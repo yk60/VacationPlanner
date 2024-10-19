@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav"
+    app:startDestination="@id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="edu.sjsu.android.vacationplanner.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_group"
+        android:name="edu.sjsu.android.vacationplanner.GroupFragment"
+        android:label="fragment_group"
+        tools:layout="@layout/fragment_group" />
+
+    <fragment
+        android:id="@+id/navigation_budget"
+        android:name="edu.sjsu.android.vacationplanner.BudgetFragment"
+        android:label="fragment_budget"
+        tools:layout="@layout/fragment_budget" />
+
+    <fragment
+        android:id="@+id/navigation_planning"
+        android:name="edu.sjsu.android.vacationplanner.PlanningFragment"
+        android:label="fragment_planning"
+        tools:layout="@layout/fragment_planning" />
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="edu.sjsu.android.vacationplanner.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+
+
+</navigation>
