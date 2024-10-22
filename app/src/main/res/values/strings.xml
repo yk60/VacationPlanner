@@ -3,4 +3,10 @@
     <string name="title_activity_maps">MapsActivity</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="string_teal">#84DCCE</string>
+    <string name="string_tealdark">#247F70</string>
+    <string name="string_redlight">#FF686B</string>
+    <string name="string_aquamarine">#A5FED6</string>
+    <string name="string_melon">#FFA69E</string>
+    <string name="string_wheat">#E9C386</string>
 </resources>

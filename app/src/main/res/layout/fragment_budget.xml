@@ -1,19 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".BudgetFragment">
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:layout_gravity="center"
-        android:textSize="20sp"
-        android:text="Budget Page"/>
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="88dp">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2000dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="Budget Planner"
+                android:textAlignment="center"
+                android:textSize="16sp"/>
+
+
+            <TextView
+                android:id="@+id/text_budgetGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_30dp"
+                android:layout_marginTop="36dp"
+                android:text="Budget Goal:" />
+
+            <TextView
+                android:id="@+id/budgetDisplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_30dp"
+                android:text="$750.00"
+                android:textSize="30dp" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_marginEnd="@dimen/_30dp"
+                android:layout_marginStart="@dimen/_30dp"
+                android:layout_marginTop="@dimen/_10dp"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:progressDrawable="@drawable/custom_progress_bar"
+                android:max="750"
+                android:progress="450"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/progress_text"
+                    android:layout_width="0dp"
+                    android:layout_marginStart="@dimen/_30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="$450.00 / $750.00" />
+
+                <Button
+                    android:id="@+id/button_editBudget"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginEnd="@dimen/_30dp"
+                    android:backgroundTint="@color/melon"
+                    android:text="edit  >" />
+            </LinearLayout>
+
+            <com.google.android.material.tabs.TabLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:tabIndicatorColor="@color/red_light"
+                app:tabRippleColor="@color/melon"
+                app:tabTextColor="@color/red_light"
+                android:layout_marginTop="@dimen/_10dp">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Daily" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Weekly" />
+            </com.google.android.material.tabs.TabLayout>
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart_view"
+                android:layout_width="match_parent"
+                android:layout_height="575dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

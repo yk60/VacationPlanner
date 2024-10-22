@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlanningFragment">
+    tools:context=".group.ItineraryFragment"
+    android:background="@color/melon">
 
+    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Planning"
         android:textAlignment="center"
-        android:textSize="16sp" />
+        android:text="Itinerary Page \n(will show itinerary as it is currently and include link to voting page as well)"
+        android:layout_gravity="center"/>
 
 </FrameLayout>

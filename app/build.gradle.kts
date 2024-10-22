@@ -1,9 +1,9 @@
 plugins {
-     alias(libs.plugins.android.application)
-     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 //    id("com.android.application")
 //    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    
+
 }
 
 android {
@@ -54,6 +54,8 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.mpandroidchart)
+    implementation(libs.circleimageview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

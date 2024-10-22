@@ -13,7 +13,7 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/profile_icon"
+        android:icon="@drawable/home_icon"
         android:title="Home" />
 
     <item

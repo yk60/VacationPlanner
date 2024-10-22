@@ -1,0 +1,29 @@
+<!--tutorials:
+https://stackoverflow.com/questions/16893209/how-to-customize-a-progress-bar-in-android
+https://stackoverflow.com/questions/42646574/progress-bar-with-rounded-corners
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background properties: color ... -->
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="8dp"/>
+            <solid android:color="@color/grey_light"/>
+        </shape>
+    </item>
+
+
+    <!-- Progress properties: start color, end color ... -->
+    <item android:id="@android:id/progress"
+        android:top="3dp"
+        android:bottom="3dp"
+        android:left="3dp"
+        android:right="3dp">
+        <clip>
+            <shape>
+                <corners android:radius="8dp"/>
+                <solid android:color="@color/teal"/>
+            </shape>
+        </clip>
+    </item>
+</layer-list>
