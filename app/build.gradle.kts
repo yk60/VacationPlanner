@@ -1,8 +1,6 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
-//    id("com.android.application")
-//    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+     alias(libs.plugins.android.application)
+     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 
 }
 
@@ -35,6 +33,8 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
+        dataBinding = true
     }
 
 
@@ -59,4 +59,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("com.android.volley:volley:1.1.1")
+    implementation("com.google.android.libraries.places:places:3.5.0")
+
 }

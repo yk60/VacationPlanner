@@ -13,6 +13,7 @@ navigationFragment = "2.8.3"
 navigationUi = "2.8.3"
 mpandroidchart = "v3.0.3"
 circleimageview = "3.1.0"
+kotlin = "1.5.31"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -31,4 +32,5 @@ circleimageview = { group = "de.hdodenhof", name = "circleimageview", version.re
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 google-android-libraries-mapsplatform-secrets-gradle-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "googleAndroidLibrariesMapsplatformSecretsGradlePlugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
