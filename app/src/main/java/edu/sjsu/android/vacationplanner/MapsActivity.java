@@ -6,13 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Spinner;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
@@ -24,11 +25,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FetchPhotoRequest;
+
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +49,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private TextView placeAddress;
     private TextView placeRating;
     private TextView placeBusinessHour;
-    private TextView placeImage;
+    private ImageView placeImage;
+    private boolean isSaved = false;
 
 
     @Override
@@ -77,14 +83,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
         // Specify the types of place data to return
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.BUSINESS_STATUS));
 
         // Set up a PlaceSelectionListener to handle the response
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             // Search and move to place
             @Override
             public void onPlaceSelected(@NonNull Place place) {
-                // TODO: Get info about the selected place.
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
 
                 LatLng latLng = place.getLatLng();
@@ -103,6 +108,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         placeName = findViewById(R.id.place_name);
         placeAddress = findViewById(R.id.place_address);
         placeRating = findViewById(R.id.place_rating);
+        placeBusinessHour = findViewById(R.id.place_business_hour);
+        placeImage = findViewById(R.id.place_image);
+
+        ScrollView placesWindow = findViewById(R.id.scroll_view);
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(placesWindow);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        bottomSheetBehavior.setPeekHeight(100);
+        bottomSheetBehavior.setHideable(false); 
+
+        ImageButton saveButton = findViewById(R.id.save_button);
+
+        saveButton.setOnClickListener(v -> {
+            isSaved = !isSaved;
+            if (isSaved) {
+                saveButton.setImageResource(R.drawable.saved);
+                Toast.makeText(MapsActivity.this, "Saved place", Toast.LENGTH_SHORT).show();
+            } else {
+                saveButton.setImageResource(R.drawable.save);
+                Toast.makeText(MapsActivity.this, "Unsaved place", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -129,7 +155,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void searchPlace(String placeId) {
         // Specify the fields to return.
-        final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.RATING);
+        final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.RATING, Place.Field.OPENING_HOURS, Place.Field.PHOTO_METADATAS);
 
         // Construct a request object, passing the place ID and fields array.
         final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
@@ -141,7 +167,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             placeAddress.setText(place.getAddress());
             placeRating.setText(place.getRating().toString());
 
-        }).addOnFailureListener((exception) -> {
+            if (place.getOpeningHours() != null) {
+                placeBusinessHour.setText(place.getOpeningHours().getWeekdayText().toString());
+            } else {
+                placeBusinessHour.setText("N/A");
+            }
+
+            // Get the photo metadata.
+            final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
+            if (metadata == null || metadata.isEmpty()) {
+                Log.w(TAG, "No photo metadata.");
+                placeImage.setImageResource(R.drawable.default_place_image);
+                return;
+            }
+            final PhotoMetadata photoMetadata = metadata.get(0);
+
+            // Get the attribution text.
+            final String attributions = photoMetadata.getAttributions();
+
+            // Create a FetchPhotoRequest.
+            final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                    .setMaxWidth(500)
+                    .setMaxHeight(300)
+                    .build();
+            placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
+                Bitmap bitmap = fetchPhotoResponse.getBitmap();
+                placeImage.setImageBitmap(bitmap);
+            }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) {
                 final ApiException apiException = (ApiException) exception;
                 Log.e(TAG, "Place not found: " + apiException.getMessage());
@@ -151,6 +203,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.e(TAG, "Place not found: " + exception.getMessage());
             }
         });
-    }
+    });
 
+    }
 }
