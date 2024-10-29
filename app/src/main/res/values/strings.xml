@@ -18,5 +18,5 @@
     <string name="string_wheat">#E9C386</string>
 
     <string name="save_pressed">saved</string>
-    <string name="save_notpressed">save</string>
+    <string name="save_not_pressed">save</string>
 </resources>

@@ -1,10 +1,13 @@
 package edu.sjsu.android.vacationplanner;
 
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -13,6 +16,7 @@ import androidx.constraintlayout.widget.Group;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -29,6 +33,9 @@ import edu.sjsu.android.vacationplanner.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private ImageButton calendarButton;
+    private boolean isCalendarOpen = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +55,21 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.nav_view);
         NavigationUI.setupWithNavController(bottomNav, navController);
 
+        calendarButton = (ImageButton)findViewById(R.id.CalendarButton);
+        calendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+
+                if (isCalendarOpen) {
+                    fragmentManager.popBackStack();
+                    isCalendarOpen = false;
+                } else {
+                    navController.navigate(R.id.navigation_calendar);
+                    isCalendarOpen = true;
+                }
+            }
+        });
 
     }
 

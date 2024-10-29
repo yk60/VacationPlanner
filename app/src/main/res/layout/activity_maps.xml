@@ -37,82 +37,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="500dp"
-
             android:background="@android:color/white"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
             <LinearLayout
-                android:id="@+id/place_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:layout_alignParentBottom="true">
-            
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/place_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:paddingBottom="8dp"/>
-                        <TextView
-                            android:id="@+id/place_address"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:textStyle="bold" 
-                            android:paddingBottom="8dp"/>
-                        <TextView
-                            android:id="@+id/place_rating"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:textStyle="bold" 
-                            android:paddingBottom="8dp"/>
-                        <TextView
-                            android:id="@+id/place_business_hour"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:paddingBottom="8dp"
-                            />
-                        
-                    </LinearLayout>
-
-
-                    <ImageButton
-                        android:id="@+id/save_button"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="10dp"
-                        android:background="@android:color/transparent"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/save"
-                        android:contentDescription="@string/save_notpressed" />
-
-                    <ImageView
-                        android:id="@+id/place_image"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true" />
+                android:orientation="vertical">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    app:layoutManager="LinearLayoutManager"
+                    tools:listitem="@layout/map_row_layout" />
             </LinearLayout>
-        </ScrollView>
+
+        </androidx.core.widget.NestedScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </RelativeLayout>
-
-
-    <!-- map:mapColorScheme="dark" -->

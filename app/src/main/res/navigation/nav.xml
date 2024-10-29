@@ -33,6 +33,11 @@
         android:name="edu.sjsu.android.vacationplanner.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/navigation_calendar"
+        android:name="edu.sjsu.android.vacationplanner.CalendarFragment"
+        android:label="fragment_calendar"
+        tools:layout="@layout/fragment_calendar" />
 
 
 </navigation>

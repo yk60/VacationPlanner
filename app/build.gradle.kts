@@ -56,6 +56,9 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.mpandroidchart)
     implementation(libs.circleimageview)
+    // implementation(libs.recyclerview)
+    implementation("androidx.recyclerview:recyclerview:1.2.1") 
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
