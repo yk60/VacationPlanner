@@ -9,20 +9,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ListView;
 
-import java.util.List;
-import java.util.Objects;
-
-import edu.sjsu.android.vacationplanner.MapsActivity;
 import edu.sjsu.android.vacationplanner.R;
 
 
 public class ToDosFragment extends Fragment {
 
-    private ListView noteListView;
+    private GridView noteGridView;
     Activity context;
 
     public ToDosFragment() {
@@ -44,12 +39,19 @@ public class ToDosFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_to_dos, container, false);
 
         // Initialize Notes widgets
-        noteListView = view.findViewById(R.id.todos_listView);
+        noteGridView = view.findViewById(R.id.todos_gridView);
         // Set NoteAdapter
         NoteAdapter noteAdapter = new NoteAdapter(requireActivity().getApplicationContext(), Note.noteArrayList);
-        noteListView.setAdapter(noteAdapter);
+        noteGridView.setAdapter(noteAdapter);
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ImageButton button = context.findViewById(R.id.newNoteButton);
+        button.setOnClickListener(this::newNote);
     }
 
     public void newNote(View view){
@@ -58,15 +60,13 @@ public class ToDosFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        ImageButton button = (ImageButton) context.findViewById(R.id.newNoteButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                newNote(view);
-            }
-        });
+    public void onResume()
+    {
+        super.onResume();
+        // Set NoteAdapter
+        NoteAdapter noteAdapter = new NoteAdapter(requireActivity().getApplicationContext(), Note.noteArrayList);
+        noteGridView.setAdapter(noteAdapter);
     }
+
 
 }

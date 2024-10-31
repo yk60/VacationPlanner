@@ -43,8 +43,13 @@
         
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/todos_listView"
+
+    <GridView
+        android:id="@+id/todos_gridView"
+        android:numColumns="2"
+        android:layout_marginTop="@dimen/_10dp"
+        android:verticalSpacing="5dp"
+        android:horizontalSpacing="5dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
@@ -52,6 +57,7 @@
         android:paddingEnd="@dimen/_10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toDos_searchLayout" />
+
 
     <ImageButton
         android:id="@+id/newNoteButton"
