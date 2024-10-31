@@ -2,27 +2,31 @@ package edu.sjsu.android.vacationplanner;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.Objects;
 
 import edu.sjsu.android.vacationplanner.group.GroupListFragment;
 import edu.sjsu.android.vacationplanner.group.ItineraryFragment;
+import edu.sjsu.android.vacationplanner.group.ToDosFragment;
 
 
 public class GroupFragment extends Fragment {
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
+    TabLayoutMediator tabLayoutMediator;
 
     public GroupFragment() {
         // Required empty public constructor
@@ -39,21 +43,28 @@ public class GroupFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group, container, false);
-        tabLayout = view.findViewById(R.id.tabLayout);
-        viewPager = view.findViewById(R.id.group_viewpager);
 
-        tabLayout.setupWithViewPager(viewPager);
 
-        ViewPagerAdapter vpAdapter = new ViewPagerAdapter(requireActivity().getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        TabLayout tabLayout = view.findViewById(R.id.tabLayout);
+        ViewPager2 viewPager = view.findViewById(R.id.group_viewpager);
 
+        // Initialize the tab layout
+        ViewPagerAdapter vpAdapter = new ViewPagerAdapter(requireActivity().getSupportFragmentManager(), getLifecycle());
         vpAdapter.addFragment(new GroupListFragment(), "Group Members");
         vpAdapter.addFragment(new ItineraryFragment(), "Itinerary");
+        vpAdapter.addFragment(new ToDosFragment(), "To Dos");
 
-        //TODO: change last fragment on list (this was just for testing purposes)
-        vpAdapter.addFragment(new SearchFragment(), "To Dos");
+        tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            tab.setText(vpAdapter.getPageTitle(position));
+        });
+
+        // set adapter
         viewPager.setAdapter(vpAdapter);
 
-
+        // attach mediator
+        if (!tabLayoutMediator.isAttached()) {
+            tabLayoutMediator.attach();
+        }
         return view;
     }
 

@@ -65,4 +65,8 @@ dependencies {
     implementation("com.android.volley:volley:1.1.1")
     implementation("com.google.android.libraries.places:places:3.5.0")
 
+    // rounded ImageView
+    implementation (libs.roundedimageview)
+
+
 }
