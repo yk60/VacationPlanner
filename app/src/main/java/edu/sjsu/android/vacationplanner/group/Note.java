@@ -11,19 +11,22 @@ public class Note {
     private String title;
     private String description;
     private Date deleted;
+    private int color;
 
-    public Note(int id, String title, String description, Date deleted) {
+    public Note(int id, String title, String description, int color, Date deleted) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.deleted = deleted;
+        this.color = color;
     }
 
-    public Note(int id, String title, String description) {
+    public Note(int id, String title, String description, int color) {
         this.id = id;
         this.title = title;
         this.description = description;
         deleted = null;
+        this.color = color;
     }
 
     public int getId() {
@@ -56,5 +59,13 @@ public class Note {
 
     public void setDeleted(Date deleted) {
         this.deleted = deleted;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 }

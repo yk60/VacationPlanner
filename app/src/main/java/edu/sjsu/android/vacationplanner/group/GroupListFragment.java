@@ -45,7 +45,7 @@ public class GroupListFragment extends Fragment {
     }
 
     public void onClick(int position){
-
+        // TODO: allow user option to delete group members
     }
 
     @Override
