@@ -26,7 +26,8 @@
                 android:layout_marginTop="16dp"
                 android:text="Budget Planner"
                 android:textAlignment="center"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:textColor="@color/teal_light"/>
 
 
             <TextView

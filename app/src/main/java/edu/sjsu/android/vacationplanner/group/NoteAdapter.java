@@ -16,9 +16,11 @@ import edu.sjsu.android.vacationplanner.R;
 
 public class NoteAdapter extends ArrayAdapter<Note> {
 
+
     public NoteAdapter(@NonNull Context context, List<Note> notes) {
         super(context, 0, notes);
     }
+
 
     @NonNull
     @Override

@@ -21,6 +21,7 @@ public class NoteDetailActivity extends AppCompatActivity {
     private EditText titleEditText, descEditText;
     private int selectedNoteColor;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +37,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         saveNoteButton.setOnClickListener(this::saveNote);
 
     }
+
 
     private void initWidgets() {
         titleEditText = findViewById(R.id.edit_noteTitle);

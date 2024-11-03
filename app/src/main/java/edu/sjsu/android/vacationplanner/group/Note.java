@@ -1,9 +1,15 @@
 package edu.sjsu.android.vacationplanner.group;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Note {
+public class Note implements Serializable {
 
     public static ArrayList<Note> noteArrayList = new ArrayList<>();
 
@@ -68,4 +74,5 @@ public class Note {
     public void setColor(int color) {
         this.color = color;
     }
+
 }
