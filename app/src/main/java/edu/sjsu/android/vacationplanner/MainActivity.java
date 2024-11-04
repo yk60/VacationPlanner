@@ -34,7 +34,10 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private ImageButton calendarButton;
+    private ImageButton savesButton;
     private boolean isCalendarOpen = false;
+    private boolean isSavesOpen = false;
+    FragmentManager fragmentManager = getSupportFragmentManager();
 
 
     @Override
@@ -59,14 +62,27 @@ public class MainActivity extends AppCompatActivity {
         calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-
                 if (isCalendarOpen) {
                     fragmentManager.popBackStack();
                     isCalendarOpen = false;
                 } else {
                     navController.navigate(R.id.navigation_calendar);
                     isCalendarOpen = true;
+                }
+            }
+        });
+
+        savesButton = (ImageButton)findViewById(R.id.SavesButton);
+        savesButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                if (isSavesOpen) {
+                    fragmentManager.popBackStack();
+                    isSavesOpen = false;
+                } else {
+                    navController.navigate(R.id.navigation_saves);
+                    isSavesOpen = true;
                 }
             }
         });

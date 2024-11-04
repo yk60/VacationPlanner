@@ -130,7 +130,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // placeList.add(new MyPlace("SJSU", "California", "5.0", "9-5", false, R.drawable.default_place_image));
         recyclerView = findViewById(R.id.recycler_view);
         placeList = new ArrayList<>();
-        mapAdapter = new MapAdapter(this, placeList);
+        mapAdapter = new MapAdapter(this, placeList, false, new UpdateSavesListener() {
+            @Override
+            public void updateTotalCost() {
+            }
+        });        
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mapAdapter);
 
@@ -193,44 +197,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
             Place place = response.getPlace();
-        String name = place.getName();
-        String address = place.getAddress();
-        String rating = place.getRating() != null ? place.getRating().toString() : "N/A";
-        String businessHour = place.getOpeningHours() != null ? place.getOpeningHours().getWeekdayText().toString() : "N/A";
+            String name = place.getName();
+            String address = place.getAddress();
+            String rating = place.getRating() != null ? place.getRating().toString() : "N/A";
+            String businessHour = place.getOpeningHours() != null ? place.getOpeningHours().getWeekdayText().toString() : "N/A";
 
-        Log.i(TAG, "Place found: " + name);
+            Log.i(TAG, "Place found: " + name);
 
-        Bitmap defaultImage = BitmapFactory.decodeResource(getResources(), R.drawable.default_place_image);
-        MyPlace myPlace = new MyPlace(name, address, rating, businessHour, false, defaultImage);
+            Bitmap defaultImage = BitmapFactory.decodeResource(getResources(), R.drawable.default_place_image);
+            MyPlace myPlace = new MyPlace(name, address, rating, businessHour, false, defaultImage);
 
-        // Get the photo metadata
-        final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
-        if (metadata != null && !metadata.isEmpty()) {
-            Log.w(TAG, "photo metadata found");
-        
-            final PhotoMetadata photoMetadata = metadata.get(0);
-            final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
-                    .setMaxWidth(500)
-                    .setMaxHeight(300)
-                    .build();
-            placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
-                Bitmap bitmap = fetchPhotoResponse.getBitmap();
-                myPlace.setImage(bitmap);
+            // Get the photo metadata
+            final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
+            if (metadata != null && !metadata.isEmpty()) {
+                Log.w(TAG, "photo metadata found");
+            
+                final PhotoMetadata photoMetadata = metadata.get(0);
+                final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                        .setMaxWidth(500)
+                        .setMaxHeight(300)
+                        .build();
+                placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
+                    Bitmap bitmap = fetchPhotoResponse.getBitmap();
+                    myPlace.setImage(bitmap);
 
-                mapAdapter.notifyDataSetChanged();
-            }).addOnFailureListener((exception) -> {
-                if (exception instanceof ApiException) {
-                    final ApiException apiException = (ApiException) exception;
-                    Log.e(TAG, "Place not found: " + apiException.getMessage());
-                    final int statusCode = apiException.getStatusCode();
-                    Log.e(TAG, "Status code: " + statusCode);
-                } else {
-                    Log.e(TAG, "Place not found: " + exception.getMessage());
-                }
-            });
-        }
-           searchResults.add(myPlace);
-           updateBottomSheet(searchResults);
+                    mapAdapter.notifyDataSetChanged();
+                }).addOnFailureListener((exception) -> {
+                    if (exception instanceof ApiException) {
+                        final ApiException apiException = (ApiException) exception;
+                        Log.e(TAG, "Place not found: " + apiException.getMessage());
+                        final int statusCode = apiException.getStatusCode();
+                        Log.e(TAG, "Status code: " + statusCode);
+                    } else {
+                        Log.e(TAG, "Place not found: " + exception.getMessage());
+                    }
+                });
+            }
+            searchResults.add(myPlace);
+            updateBottomSheet(searchResults);
        }).addOnFailureListener((exception) -> {
            if (exception instanceof ApiException) {
                Log.e(TAG, "Place not found: " + exception.getMessage());

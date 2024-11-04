@@ -4,6 +4,8 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ImageView;
@@ -16,6 +18,8 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
     TextView businessHourView;
     ImageButton saveView;
     ImageView imageView;
+    EditText costView;
+    EditText datetimeView;
 
     public PlaceViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -25,9 +29,12 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         businessHourView = itemView.findViewById(R.id.place_business_hour);
         saveView = itemView.findViewById(R.id.save_button);
         imageView = itemView.findViewById(R.id.place_image);
+        costView = itemView.findViewById(R.id.place_cost);
+        datetimeView = itemView.findViewById(R.id.place_datetime);
+
     }
     
-    public void bind(MyPlace myPlace) {
+    public void bind(MyPlace myPlace,  boolean isSavesOpen) {
         nameView.setText(myPlace.getName());
         addressView.setText(myPlace.getAddress());
         ratingView.setText(myPlace.getRating());
@@ -37,5 +44,15 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         } else {
             imageView.setImageResource(R.drawable.default_place_image);
         }
+        
+        if (isSavesOpen) {
+            costView.setVisibility(View.VISIBLE);
+            datetimeView.setVisibility(View.VISIBLE);
+        } else {
+            costView.setVisibility(View.GONE);
+            datetimeView.setVisibility(View.GONE);
+        }
+        costView.setText(myPlace.getCost());
+        datetimeView.setText(myPlace.getDatetime());
     }
 }

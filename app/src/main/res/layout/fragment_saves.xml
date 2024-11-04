@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SavesFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:paddingTop="40dp"
+        tools:listitem="@layout/map_row_layout" >
+
+
+    </androidx.recyclerview.widget.RecyclerView>
+    <TextView
+        android:id="@+id/expected_cost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total cost: $0.00"
+        android:textStyle="bold"
+        android:paddingTop="8dp" />
+
+</LinearLayout>

@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+
 public class MyPlace implements Parcelable{
     private final String name;
     private final String address;
@@ -13,6 +14,8 @@ public class MyPlace implements Parcelable{
     private final String businessHour;
     private boolean isSaved;
     private Bitmap image;
+    private String cost;
+    private String datetime;
 
     public MyPlace(String name, String address, String rating, String businessHour, boolean isSaved, Bitmap image) {
         this.name = name;
@@ -29,8 +32,9 @@ public class MyPlace implements Parcelable{
        rating = in.readString();
        businessHour = in.readString();
        isSaved = in.readByte() != 0;
-    //    image = in.readBitmap();
        image = in.readParcelable(Bitmap.class.getClassLoader());
+       cost = in.readString();
+       datetime = in.readString();
 
    }
 
@@ -73,9 +77,27 @@ public class MyPlace implements Parcelable{
     public Bitmap getImage() {
         return image;
     }
+
     public void setImage(Bitmap image) {
         this.image = image;
     }
+
+    public String getCost() {
+        return cost;
+    }
+
+    public void setCost(String cost) {
+        this.cost = cost;
+    }
+
+    public String getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(String datetime) {
+        this.datetime = datetime;
+    }
+
 
    @Override
    public int describeContents() {
@@ -89,8 +111,9 @@ public class MyPlace implements Parcelable{
        parcel.writeString(rating);
        parcel.writeString(businessHour);
        parcel.writeByte((byte) (isSaved ? 1 : 0));
-    //    parcel.writeInt(image);
        parcel.writeParcelable(image, i);
+       parcel.writeString(cost);
+       parcel.writeString(datetime);
    }
 
 
