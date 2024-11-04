@@ -38,6 +38,11 @@
         android:name="edu.sjsu.android.vacationplanner.CalendarFragment"
         android:label="fragment_calendar"
         tools:layout="@layout/fragment_calendar" />
+    <fragment
+        android:id="@+id/navigation_saves"
+        android:name="edu.sjsu.android.vacationplanner.SavesFragment"
+        android:label="fragment_saves"
+        tools:layout="@layout/fragment_saves" />
 
 
 </navigation>

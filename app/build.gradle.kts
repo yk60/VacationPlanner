@@ -64,6 +64,9 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("com.android.volley:volley:1.1.1")
     implementation("com.google.android.libraries.places:places:3.5.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-livedata:2.6.2")
+
 
     // rounded ImageView
     implementation (libs.roundedimageview)
