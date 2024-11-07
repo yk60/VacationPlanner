@@ -50,7 +50,7 @@
                 android:layout_width="@dimen/_40dp"
                 android:layout_height="@dimen/_40dp"
                 android:src="@drawable/round_check_circle"
-                android:tint="@color/white"/>
+                app:tint="@color/white" />
         </FrameLayout>
 
         <FrameLayout
@@ -65,8 +65,7 @@
             <ImageView
                 android:id="@+id/imageColor2"
                 android:layout_width="@dimen/_40dp"
-                android:layout_height="@dimen/_40dp"
-                android:tint="@color/white"/>
+                android:layout_height="@dimen/_40dp"/>
         </FrameLayout>
 
         <FrameLayout
@@ -81,8 +80,7 @@
             <ImageView
                 android:id="@+id/imageColor3"
                 android:layout_width="@dimen/_40dp"
-                android:layout_height="@dimen/_40dp"
-                android:tint="@color/white"/>
+                android:layout_height="@dimen/_40dp"/>
         </FrameLayout>
 
         <FrameLayout
@@ -97,8 +95,7 @@
             <ImageView
                 android:id="@+id/imageColor4"
                 android:layout_width="@dimen/_40dp"
-                android:layout_height="@dimen/_40dp"
-                android:tint="@color/white"/>
+                android:layout_height="@dimen/_40dp"/>
         </FrameLayout>
 
         <TextView
@@ -136,5 +133,14 @@
         android:minHeight="400dp"
         android:textColor="@color/black"
         android:gravity="top"/>
+
+    <Button
+        android:id="@+id/deleteNoteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10dp"
+        android:text="delete note"
+        android:backgroundTint="@color/red_light"
+        android:layout_gravity="center"/>
 
 </LinearLayout>

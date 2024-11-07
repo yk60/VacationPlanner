@@ -1,5 +1,7 @@
 package edu.sjsu.android.vacationplanner.group;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,8 +16,10 @@ import edu.sjsu.android.vacationplanner.User;
 
 public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.ViewHolder>{
 
-    private final List<User> usersList;
+    final List<User> usersList;
     private OnUserClickedListener listener;
+    RowLayoutBinding binding;
+    Context context;
 
     public GroupListAdapter(List<User> items) {
         usersList = items;
@@ -24,7 +28,8 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RowLayoutBinding binding = RowLayoutBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        context = parent.getContext();
+        binding = RowLayoutBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new ViewHolder(binding, listener);
     }
 
@@ -37,6 +42,9 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         User user = usersList.get(position); // returns an object in list based on position
         holder.iconView.setImageResource(user.getProfilePicID());
         holder.nameView.setText(user.getUsername());
+        binding.groupmemDeleteButton.setOnClickListener(view -> {
+            showWarning(position);
+        });
     }
 
     @Override
@@ -56,4 +64,24 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         }
 
     }
+    public void showWarning(int position){
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(context);
+
+        builder.setTitle("Warning");
+        builder.setMessage("Are you sure you want to remove this member from your list?");
+
+        builder.setPositiveButton("Yes", (dialog, id) -> {
+            // When user selects yes
+            this.usersList.remove(position);
+            this.notifyItemRemoved(position);
+            this.notifyItemRangeChanged(position, usersList.size());
+        });
+        builder.setNegativeButton("No", (dialog, id) -> {
+            // When user selects no, do nothing
+        });
+        builder.create().show();
+    }
+
+
 }

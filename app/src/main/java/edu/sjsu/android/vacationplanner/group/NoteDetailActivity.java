@@ -1,9 +1,11 @@
 package edu.sjsu.android.vacationplanner.group;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Debug;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -14,13 +16,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
+import java.util.Date;
+
 import edu.sjsu.android.vacationplanner.R;
 
 public class NoteDetailActivity extends AppCompatActivity {
 
     private EditText titleEditText, descEditText;
     private int selectedNoteColor;
-
+    private Button deleteButton;
+    private Note selectedNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,28 +41,68 @@ public class NoteDetailActivity extends AppCompatActivity {
         ImageButton saveNoteButton = findViewById(R.id.saveNoteButton);
         saveNoteButton.setOnClickListener(this::saveNote);
 
+        // setOnClickListener for delete note button
+        deleteButton.setOnClickListener(this::deleteNote);
+
+        // check if note is being viewed/edited (already existing)
+        checkForEditNote();
     }
 
 
     private void initWidgets() {
         titleEditText = findViewById(R.id.edit_noteTitle);
         descEditText = findViewById(R.id.edit_noteContent);
+        deleteButton = findViewById(R.id.deleteNoteButton);
     }
+
+    private void checkForEditNote()
+    {
+        Intent previousIntent = getIntent();
+
+        int passedNoteID = previousIntent.getIntExtra(Note.NOTE_EDIT_EXTRA, -1);
+        selectedNote = Note.getNoteForID(passedNoteID);
+
+        if (selectedNote != null)
+        {
+            titleEditText.setText(selectedNote.getTitle());
+            descEditText.setText(selectedNote.getDescription());
+        }
+        else
+        {
+            deleteButton.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void deleteNote(View view) {
+        selectedNote.setDeleted(new Date());
+        finish();
+    }
+
 
     public void saveNote(View view){
         String title = String.valueOf(titleEditText.getText());
         String desc = String.valueOf(descEditText.getText());
 
-        if (title.isEmpty()) {
-            Toast.makeText(view.getContext(), "Please enter a title", Toast.LENGTH_LONG).show();
-        } else if (desc.isEmpty()) {
-            Toast.makeText(view.getContext(), "Please enter a note", Toast.LENGTH_LONG).show();
-        } else {
-            int id = Note.noteArrayList.size();
-            Note newNote = new Note(id, title, desc, selectedNoteColor);
-            Note.noteArrayList.add(newNote);
-            finish();
+        if(selectedNote == null)
+        {
+            if (title.isEmpty()) {
+                Toast.makeText(view.getContext(), "Please enter a title", Toast.LENGTH_LONG).show();
+            } else if (desc.isEmpty()) {
+                Toast.makeText(view.getContext(), "Please enter a note", Toast.LENGTH_LONG).show();
+            } else {
+                int id = Note.noteArrayList.size();
+                Note newNote = new Note(id, title, desc, selectedNoteColor);
+                Note.noteArrayList.add(newNote);
+            }
         }
+        else
+        {
+            selectedNote.setTitle(title);
+            selectedNote.setDescription(desc);
+            selectedNote.setColor(selectedNoteColor);
+        }
+
+        finish();
     }
 
    private void initColors(){

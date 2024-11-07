@@ -1,10 +1,12 @@
 package edu.sjsu.android.vacationplanner.group;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +35,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
 
         TextView title = convertView.findViewById(R.id.cellTitle);
         TextView desc = convertView.findViewById(R.id.cellDescription);
+
         LinearLayout linearLayout = convertView.findViewById(R.id.layout_note);
 
         title.setText(note.getTitle());

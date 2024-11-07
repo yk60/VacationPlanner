@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import edu.sjsu.android.vacationplanner.R;
 
@@ -45,10 +46,41 @@ public class ToDosFragment extends Fragment {
         // Initialize Notes widgets
         noteGridView = view.findViewById(R.id.todos_gridView);
         // Set NoteAdapter
-        NoteAdapter noteAdapter = new NoteAdapter(requireActivity().getApplicationContext(), Note.noteArrayList);
+        NoteAdapter noteAdapter = new NoteAdapter(requireActivity().getApplicationContext(), Note.nonDeletedNotes());
         noteGridView.setAdapter(noteAdapter);
 
+
+        // show that todos are empty if there are none
+        TextView emptyText = (TextView) view.findViewById(R.id.emptyList);
+        noteGridView.setEmptyView(emptyText);
+
+        // set listener on note clicked
+        setOnClickListener();
+
         return view;
+    }
+
+    /*public void onNoteClicked(int position){
+        Note note = Note.noteArrayList.get(position); // getting object from position
+        Intent viewNoteIntent = new Intent(context, NoteDetailActivity.class);
+        viewNoteIntent.putExtra("isViewOrUpdate", true);
+        viewNoteIntent.putExtra("note", note);
+        startActivity(viewNoteIntent);
+    }*/
+
+    private void setOnClickListener()
+    {
+        noteGridView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
+            {
+                Note selectedNote = (Note) noteGridView.getItemAtPosition(position);
+                Intent editNoteIntent = new Intent(context, NoteDetailActivity.class);
+                editNoteIntent.putExtra(Note.NOTE_EDIT_EXTRA, selectedNote.getId());
+                startActivity(editNoteIntent);
+            }
+        });
     }
 
     @Override
@@ -69,7 +101,7 @@ public class ToDosFragment extends Fragment {
     {
         super.onResume();
         // Set NoteAdapter
-        NoteAdapter noteAdapter = new NoteAdapter(requireActivity().getApplicationContext(), Note.noteArrayList);
+        NoteAdapter noteAdapter = new NoteAdapter(requireActivity().getApplicationContext(), Note.nonDeletedNotes());
         noteGridView.setAdapter(noteAdapter);
     }
 

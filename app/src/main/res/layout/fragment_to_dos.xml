@@ -6,44 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".group.ToDosFragment">
 
-
-    <LinearLayout
-        android:id="@+id/toDos_searchLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#edf5f7"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/_10dp"
-        android:paddingEnd="@dimen/_10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageButton
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/mapsearch_icon"
-            android:background="@null"
-            app:tint="@color/teal_dark" />
-
-
-        <EditText
-            android:id="@+id/toDos_searchInput"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginStart="@dimen/_10dp"
-            android:background="@null"
-            android:hint="Search To Dos"
-            android:imeOptions="actionDone"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            android:textColor="@color/teal_dark"
-            android:textColorHint="@color/teal_light"
-            android:textSize="17sp"/>
-        
-    </LinearLayout>
-
-
     <GridView
         android:id="@+id/todos_gridView"
         android:numColumns="2"
@@ -56,7 +18,7 @@
         android:paddingStart="@dimen/_10dp"
         android:paddingEnd="@dimen/_10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toDos_searchLayout" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <ImageButton
@@ -70,6 +32,17 @@
         android:src="@drawable/planning_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/emptyList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No to dos yet!\nClick the + button to add your notes"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
