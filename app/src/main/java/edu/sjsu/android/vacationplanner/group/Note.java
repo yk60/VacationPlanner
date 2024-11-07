@@ -12,12 +12,14 @@ import java.util.Date;
 public class Note implements Serializable {
 
     public static ArrayList<Note> noteArrayList = new ArrayList<>();
+    public static String NOTE_EDIT_EXTRA =  "noteEdit";
 
     private int id;
     private String title;
     private String description;
     private Date deleted;
     private int color;
+
 
     public Note(int id, String title, String description, int color, Date deleted) {
         this.id = id;
@@ -33,6 +35,24 @@ public class Note implements Serializable {
         this.description = description;
         deleted = null;
         this.color = color;
+    }
+
+    public static Note getNoteForID(int passedNoteID) {
+        for (Note note : noteArrayList) {
+            if(note.getId() == passedNoteID)
+                return note;
+        }
+
+        return null;
+    }
+
+    public static ArrayList<Note> nonDeletedNotes() {
+        ArrayList<Note> nonDeleted = new ArrayList<>();
+        for(Note note : noteArrayList) {
+            if(note.getDeleted() == null)
+                nonDeleted.add(note);
+        }
+        return nonDeleted;
     }
 
     public int getId() {
