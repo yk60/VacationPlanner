@@ -13,13 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import edu.sjsu.android.vacationplanner.databinding.RowLayoutBinding;
 import edu.sjsu.android.vacationplanner.User;
+import edu.sjsu.android.vacationplanner.databinding.RowLayoutUsersBinding;
 
 public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.ViewHolder>{
 
-    final List<User> usersList;
+    private List<User> usersList;
     private OnUserClickedListener listener;
-    RowLayoutBinding binding;
+    RowLayoutUsersBinding binding;
     Context context;
+
 
     public GroupListAdapter(List<User> items) {
         usersList = items;
@@ -29,7 +31,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        binding = RowLayoutBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        binding = RowLayoutUsersBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new ViewHolder(binding, listener);
     }
 
@@ -42,9 +44,6 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         User user = usersList.get(position); // returns an object in list based on position
         holder.iconView.setImageResource(user.getProfilePicID());
         holder.nameView.setText(user.getUsername());
-        binding.groupmemDeleteButton.setOnClickListener(view -> {
-            showWarning(position);
-        });
     }
 
     @Override
@@ -56,7 +55,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         public final ImageView iconView;
         public final TextView nameView;
 
-        public ViewHolder(RowLayoutBinding binding, OnUserClickedListener listener) {
+        public ViewHolder(RowLayoutUsersBinding binding, OnUserClickedListener listener) {
             super(binding.getRoot());
             this.iconView = binding.profileImage;
             this.nameView = binding.username;
@@ -64,6 +63,13 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         }
 
     }
+
+    public void setFilteredList(List<User> filteredList) {
+        this.usersList = filteredList;
+        notifyDataSetChanged();
+    }
+
+    /*
     public void showWarning(int position){
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
@@ -82,6 +88,6 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         });
         builder.create().show();
     }
-
+*/
 
 }

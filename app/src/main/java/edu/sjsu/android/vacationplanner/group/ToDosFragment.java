@@ -24,6 +24,7 @@ public class ToDosFragment extends Fragment {
 
     private GridView noteGridView;
     Activity context;
+    ImageButton newNoteButton;
 
     public ToDosFragment() {
         // Required empty public constructor
@@ -57,16 +58,12 @@ public class ToDosFragment extends Fragment {
         // set listener on note clicked
         setOnClickListener();
 
+        // initialize button
+        newNoteButton = context.findViewById(R.id.newNoteButton);
+
         return view;
     }
 
-    /*public void onNoteClicked(int position){
-        Note note = Note.noteArrayList.get(position); // getting object from position
-        Intent viewNoteIntent = new Intent(context, NoteDetailActivity.class);
-        viewNoteIntent.putExtra("isViewOrUpdate", true);
-        viewNoteIntent.putExtra("note", note);
-        startActivity(viewNoteIntent);
-    }*/
 
     private void setOnClickListener()
     {
@@ -86,8 +83,8 @@ public class ToDosFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ImageButton button = context.findViewById(R.id.newNoteButton);
-        button.setOnClickListener(this::newNote);
+        ImageButton newNoteButton = context.findViewById(R.id.newNoteButton);
+        newNoteButton.setOnClickListener(this::newNote);
     }
 
     public void newNote(View view){

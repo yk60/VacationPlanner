@@ -105,7 +105,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         finish();
     }
 
-   private void initColors(){
+    private void initColors(){
         final LinearLayout colorLayout = findViewById(R.id.colorLayout);
         final ImageView imageColor1 = colorLayout.findViewById(R.id.imageColor1);
         final ImageView imageColor2 = colorLayout.findViewById(R.id.imageColor2);
@@ -120,29 +120,29 @@ public class NoteDetailActivity extends AppCompatActivity {
             imageColor4.setImageResource(0);
         });
 
-       colorLayout.findViewById(R.id.viewColor2).setOnClickListener(view -> {
-           selectedNoteColor=R.color.aquamarine;
-           imageColor2.setImageResource(R.drawable.round_check_circle);
-           imageColor1.setImageResource(0);
-           imageColor3.setImageResource(0);
-           imageColor4.setImageResource(0);
-       });
+        colorLayout.findViewById(R.id.viewColor2).setOnClickListener(view -> {
+            selectedNoteColor=R.color.aquamarine;
+            imageColor2.setImageResource(R.drawable.round_check_circle);
+            imageColor1.setImageResource(0);
+            imageColor3.setImageResource(0);
+            imageColor4.setImageResource(0);
+        });
 
-       colorLayout.findViewById(R.id.viewColor3).setOnClickListener(view -> {
-           selectedNoteColor=R.color.melon;
-           imageColor3.setImageResource(R.drawable.round_check_circle);
-           imageColor1.setImageResource(0);
-           imageColor2.setImageResource(0);
-           imageColor4.setImageResource(0);
-       });
+        colorLayout.findViewById(R.id.viewColor3).setOnClickListener(view -> {
+            selectedNoteColor=R.color.melon;
+            imageColor3.setImageResource(R.drawable.round_check_circle);
+            imageColor1.setImageResource(0);
+            imageColor2.setImageResource(0);
+            imageColor4.setImageResource(0);
+        });
 
-       colorLayout.findViewById(R.id.viewColor4).setOnClickListener(view -> {
-           selectedNoteColor=R.color.wheat;
-           imageColor4.setImageResource(R.drawable.round_check_circle);
-           imageColor1.setImageResource(0);
-           imageColor2.setImageResource(0);
-           imageColor3.setImageResource(0);
-       });
+        colorLayout.findViewById(R.id.viewColor4).setOnClickListener(view -> {
+            selectedNoteColor=R.color.wheat;
+            imageColor4.setImageResource(R.drawable.round_check_circle);
+            imageColor1.setImageResource(0);
+            imageColor2.setImageResource(0);
+            imageColor3.setImageResource(0);
+        });
     }
 
 }
