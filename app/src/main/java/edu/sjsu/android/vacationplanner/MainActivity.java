@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -44,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.top_toolbar);
+        setSupportActionBar(toolbar);
 
         // implementing bottom navigation
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
@@ -84,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
-        
+
                 if (itemId == R.id.navigation_home) {
                     navController.navigate(R.id.navigation_home);
                     return true;
@@ -102,14 +106,8 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 } else {
                     return false;
-                } 
+                }
             }
         });
-
-
-
     }
-
-
-
 }
