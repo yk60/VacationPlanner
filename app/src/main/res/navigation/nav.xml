@@ -27,7 +27,9 @@
         android:id="@+id/navigation_planning"
         android:name="edu.sjsu.android.vacationplanner.PlanningFragment"
         android:label="fragment_planning"
-        tools:layout="@layout/fragment_planning" />
+        tools:layout="@layout/fragment_planning" >
+    </fragment>
+
     <fragment
         android:id="@+id/navigation_search"
         android:name="edu.sjsu.android.vacationplanner.SearchFragment"
@@ -49,5 +51,10 @@
         android:label="activity_add_members"
         tools:layout="@layout/activity_add_members" />
 
+    <fragment
+        android:id="@+id/navigation_voting"
+        android:name="edu.sjsu.android.vacationplanner.VotingFragment"
+        android:label="fragment_voting"
+        tools:layout="@layout/fragment_voting" />
 
 </navigation>

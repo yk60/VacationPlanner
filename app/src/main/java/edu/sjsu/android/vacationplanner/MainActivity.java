@@ -80,6 +80,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+        
+                if (itemId == R.id.navigation_home) {
+                    navController.navigate(R.id.navigation_home);
+                    return true;
+                } else if (itemId == R.id.navigation_group) {
+                    navController.navigate(R.id.navigation_group);
+                    return true;
+                } else if (itemId == R.id.navigation_budget) {
+                    navController.navigate(R.id.navigation_budget);
+                    return true;
+                } else if (itemId == R.id.navigation_planning) {
+                    navController.navigate(R.id.navigation_voting);
+                    return true;
+                } else if (itemId == R.id.navigation_search) {
+                    navController.navigate(R.id.navigation_search);
+                    return true;
+                } else {
+                    return false;
+                } 
+            }
+        });
+
+
+
     }
 
 

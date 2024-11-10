@@ -13,14 +13,19 @@
         android:paddingTop="40dp"
         tools:listitem="@layout/map_row_layout" >
 
-
     </androidx.recyclerview.widget.RecyclerView>
-    <TextView
-        android:id="@+id/expected_cost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Total cost: $0.00"
-        android:textStyle="bold"
-        android:paddingTop="8dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/teal">
 
+        <TextView
+            android:id="@+id/expected_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total cost: $0.00"
+            android:textStyle="bold"
+            android:paddingTop="8dp" />
+    </LinearLayout>
 </LinearLayout>

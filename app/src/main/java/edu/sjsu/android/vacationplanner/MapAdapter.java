@@ -106,9 +106,37 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
             @Override
             public void afterTextChanged(Editable s) {}
         });
+        holder.startTimeView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                myPlace.setStartTime(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+        holder.endTimeView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                myPlace.setEndTime(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
 
         holder.costView.setText(myPlace.getCost());
         holder.datetimeView.setText(myPlace.getDatetime());
+        holder.startTimeView.setText(myPlace.getStartTime());
+        holder.endTimeView.setText(myPlace.getEndTime());
+
     }
 
     @Override

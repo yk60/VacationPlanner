@@ -56,7 +56,6 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.mpandroidchart)
     implementation(libs.circleimageview)
-    // implementation(libs.recyclerview)
     implementation("androidx.recyclerview:recyclerview:1.2.1") 
 
     testImplementation(libs.junit)
@@ -66,6 +65,10 @@ dependencies {
     implementation("com.google.android.libraries.places:places:3.5.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata:2.6.2")
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+    implementation("com.google.android.material:material:1.4.0")
+    implementation("androidx.gridlayout:gridlayout:1.0.0")
+    
 
 
     // rounded ImageView

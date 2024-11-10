@@ -9,13 +9,15 @@ import androidx.annotation.NonNull;
 
 public class MyPlace implements Parcelable{
     private final String name;
-    private final String address;
-    private final String rating;
-    private final String businessHour;
+    private String address;
+    private String rating;
+    private String businessHour;
     private boolean isSaved;
     private Bitmap image;
     private String cost;
     private String datetime;
+    private String startTime;
+    private String endTime;
 
     public MyPlace(String name, String address, String rating, String businessHour, boolean isSaved, Bitmap image) {
         this.name = name;
@@ -25,7 +27,10 @@ public class MyPlace implements Parcelable{
         this.isSaved = isSaved;
         this.image = image;
     }
-
+    public MyPlace(String name, Bitmap image) {
+        this.name = name;
+        this.image = image;
+    }
    protected MyPlace(Parcel in) {
        name = in.readString();
        address = in.readString();
@@ -49,6 +54,8 @@ public class MyPlace implements Parcelable{
            return new MyPlace[size];
        }
    };
+
+
 
     public String getName() {
         return name;
@@ -98,6 +105,22 @@ public class MyPlace implements Parcelable{
         this.datetime = datetime;
     }
 
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
 
    @Override
    public int describeContents() {
@@ -114,6 +137,8 @@ public class MyPlace implements Parcelable{
        parcel.writeParcelable(image, i);
        parcel.writeString(cost);
        parcel.writeString(datetime);
+       parcel.writeString(startTime);
+       parcel.writeString(endTime);
    }
 
 

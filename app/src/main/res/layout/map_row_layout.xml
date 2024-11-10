@@ -43,7 +43,7 @@
                 android:paddingBottom="8dp"/>
 
 
-             <EditText
+            <EditText
                 android:id="@+id/place_cost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,14 +52,51 @@
                 android:inputType="numberDecimal"
                 android:hint="cost" />
 
-             <EditText
+            <EditText
                 android:id="@+id/place_datetime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:minHeight="50dp"
                 android:inputType="datetime"
-                android:hint="datetime" />
+                android:hint="MM/DD/YYYY" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Starts">
+                <EditText
+                    android:id="@+id/startTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:minHeight="50dp"
+                    android:inputType="time"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ends">
+                <EditText
+                    android:id="@+id/endTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:minHeight="50dp"
+                    android:inputType="time"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/date_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date picker"/>
+
+<!--            <TimePicker-->
+<!--                android:id="@+id/time_picker"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:timePickerMode="spinner" />-->
 
 
         </LinearLayout>
