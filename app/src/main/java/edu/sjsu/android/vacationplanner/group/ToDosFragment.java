@@ -24,7 +24,7 @@ public class ToDosFragment extends Fragment {
 
     private GridView noteGridView;
     Activity context;
-    ImageButton newNoteButton;
+    View view;
 
     public ToDosFragment() {
         // Required empty public constructor
@@ -42,7 +42,7 @@ public class ToDosFragment extends Fragment {
         context = getActivity();
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_to_dos, container, false);
+        view = inflater.inflate(R.layout.fragment_to_dos, container, false);
 
         // Initialize Notes widgets
         noteGridView = view.findViewById(R.id.todos_gridView);
@@ -57,9 +57,6 @@ public class ToDosFragment extends Fragment {
 
         // set listener on note clicked
         setOnClickListener();
-
-        // initialize button
-        newNoteButton = context.findViewById(R.id.newNoteButton);
 
         return view;
     }
@@ -83,7 +80,7 @@ public class ToDosFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ImageButton newNoteButton = context.findViewById(R.id.newNoteButton);
+        ImageButton newNoteButton = view.findViewById(R.id.newNoteButton);
         newNoteButton.setOnClickListener(this::newNote);
     }
 

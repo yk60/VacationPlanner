@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,7 @@ public class GroupListFragment extends Fragment {
     public static final String TITLE = "Group Members";
     private ListView userListView;
     Activity context;
+    View view;
 
     public GroupListFragment() {
         // Required empty public constructor
@@ -41,7 +44,7 @@ public class GroupListFragment extends Fragment {
         context = getActivity();
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_group_list, container, false);
+        view = inflater.inflate(R.layout.fragment_group_list, container, false);
 
         // Initialize widgets
         userListView = view.findViewById(R.id.membersListView);
@@ -49,23 +52,18 @@ public class GroupListFragment extends Fragment {
         MembersListAdapter adapter = new MembersListAdapter(context, User.usersList);
         userListView.setAdapter(adapter);
 
-
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Button button = context.findViewById(R.id.addMembers_button);
-        button.setOnClickListener(this::editGroupList);
+        Button button = view.findViewById(R.id.addMembers_button);
+        button.setOnClickListener(v -> {
+            NavController controller = NavHostFragment.findNavController(this);
+            controller.navigate(R.id.addMembersActivity);
+        });
     }
-
-    public void editGroupList(View view){
-        Intent editGroup = new Intent(context, AddMembersActivity.class);
-        startActivity(editGroup);
-    }
-
-
 
     @Override
     public void onResume()

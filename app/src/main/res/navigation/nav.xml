@@ -43,6 +43,11 @@
         android:name="edu.sjsu.android.vacationplanner.SavesFragment"
         android:label="fragment_saves"
         tools:layout="@layout/fragment_saves" />
+    <activity
+        android:id="@+id/addMembersActivity"
+        android:name="edu.sjsu.android.vacationplanner.group.AddMembersActivity"
+        android:label="activity_add_members"
+        tools:layout="@layout/activity_add_members" />
 
 
 </navigation>
