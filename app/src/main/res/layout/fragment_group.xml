@@ -7,42 +7,19 @@
     tools:context=".GroupFragment">
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="match_parent"
+        android:id="@+id/dashboardLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Group Dashboard"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp"
-        android:textColor="@color/teal_light"/>
-
-    <TextView
-        android:id="@+id/tripName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="28dp"
-        android:textSize="20sp"
+        android:textStyle="bold"
         android:textAllCaps="false"
-        android:text="[Name of Trip]"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-
-    <ImageButton
-        android:id="@+id/button_editName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/teal"
-        android:contentDescription="edit"
-        android:src="@drawable/edit_icon"
+        android:textSize="23sp"
+        android:textColor="@color/teal_light"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.775"
-        app:layout_constraintStart_toEndOf="@+id/tripName"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -50,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tripName"
+        app:layout_constraintTop_toBottomOf="@+id/dashboardLabel"
         app:tabIndicatorColor="@color/teal_dark"
         app:tabRippleColor="@color/teal"
         app:tabTextColor="@color/teal_dark"
@@ -71,8 +48,8 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/group_viewpager"
-        android:layout_width="346dp"
-        android:layout_height="549dp"
+        android:layout_width="345dp"
+        android:layout_height="525dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"

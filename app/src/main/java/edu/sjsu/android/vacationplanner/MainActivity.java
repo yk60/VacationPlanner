@@ -1,12 +1,18 @@
 package edu.sjsu.android.vacationplanner;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
@@ -14,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.Group;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -28,6 +35,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import edu.sjsu.android.vacationplanner.databinding.ActivityMainBinding;
 
 
@@ -36,9 +44,12 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private ImageButton calendarButton;
     private ImageButton savesButton;
+    private ImageButton notificationsButton;
     private boolean isCalendarOpen = false;
     private boolean isSavesOpen = false;
     FragmentManager fragmentManager = getSupportFragmentManager();
+
+    private CircleImageView userProfile;
 
 
     @Override
@@ -84,6 +95,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        notificationsButton = findViewById(R.id.home_notifications);
+        notificationsButton.setOnClickListener(view -> {
+            showNotifications();
+        });
+
+        userProfile = findViewById(R.id.home_profile);
+        userProfile.setOnClickListener(view -> {
+            navController.navigate(R.id.userProfile);
+        });
+
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -109,5 +130,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void showNotifications() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.bottomsheet_layout);
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().getAttributes().windowAnimations = R.style.BottomSheetAnimation;
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
     }
 }

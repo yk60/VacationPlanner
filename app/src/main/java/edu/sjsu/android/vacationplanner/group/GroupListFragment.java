@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import edu.sjsu.android.vacationplanner.R;
 import edu.sjsu.android.vacationplanner.User;
@@ -51,6 +52,10 @@ public class GroupListFragment extends Fragment {
         // Set adapter
         MembersListAdapter adapter = new MembersListAdapter(context, User.usersList);
         userListView.setAdapter(adapter);
+
+        // show that todos are empty if there are none
+        TextView emptyText = (TextView) view.findViewById(R.id.emptyMembersList);
+        userListView.setEmptyView(emptyText);
 
         return view;
     }

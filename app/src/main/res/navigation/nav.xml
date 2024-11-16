@@ -56,5 +56,10 @@
         android:name="edu.sjsu.android.vacationplanner.VotingFragment"
         android:label="fragment_voting"
         tools:layout="@layout/fragment_voting" />
+    <fragment
+        android:id="@+id/userProfile"
+        android:name="edu.sjsu.android.vacationplanner.UserProfile"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile" />
 
 </navigation>

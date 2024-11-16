@@ -26,7 +26,9 @@
                 android:layout_marginTop="16dp"
                 android:text="Budget Planner"
                 android:textAlignment="center"
-                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:textSize="23sp"
                 android:textColor="@color/teal_light"/>
 
 
@@ -35,16 +37,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_30dp"
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="20dp"
                 android:text="Budget Goal:" />
 
-            <TextView
-                android:id="@+id/budgetDisplay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_30dp"
-                android:text="$750.00"
-                android:textSize="30dp" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/budgetDisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginStart="@dimen/_30dp"
+                    android:text="$750.00"
+                    android:textSize="30sp" />
+
+                <ImageButton
+                    android:id="@+id/editBudgetButton"
+                    android:layout_width="@dimen/_40dp"
+                    android:layout_height="@dimen/_40dp"
+                    android:contentDescription="edit budget goal"
+                    android:src="@drawable/edit_icon"
+                    android:background="@drawable/background_add_button"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginEnd="@dimen/_40dp"/>
+
+
+            </FrameLayout>
+
+
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -72,15 +96,6 @@
                     android:layout_weight="1"
                     android:text="$450.00 / $750.00" />
 
-                <Button
-                    android:id="@+id/button_editBudget"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/_10dp"
-                    android:layout_marginEnd="@dimen/_30dp"
-                    android:backgroundTint="@color/melon"
-                    android:text="edit  >" />
             </LinearLayout>
 
             <com.google.android.material.tabs.TabLayout
