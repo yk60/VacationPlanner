@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                     navController.navigate(R.id.navigation_budget);
                     return true;
                 } else if (itemId == R.id.navigation_planning) {
-                    navController.navigate(R.id.navigation_voting);
+                    navController.navigate(R.id.navigation_votingGroup);
                     return true;
                 } else if (itemId == R.id.navigation_search) {
                     navController.navigate(R.id.navigation_search);

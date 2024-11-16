@@ -57,9 +57,9 @@
         android:label="fragment_voting"
         tools:layout="@layout/fragment_voting" />
     <fragment
-        android:id="@+id/userProfile"
-        android:name="edu.sjsu.android.vacationplanner.UserProfile"
-        android:label="fragment_user_profile"
-        tools:layout="@layout/fragment_user_profile" />
+        android:id="@+id/navigation_votingGroup"
+        android:name="edu.sjsu.android.vacationplanner.VotingGroup"
+        android:label="fragment_voting_group"
+        tools:layout="@layout/fragment_voting_group" />
 
 </navigation>
