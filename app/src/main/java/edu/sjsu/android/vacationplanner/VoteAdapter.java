@@ -5,17 +5,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.VoteViewHolder> {
     private final List<MyPlace> placeList;
+    private final LinkedHashMap<String, Integer> voteCountMap;
 
-    public VoteAdapter(List<MyPlace> placeList) {
+    public VoteAdapter(List<MyPlace> placeList, LinkedHashMap<String, Integer> voteCountMap) {
         this.placeList = placeList;
+        this.voteCountMap = voteCountMap;
     }
 
     @NonNull
@@ -36,7 +40,7 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.VoteViewHolder
         return placeList.size();
     }
 
-    public static class VoteViewHolder extends RecyclerView.ViewHolder {
+    public class VoteViewHolder extends RecyclerView.ViewHolder {
         TextView nameView;
         ImageView imageView;
 
@@ -53,6 +57,12 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.VoteViewHolder
             } else {
                 imageView.setImageResource(R.drawable.default_place_image);
             }
+            itemView.setOnClickListener(v -> {
+                String placeName = myPlace.getName();
+                Toast.makeText(itemView.getContext(), placeName + " clicked", Toast.LENGTH_SHORT).show();
+                int count = voteCountMap.get(placeName);
+                voteCountMap.put(placeName, count + 1);
+            });
         }
     }
 }
