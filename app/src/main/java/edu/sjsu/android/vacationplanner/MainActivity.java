@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
         userProfile = findViewById(R.id.home_profile);
         userProfile.setOnClickListener(view -> {
-            navController.navigate(R.id.userProfile);
+            //navController.navigate(R.id.userProfile);
         });
 
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {

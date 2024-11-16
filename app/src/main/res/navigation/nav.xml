@@ -62,4 +62,5 @@
         android:label="fragment_voting_group"
         tools:layout="@layout/fragment_voting_group" />
 
+
 </navigation>
