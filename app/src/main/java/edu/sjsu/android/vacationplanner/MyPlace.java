@@ -18,6 +18,7 @@ public class MyPlace implements Parcelable{
     private String datetime;
     private String startTime;
     private String endTime;
+    private String type;
 
     public MyPlace(String name, String address, String rating, String businessHour, boolean isSaved, Bitmap image) {
         this.name = name;
@@ -40,6 +41,7 @@ public class MyPlace implements Parcelable{
        image = in.readParcelable(Bitmap.class.getClassLoader());
        cost = in.readString();
        datetime = in.readString();
+       type = in.readString();
 
    }
 
@@ -121,6 +123,13 @@ public class MyPlace implements Parcelable{
         this.endTime = endTime;
     }
 
+    public String getType() { 
+        return type;
+    }
+
+    public void setType(String type) { 
+        this.type = type;
+    }
 
    @Override
    public int describeContents() {
@@ -139,6 +148,7 @@ public class MyPlace implements Parcelable{
        parcel.writeString(datetime);
        parcel.writeString(startTime);
        parcel.writeString(endTime);
+       parcel.writeString(type);
    }
 
 

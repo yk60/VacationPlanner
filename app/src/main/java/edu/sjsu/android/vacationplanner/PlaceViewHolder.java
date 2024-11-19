@@ -1,14 +1,18 @@
 package edu.sjsu.android.vacationplanner;
 
 import android.app.TimePickerDialog;
+import android.text.TextWatcher;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.TimePicker;
@@ -36,7 +40,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
     EditText startTimeView;
     EditText endTimeView;
     MaterialButton datePickerButton;
-//    TimePicker timePickerView;
+    Spinner placeTypeSpinner;
 
 
     public PlaceViewHolder(@NonNull View itemView) {
@@ -52,7 +56,13 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         startTimeView = itemView.findViewById(R.id.startTime);
         endTimeView = itemView.findViewById(R.id.endTime);
         datePickerButton = itemView.findViewById(R.id.date_picker);
-//        timePickerView = itemView.findViewById(R.id.time_picker);
+        placeTypeSpinner = itemView.findViewById(R.id.place_type_spinner);
+
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(itemView.getContext(),
+        R.array.place_types, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        placeTypeSpinner.setAdapter(adapter);
 
 
         Calendar calendar = Calendar.getInstance();
@@ -114,7 +124,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
 
     }
     
-    public void bind(MyPlace myPlace,  boolean isSavesOpen) {
+    public void bind(MyPlace myPlace,  boolean isSavesOpen, SharedViewModel sharedViewModel) {
         nameView.setText(myPlace.getName());
         addressView.setText(myPlace.getAddress());
         ratingView.setText(myPlace.getRating());
@@ -131,7 +141,8 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
             datePickerButton.setVisibility(View.VISIBLE);
             startTimeView.setVisibility(View.VISIBLE);
             endTimeView.setVisibility(View.VISIBLE);
-//            timePickerView.setVisibility(View.VISIBLE);
+            placeTypeSpinner.setVisibility(View.VISIBLE);
+
 
         } else {
             costView.setVisibility(View.GONE);
@@ -139,12 +150,19 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
             datePickerButton.setVisibility(View.GONE);
             startTimeView.setVisibility(View.GONE);
             endTimeView.setVisibility(View.GONE);
-//            timePickerView.setVisibility(View.GONE);
+            placeTypeSpinner.setVisibility(View.GONE);
         }
+
         costView.setText(myPlace.getCost());
         datetimeView.setText(myPlace.getDatetime());
         startTimeView.setText(myPlace.getStartTime());
         endTimeView.setText(myPlace.getEndTime());
+
+        int spinnerPosition = ((ArrayAdapter) placeTypeSpinner.getAdapter()).getPosition(myPlace.getType());
+        placeTypeSpinner.setSelection(spinnerPosition);
+
+        
+
 
     }
 }

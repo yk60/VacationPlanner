@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
     private final boolean isSavesOpen;
     private final SharedViewModel sharedViewModel;
     private final UpdateSavesListener updateSavesListener;
+    String selectedType = null;
 
     public MapAdapter(Context context, ArrayList<MyPlace> placeList, boolean isSavesOpen, UpdateSavesListener updateSavesListener) {
         this.context = context;
@@ -44,7 +46,7 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull PlaceViewHolder holder, int position) {
         MyPlace myPlace = placeList.get(position);
-        holder.bind(myPlace, isSavesOpen);
+        holder.bind(myPlace, isSavesOpen, sharedViewModel);
         holder.itemView.setSelected(selectedPos == position);
 
         if (myPlace.isSaved()) {
@@ -129,6 +131,19 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
 
             @Override
             public void afterTextChanged(Editable s) {}
+        });
+    
+
+        holder.placeTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedType = (String) parent.getItemAtPosition(position);
+                myPlace.setType(selectedType);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
 

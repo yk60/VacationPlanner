@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Planner {
     private static Planner instance;
     private ArrayList<MyPlace> savedPlaces;
+    public static boolean isSampleDataAdded = false;
 
     private Planner() {
         savedPlaces = new ArrayList<>();

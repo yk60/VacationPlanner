@@ -13,8 +13,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class VotingGroup extends Fragment {
 
-    private TabLayout tabLayout;
-    private ViewPager2 viewPager2;
+    public TabLayout tabLayout;
+    public ViewPager2 viewPager2;
     TabLayoutMediator tabLayoutMediator;
 
     public VotingGroup() {

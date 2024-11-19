@@ -6,7 +6,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +38,10 @@ public class BudgetFragment extends Fragment {
     private TextView budgetProgressText;
     private static Double actualAmount = 0.0;
     private ProgressBar budgetProgressBar;
+    private SharedViewModel sharedViewModel;
+    Map<String, Double> typeAmountMap = new HashMap<>();
+    ArrayList<Integer> colors;
+
 
 
     public BudgetFragment() {
@@ -44,6 +51,8 @@ public class BudgetFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
     }
 
     @Override
@@ -64,8 +73,34 @@ public class BudgetFragment extends Fragment {
 
         // expenses chart
         pieChart = view.findViewById(R.id.pieChart_view);
+
+        //initializing colors for the entries
+        colors = new ArrayList<>();
+        colors.add(Color.parseColor(getString(R.string.string_teal)));
+        colors.add(Color.parseColor(getString(R.string.string_tealdark)));
+        colors.add(Color.parseColor(getString(R.string.string_redlight)));
+        colors.add(Color.parseColor(getString(R.string.string_wheat)));
+        colors.add(Color.parseColor(getString(R.string.string_melon)));
+
+        
         showPieChart();
-        // TODO: make progress bar dynamic (not hardcoded values)
+
+        sharedViewModel.getTypeAmountMap().observe(getViewLifecycleOwner(), new Observer<Map<String, Double>>() {
+            @Override
+            public void onChanged(Map<String, Double> newTypeAmountMap) {
+                typeAmountMap = newTypeAmountMap;
+                Log.d("PieChart", "updated map: " + newTypeAmountMap.toString());
+                updatePieChart();
+            }
+        });
+
+        sharedViewModel.getActualAmount().observe(getViewLifecycleOwner(), new Observer<Double>() {
+            @Override
+            public void onChanged(Double newActualAmount) {
+                actualAmount = newActualAmount;
+                setProgress();
+            }
+        });
 
         return view;
     }
@@ -112,21 +147,12 @@ public class BudgetFragment extends Fragment {
 
         //initializing data
         //TODO: make interactive, turn into percentages (these are test values)
-        Map<String, Integer> typeAmountMap = new HashMap<>();
-        typeAmountMap.put("Food and Drink",200);
-        typeAmountMap.put("Transportation",230);
-        typeAmountMap.put("Accommodation",100);
-        typeAmountMap.put("Activities",500);
-        typeAmountMap.put("Other",50);
+        typeAmountMap.put("Food and Drink",0.0);
+        typeAmountMap.put("Transportation",0.0);
+        typeAmountMap.put("Accommodation",0.0);
+        typeAmountMap.put("Activities",0.0);
+        typeAmountMap.put("Other",0.0);
 
-        //initializing colors for the entries
-        ArrayList<Integer> colors = new ArrayList<>();
-
-        colors.add(Color.parseColor(getString(R.string.string_teal)));
-        colors.add(Color.parseColor(getString(R.string.string_tealdark)));
-        colors.add(Color.parseColor(getString(R.string.string_redlight)));
-        colors.add(Color.parseColor(getString(R.string.string_wheat)));
-        colors.add(Color.parseColor(getString(R.string.string_melon)));
 
         //input data and fit data into pie chart entry
         for(String type: typeAmountMap.keySet()){
@@ -137,8 +163,8 @@ public class BudgetFragment extends Fragment {
         PieDataSet pieDataSet = new PieDataSet(pieEntries,label);
         //setting text size of the value
         pieDataSet.setValueTextSize(12f);
-        //providing color list for coloring different entries
         pieDataSet.setColors(colors);
+
         //grouping the data set from entry to chart
         PieData pieData = new PieData(pieDataSet);
         //showing the value of the entries, default true if not set
@@ -150,6 +176,18 @@ public class BudgetFragment extends Fragment {
 
         pieChart.setData(pieData);
         pieChart.invalidate();
+    }
+
+    private void updatePieChart(){
+        ArrayList<PieEntry> pieEntries = new ArrayList<>();
+        String label = "type";
+        for(String type: typeAmountMap.keySet()){
+            pieEntries.add(new PieEntry(typeAmountMap.get(type).floatValue(), type));
+        }
+        PieDataSet pieDataSet = new PieDataSet(pieEntries,label);
+        pieDataSet.setColors(colors);
+        PieData pieData = new PieData(pieDataSet);
+        pieChart.setData(pieData);
     }
 
     private void setProgress() {

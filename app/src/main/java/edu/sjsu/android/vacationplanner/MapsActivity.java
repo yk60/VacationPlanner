@@ -164,7 +164,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        placesClient = Places.createClient(this);
+        // placesClient = Places.createClient(this);
 
         findViewById(R.id.Restaurants_button).setOnClickListener(v -> searchNearbyPlaces("restaurant", LOCATION_UNIV));
         findViewById(R.id.Hotels_button).setOnClickListener(v -> searchNearbyPlaces("hotel", LOCATION_UNIV));
@@ -282,9 +282,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // Get multiple search results from the input query. For each result, call searchResult to get and save place info
     private void searchPlaces(String query) {
-        // if (mMap != null) {
-        //     mMap.clear();
-        // }
+        if (placesClient == null) {
+            Log.e(TAG, "PlacesClient is null");
+            return;
+        }
 
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                 .setQuery(query)
@@ -307,6 +308,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void searchPlace(String placeId, List<MyPlace> searchResults) {
+        if (placesClient == null) {
+            Log.e(TAG, "PlacesClient is null");
+            return;
+        }
         // Specify the fields to return.
         List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.RATING, Place.Field.OPENING_HOURS, Place.Field.PHOTO_METADATAS);
 
@@ -433,6 +438,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
     class MyTask extends AsyncTask<ContentValues, Void, Void> {
         @Override
