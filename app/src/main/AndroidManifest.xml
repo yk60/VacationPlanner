@@ -16,6 +16,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VacationPlanner"
         tools:targetApi="31">
+        <provider
+            android:name=".UsersProvider"
+            android:authorities="dataprovider.vacationplanner"
+            android:enabled="true"
+            android:exported="true"></provider>
+        <provider
+            android:name=".DataProvider"
+            android:authorities="dataprovider.vacationplanner"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
             android:name=".VotingGroup"
             android:exported="false" />
