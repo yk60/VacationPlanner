@@ -7,7 +7,7 @@ public class Planner {
     private ArrayList<MyPlace> savedPlaces;
     public static boolean isSampleDataAdded = false;
 
-    private Planner() {
+    public Planner() {
         savedPlaces = new ArrayList<>();
     }
 

@@ -26,4 +26,17 @@
         <item name="android:background">@color/yellow_light</item>
     </style>
 
+    <style name="saveItemBorder">
+        <item name="android:background">@drawable/border</item>
+    </style>
+
+    <style name="eventItemBorder">
+        <item name="android:background">@drawable/event_item_style</item>
+    </style>
+
+    <style name="hourItemBorder">
+        <item name="android:background">@drawable/hour_item_style</item>
+    </style>
+    
+
 </resources>

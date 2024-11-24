@@ -1,66 +1,285 @@
 package edu.sjsu.android.vacationplanner.group;
 
+import android.app.Dialog;
+import android.app.TimePickerDialog;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+
+import edu.sjsu.android.vacationplanner.EventAdapter;
+import edu.sjsu.android.vacationplanner.ItineraryAdapter;
+import edu.sjsu.android.vacationplanner.MyEvent;
 import edu.sjsu.android.vacationplanner.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ItineraryFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class ItineraryFragment extends Fragment {
+    private static List<MyEvent> eventsList = new ArrayList<>();
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private TextView tripDateView;
+    private TextView currentDateView;
+    private Calendar currentCalendar;
+    private Dialog createEventDialog;
+    private ItineraryAdapter itineraryAdapter;
+    private EventAdapter eventAdapter;
+    private RecyclerView itineraryRecyclerView;
+    private RecyclerView eventRecyclerView;
+    private static List<String> hoursList;
 
     public ItineraryFragment() {
-        // Required empty public constructor
+
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ItineraryFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ItineraryFragment newInstance(String param1, String param2) {
-        ItineraryFragment fragment = new ItineraryFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        if (eventsList.isEmpty()) {
+            initEventsList();
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_itinerary, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_itinerary, container, false);
+
+        itineraryRecyclerView = view.findViewById(R.id.recycler_view_itinerary);
+        itineraryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        eventRecyclerView = view.findViewById(R.id.recycler_view_event);
+        eventRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        synchronizeScroll(itineraryRecyclerView, eventRecyclerView);
+        List<String> hours = setHours();
+
+        itineraryAdapter = new ItineraryAdapter(hours);
+        itineraryRecyclerView.setAdapter(itineraryAdapter);
+        eventAdapter = new EventAdapter(eventsList);
+        eventRecyclerView.setAdapter(eventAdapter);
+
+        tripDateView = view.findViewById(R.id.trip_date);
+        currentDateView = view.findViewById(R.id.current_date);
+        currentCalendar = Calendar.getInstance();
+
+
+        ImageButton prevDayButton = view.findViewById(R.id.prev_day);
+        prevDayButton.setOnClickListener(v -> {
+            String tripDate = tripDateView.getText().toString();
+            int day = Integer.parseInt(tripDate.split(" ")[1]);
+            if(day > 1){
+                goPrevDay(view);
+            }
+
+        });
+
+        ImageButton nextDayButton = view.findViewById(R.id.next_day);
+        nextDayButton.setOnClickListener(v -> {
+            goNextDay(view);
+
+        });
+
+
+
+        createEventDialog = new Dialog(getContext());
+        ImageButton createEventButton = view.findViewById(R.id.create_Event);
+        createEventButton.setOnClickListener(this::showCreateEvent);
+
+        return view;
+    }
+
+    public void initEventsList(){
+        eventsList = new ArrayList<>();
+        for (int i = 0; i < 24; i++) {
+            eventsList.add(new MyEvent("", "", ""));
+        }
+    }
+
+    public List<String> setHours(){
+        hoursList = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+
+        for (int i = currentHour; i < 24; i++) {
+            hoursList.add(String.format("%02d:00", i));
+        }
+        for (int i = 0; i < currentHour; i++) {
+            hoursList.add(String.format("%02d:00", i));
+        }
+        return hoursList;
+
+    }
+
+
+    private void showCreateEvent(View view) {
+        createEventDialog.setContentView(R.layout.event_editor_popup);
+
+        EditText titleInput = createEventDialog.findViewById(R.id.new_event_input);
+        EditText startTimeInput = createEventDialog.findViewById(R.id.start_time_input);
+        EditText endTimeInput = createEventDialog.findViewById(R.id.end_time_input);
+        Button doneCreateButton = createEventDialog.findViewById(R.id.doneCreateButton);
+        ImageButton closeButton = createEventDialog.findViewById(R.id.closeButton);
+
+
+        startTimeInput.setOnClickListener(v -> showTimePickerDialog(startTimeInput));
+        endTimeInput.setOnClickListener(v -> showTimePickerDialog(endTimeInput));
+        closeButton.setOnClickListener(v -> createEventDialog.dismiss());
+
+
+
+        doneCreateButton.setOnClickListener(view1 -> {
+            String title = titleInput.getText().toString();
+            String startTime = startTimeInput.getText().toString();
+            String endTime = endTimeInput.getText().toString();
+            
+            if (title.isEmpty() || startTime.isEmpty() || endTime.isEmpty()) {
+                Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!isValidHour(startTime, endTime)) {
+                Toast.makeText(getContext(), "Invalid start or end time.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            MyEvent newEvent = new MyEvent(title, startTime, endTime);
+            addEvent(newEvent);
+            Toast.makeText(getContext(), "Added event to itinerary", Toast.LENGTH_SHORT).show();
+
+            eventAdapter.setEvents(eventsList);
+            eventAdapter.notifyDataSetChanged();
+            createEventDialog.dismiss();
+
+        });
+
+        createEventDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        createEventDialog.show();
+    }
+
+    public static boolean isValidHour(String startTime, String endTime) {
+        if(!startTime.endsWith(":00") || !endTime.endsWith(":00")){
+            return false;
+        }
+        return true;
+    }
+
+    public static void addEvent(MyEvent myEvent){
+        String startTime = myEvent.getStartTime();
+        if(startTime.length() == 4){
+            startTime = "0" + startTime;
+        }
+        int position = hoursList.indexOf(startTime);
+        if (position != -1) {
+            eventsList.set(position, myEvent);
+        }
+    }
+
+    public static void removeEvent(MyEvent myEvent) {
+        eventsList.remove(myEvent);
+    }
+
+    public void showTimePickerDialog(EditText timeInput) {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                (view, hourOfDay, minuteOfHour) -> {
+                    String time = String.format("%02d:%02d", hourOfDay, minuteOfHour);
+                    timeInput.setText(time);
+                }, hour, minute, true);
+        timePickerDialog.show();
+    }
+
+    public void goPrevDay(View view){
+        String tripDate = tripDateView.getText().toString();
+
+        int prevDay = Integer.parseInt(tripDate.split(" ")[1]) - 1;
+        tripDateView.setText("DAY " + prevDay);
+
+        currentCalendar.add(Calendar.DAY_OF_MONTH, -1);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd", Locale.getDefault());
+        String prevDate = dateFormat.format(currentCalendar.getTime());
+        currentDateView.setText(prevDate);
+        initEventsList();
+        eventAdapter.setEvents(eventsList);
+        eventAdapter.notifyDataSetChanged();
+
+    }
+
+    public void goNextDay(View view){
+        String tripDate = tripDateView.getText().toString();
+        int nextDay = Integer.parseInt(tripDate.split(" ")[1]) + 1;
+        tripDateView.setText("DAY " + nextDay);
+
+        currentCalendar.add(Calendar.DAY_OF_MONTH, 1);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd", Locale.getDefault());
+        String nextDate = dateFormat.format(currentCalendar.getTime());
+        currentDateView.setText(nextDate);
+        initEventsList();
+        eventAdapter.setEvents(eventsList);
+        eventAdapter.notifyDataSetChanged();
+
+    }
+    private void synchronizeScroll(RecyclerView recyclerView1, RecyclerView recyclerView2) {
+        final RecyclerView.OnScrollListener[] scrollListeners = new RecyclerView.OnScrollListener[2];
+
+        scrollListeners[0] = new RecyclerView.OnScrollListener( ) {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                recyclerView2.removeOnScrollListener(scrollListeners[1]);
+                recyclerView2.scrollBy(dx, dy);
+                recyclerView2.addOnScrollListener(scrollListeners[1]);
+            }
+
+        };
+        scrollListeners[1] = new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                recyclerView1.removeOnScrollListener(scrollListeners[0]);
+                recyclerView1.scrollBy(dx, dy);
+                recyclerView1.addOnScrollListener(scrollListeners[0]);
+            }
+
+
+
+        };
+
+        recyclerView1.addOnScrollListener(scrollListeners[0]);
+        recyclerView2.addOnScrollListener(scrollListeners[1]);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        eventAdapter.setEvents(eventsList);
+        eventAdapter.notifyDataSetChanged();
     }
 }

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/place_info"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="16dp"
+    style="@style/saveItemBorder">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -114,13 +116,22 @@
         <ImageButton
             android:id="@+id/save_button"
             android:layout_width="30dp"
-            android:layout_height="31dp"
+            android:layout_height="30dp"
             android:layout_marginLeft="10dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/save_not_pressed"
             android:scaleType="fitCenter"
             android:layout_gravity="end|top"
             android:src="@drawable/save" />
+
+        <ImageButton
+            android:id="@+id/saveToCalendarButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="add to calendar"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/calendar" />
     </FrameLayout>
 
 

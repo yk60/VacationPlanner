@@ -1,6 +1,7 @@
 package edu.sjsu.android.vacationplanner;
 
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.text.TextWatcher;
 import android.view.View;
 
@@ -16,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -26,6 +28,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import edu.sjsu.android.vacationplanner.group.ItineraryFragment;
 
 public class PlaceViewHolder extends RecyclerView.ViewHolder {
     // create reference to items in map_row_layout
@@ -41,6 +45,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
     EditText endTimeView;
     MaterialButton datePickerButton;
     Spinner placeTypeSpinner;
+    ImageButton saveToCalendarButton;
 
 
     public PlaceViewHolder(@NonNull View itemView) {
@@ -57,6 +62,8 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         endTimeView = itemView.findViewById(R.id.endTime);
         datePickerButton = itemView.findViewById(R.id.date_picker);
         placeTypeSpinner = itemView.findViewById(R.id.place_type_spinner);
+        saveToCalendarButton = itemView.findViewById(R.id.saveToCalendarButton);
+
 
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(itemView.getContext(),
@@ -74,7 +81,6 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 MaterialDatePicker<Long> materialDatePicker = MaterialDatePicker.Builder.datePicker()
-                        // .setTitleText("Select Date")
                         .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                         .build();
                 materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
@@ -121,6 +127,26 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
+        saveToCalendarButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                String title = nameView.getText().toString();
+                String startTime = startTimeView.getText().toString();
+                String endTime = endTimeView.getText().toString();
+                MyEvent newEvent = new MyEvent(title, startTime, endTime);
+                Context context = itemView.getContext();
+                if (!ItineraryFragment.isValidHour(startTime, endTime)) {
+                    Toast.makeText(context, "Invalid start or end time.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                ItineraryFragment.addEvent(newEvent);
+                Toast.makeText(context, "Added event to itinerary", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
 
     }
     
@@ -142,6 +168,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
             startTimeView.setVisibility(View.VISIBLE);
             endTimeView.setVisibility(View.VISIBLE);
             placeTypeSpinner.setVisibility(View.VISIBLE);
+            saveToCalendarButton.setVisibility(View.VISIBLE);
 
 
         } else {
@@ -151,6 +178,8 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
             startTimeView.setVisibility(View.GONE);
             endTimeView.setVisibility(View.GONE);
             placeTypeSpinner.setVisibility(View.GONE);
+            saveToCalendarButton.setVisibility(View.GONE);
+
         }
 
         costView.setText(myPlace.getCost());
