@@ -1,7 +1,11 @@
 package edu.sjsu.android.vacationplanner.group;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -17,10 +21,21 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import edu.sjsu.android.vacationplanner.MainActivity;
 import edu.sjsu.android.vacationplanner.R;
+import edu.sjsu.android.vacationplanner.User;
 
 
 public class ToDosFragment extends Fragment {
+
+    private final Uri CONTENT_URI3 = Uri.parse("content://edu.sjsu.android.vacationplanner.group.NoteProvider");
+    @SuppressLint("SimpleDateFormat")
+    private static final DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 
     private GridView noteGridView;
     Activity context;
@@ -46,6 +61,10 @@ public class ToDosFragment extends Fragment {
 
         // Initialize Notes widgets
         noteGridView = view.findViewById(R.id.todos_gridView);
+
+        // Initialize notes array from database
+        createNoteListArray();
+        
         // Set NoteAdapter
         NoteAdapter noteAdapter = new NoteAdapter(requireActivity().getApplicationContext(), Note.nonDeletedNotes());
         noteGridView.setAdapter(noteAdapter);
@@ -59,6 +78,34 @@ public class ToDosFragment extends Fragment {
         setOnClickListener();
 
         return view;
+    }
+
+    @SuppressLint("Range")
+    public void createNoteListArray(){
+        Note.noteArrayList.clear();
+
+        final String[] selectColumns = {"id", "title", "desc", "color", "groupID", "deleted"};
+        // Sort by groupID
+        try (Cursor c = requireContext().getContentResolver().
+                query(CONTENT_URI3, null, null, selectColumns, "groupID")) {
+            assert c != null;
+            if (c.moveToFirst()) {
+                do {
+                    int groupID = MainActivity.getGroupID();
+                    if (c.getInt(c.getColumnIndex("groupID")) == groupID) {
+                        int id = c.getInt(1);
+                        String title = c.getString(2);
+                        String desc = c.getString(3);
+                        int color = c.getInt(4);
+                        String dateDeleted = c.getString(6);
+
+                        Date deleted = getDateFromString(dateDeleted);
+                        Note note = new Note(id, title, desc, color, deleted);
+                        Note.noteArrayList.add(note);
+                    }
+                } while (c.moveToNext());
+            }
+        }
     }
 
 
@@ -97,6 +144,16 @@ public class ToDosFragment extends Fragment {
         // Set NoteAdapter
         NoteAdapter noteAdapter = new NoteAdapter(requireActivity().getApplicationContext(), Note.nonDeletedNotes());
         noteGridView.setAdapter(noteAdapter);
+    }
+
+    private Date getDateFromString(String s)
+    {
+        try {
+            return dateFormat.parse(s);
+        }
+        catch (ParseException | NullPointerException e) {
+            return null;
+        }
     }
 
 }

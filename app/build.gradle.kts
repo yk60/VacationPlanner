@@ -56,7 +56,9 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.mpandroidchart)
     implementation(libs.circleimageview)
-    implementation("androidx.recyclerview:recyclerview:1.2.1") 
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
@@ -73,6 +75,5 @@ dependencies {
 
     // rounded ImageView
     implementation (libs.roundedimageview)
-
 
 }

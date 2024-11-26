@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class User{
 
@@ -19,6 +20,11 @@ public class User{
     private int profilePicID;
 
 
+    public User(String username, int profilePicID) {
+        this.username = username;
+        this.profilePicID = profilePicID;
+    }
+
     public User(String username, String firstName, String lastName, String passWord, int profilePicID) {
         this.username = username;
         this.firstName = firstName;
@@ -28,7 +34,7 @@ public class User{
 
     public static int findUserPosition(User user) {
         for (User searchUser: User.usersList) {
-            if (searchUser.getUsername() == user.getUsername()) {
+            if (Objects.equals(searchUser.getUsername(), user.getUsername())) {
                 return usersList.indexOf(searchUser);
             }
         }
@@ -45,5 +51,16 @@ public class User{
         return lastName;
     }
     public String getUsername() {return username;}
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 
 }

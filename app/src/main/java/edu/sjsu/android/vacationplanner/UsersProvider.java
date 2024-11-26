@@ -6,17 +6,27 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.net.Uri;
+import android.os.Bundle;
+
+import java.util.Objects;
 
 public class UsersProvider extends ContentProvider {
     private UserDB database;
+
 
     public UsersProvider() {
     }
 
     @Override
+    public boolean onCreate() {
+        database = new UserDB(getContext());
+        return true;
+    }
+
+    @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         // Implement this to handle requests to delete one or more rows.
-        throw new UnsupportedOperationException("Not yet implemented");
+        return database.deleteAllUsers();
     }
 
     @Override
@@ -38,24 +48,25 @@ public class UsersProvider extends ContentProvider {
         throw new SQLException("Failed to add a record into " + uri);
     }
 
-    @Override
-    public boolean onCreate() {
-        database = new UserDB(getContext());
-        return true;
-    }
+
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
         // If not specified, sort by ID
         sortOrder = sortOrder == null ? "_id" : sortOrder;
-        return database.getAllStudents(sortOrder);
+        return database.getAllUsers(sortOrder);
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        // TODO: Implement this to handle requests to update one or more rows.
-        throw new UnsupportedOperationException("Not yet implemented");
+        if (selection != null) {
+            return database.updateWithSpecifications(values, selection, selectionArgs);
+        } else {
+            return database.update(values);
+        }
     }
+
+
 }

@@ -1,7 +1,9 @@
 package edu.sjsu.android.vacationplanner;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -35,8 +38,11 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.util.ArrayList;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import edu.sjsu.android.vacationplanner.databinding.ActivityMainBinding;
+import edu.sjsu.android.vacationplanner.group.Note;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -50,6 +56,15 @@ public class MainActivity extends AppCompatActivity {
     FragmentManager fragmentManager = getSupportFragmentManager();
 
     private CircleImageView userProfile;
+    private boolean isProfileOpen = false;
+
+    private final Uri CONTENT_URI = Uri.parse("content://edu.sjsu.android.vacationplanner");
+
+    private static String username = "";
+    private static int profilePicID = 0;
+    private static int userID = 0;
+    private static int groupID = 0;
+    private static int hostID = 0;
 
 
     @Override
@@ -59,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.top_toolbar);
         setSupportActionBar(toolbar);
+
+        // call method to get user info
+        getUserProfileInfo();
 
         // implementing bottom navigation
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
@@ -101,8 +119,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         userProfile = findViewById(R.id.home_profile);
+        userProfile.setImageResource(profilePicID);
         userProfile.setOnClickListener(view -> {
-            //navController.navigate(R.id.userProfile);
+            if (isProfileOpen) {
+                fragmentManager.popBackStack();
+                isProfileOpen = false;
+            } else {
+                navController.navigate(R.id.profileFragment);
+                isProfileOpen = true;
+            }
         });
 
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -132,6 +157,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("Range")
+    private void getUserProfileInfo() {
+        Intent previousIntent = getIntent();
+        username = previousIntent.getStringExtra("username");
+
+        String selection = "Select * from users where name = " + username;
+        String result = "";
+        try (Cursor c = getContentResolver().
+                query(CONTENT_URI, null, selection, null, "name")) {
+            assert c != null;
+            if (c.moveToFirst()) {
+                do {
+                    result = c.getString(c.getColumnIndex("name"));
+                    if (result.equals(username)) {
+                        userID = c.getInt(c.getColumnIndex("_id"));
+                        profilePicID = c.getInt(c.getColumnIndex("profilePicID"));
+                        groupID = c.getInt(c.getColumnIndex("groupID"));
+                        hostID = c.getInt(c.getColumnIndex("hostID"));
+                        break;
+                    }
+                } while (c.moveToNext());
+            }
+        }
+    }
+
+
     private void showNotifications() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -141,5 +192,18 @@ public class MainActivity extends AppCompatActivity {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().getAttributes().windowAnimations = R.style.BottomSheetAnimation;
         dialog.getWindow().setGravity(Gravity.BOTTOM);
+    }
+
+
+    // for use by other classes
+    public static String getUsername() { return username; }
+    public static int getProfilePicID() { return profilePicID; }
+    public static int getHostID() { return hostID; }
+    public static int getGroupID() { return groupID; }
+    public static int getUserID() { return userID; }
+    public static boolean isHost() { return hostID > 0; }
+
+    public static void updateGroupID(int idGroup) {
+        groupID = idGroup;
     }
 }

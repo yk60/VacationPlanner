@@ -17,12 +17,20 @@ public class UserDB extends SQLiteOpenHelper {
     private static final String ID = "_id";
     private static final String NAME = "name";
     private static final String PASSWORD = "password";
+    private static final String PROFILE_PIC = "profilePicID";
+    private static final String GROUP_ID = "groupID"; // connect to info in group table
+    private static final String HOST_ID = "hostID"; // 1 or 0; only the host will be able to edit group members, etc.
 
+    // create table for all users
     static final String CREATE_TABLE =
             String.format("CREATE TABLE %s (" +
                     "%s INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "%s TEXT NOT NULL, " +
-                    "%s TEXT NOT NULL);", TABLE_NAME, ID, NAME, PASSWORD);
+                    "%s TEXT NOT NULL, " +
+                    "%s INTEGER NOT NULL, " +
+                    "%s INTEGER NOT NULL, " +
+                    "%s INTEGER NOT NULL);", TABLE_NAME, ID, NAME, PASSWORD, PROFILE_PIC, GROUP_ID, HOST_ID);
+
 
     public UserDB(@Nullable Context context) {
         super(context, DATABASE_NAME, null, VERSION);
@@ -48,11 +56,28 @@ public class UserDB extends SQLiteOpenHelper {
         return database.insert(TABLE_NAME, null, contentValues);
     }
 
-    public Cursor getAllStudents(String orderBy) {
+
+    public Cursor getAllUsers(String orderBy) {
         SQLiteDatabase database = getWritableDatabase();
         return database.query(TABLE_NAME,
-                new String[]{ID, NAME, PASSWORD},
+                new String[]{ID, NAME, PASSWORD, PROFILE_PIC, GROUP_ID, HOST_ID},
                 null, null, null, null, orderBy);
+    }
+
+    public int deleteAllUsers() {
+        SQLiteDatabase database = getWritableDatabase();
+        return database.delete(TABLE_NAME, null, null);
+    }
+
+    public int update(ContentValues contentValue){
+        SQLiteDatabase database = getWritableDatabase();
+        return database.update(TABLE_NAME, contentValue, null, null);
+    }
+
+    public int updateWithSpecifications(ContentValues values, String selection,
+                                        String[] selectionArgs){
+        SQLiteDatabase database = getWritableDatabase();
+        return database.update(TABLE_NAME, values, selection, selectionArgs);
     }
 
 }
