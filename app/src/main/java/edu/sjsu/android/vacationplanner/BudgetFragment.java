@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,8 @@ public class BudgetFragment extends Fragment {
     Map<String, Double> typeAmountMap = new HashMap<>();
     ArrayList<Integer> colors;
 
+    private TextView emptyBudget;
+    private ImageView emptyBudgetImage;
 
 
     public BudgetFragment() {
@@ -65,6 +68,8 @@ public class BudgetFragment extends Fragment {
         budgetDisplay = view.findViewById(R.id.budgetDisplay);
         budgetProgressText = view.findViewById(R.id.progress_text);
         budgetProgressBar = view.findViewById(R.id.progressBar);
+        emptyBudget = view.findViewById(R.id.emptyBudget);
+        emptyBudgetImage = view.findViewById(R.id.emptyBudgetImage);
         
         // edit budget button
         budgetDialog = new Dialog(getContext());
@@ -154,6 +159,7 @@ public class BudgetFragment extends Fragment {
         typeAmountMap.put("Other",0.0);
 
 
+
         //input data and fit data into pie chart entry
         for(String type: typeAmountMap.keySet()){
             pieEntries.add(new PieEntry(typeAmountMap.get(type).floatValue(), type));
@@ -171,18 +177,27 @@ public class BudgetFragment extends Fragment {
         pieData.setDrawValues(true);
         //remove description label
         pieChart.getDescription().setEnabled(false);
-        //remove legend
-
+        //remove white in middle
+        pieChart.setHoleColor(Color.TRANSPARENT);
 
         pieChart.setData(pieData);
         pieChart.invalidate();
     }
 
     private void updatePieChart(){
+
+        emptyBudget.setVisibility(View.GONE);
+        emptyBudgetImage.setVisibility(View.GONE);
+
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         String label = "type";
         for(String type: typeAmountMap.keySet()){
             pieEntries.add(new PieEntry(typeAmountMap.get(type).floatValue(), type));
+
+            if (typeAmountMap.get(type).floatValue() == 0.0 ) {
+                emptyBudget.setVisibility(View.VISIBLE);
+                emptyBudgetImage.setVisibility(View.VISIBLE);
+            }
         }
         PieDataSet pieDataSet = new PieDataSet(pieEntries,label);
         pieDataSet.setColors(colors);

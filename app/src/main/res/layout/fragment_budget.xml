@@ -8,6 +8,7 @@
     tools:context=".BudgetFragment">
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="0dp"
@@ -26,10 +27,10 @@
                 android:layout_marginTop="16dp"
                 android:text="Budget Planner"
                 android:textAlignment="center"
-                android:textStyle="bold"
                 android:textAllCaps="false"
+                android:textColor="@color/teal_light"
                 android:textSize="23sp"
-                android:textColor="@color/teal_light"/>
+                android:textStyle="bold" />
 
 
             <TextView
@@ -49,8 +50,8 @@
                     android:id="@+id/budgetDisplay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10dp"
                     android:layout_marginStart="@dimen/_30dp"
+                    android:layout_marginTop="@dimen/_10dp"
                     android:text="$750.00"
                     android:textSize="30sp" />
 
@@ -58,30 +59,28 @@
                     android:id="@+id/editBudgetButton"
                     android:layout_width="@dimen/_40dp"
                     android:layout_height="@dimen/_40dp"
-                    android:contentDescription="edit budget goal"
-                    android:src="@drawable/edit_icon"
-                    android:background="@drawable/background_add_button"
                     android:layout_gravity="end"
                     android:layout_marginTop="@dimen/_10dp"
-                    android:layout_marginEnd="@dimen/_40dp"/>
+                    android:layout_marginEnd="@dimen/_40dp"
+                    android:background="@drawable/background_add_button"
+                    android:contentDescription="edit budget goal"
+                    android:src="@drawable/edit_icon" />
 
 
             </FrameLayout>
 
 
-
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_marginEnd="@dimen/_30dp"
-                android:layout_marginStart="@dimen/_30dp"
-                android:layout_marginTop="@dimen/_10dp"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:progressDrawable="@drawable/custom_progress_bar"
+                android:layout_marginStart="@dimen/_30dp"
+                android:layout_marginTop="@dimen/_10dp"
+                android:layout_marginEnd="@dimen/_30dp"
                 android:max="750"
                 android:progress="450"
-                />
+                android:progressDrawable="@drawable/custom_progress_bar" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -91,31 +90,13 @@
                 <TextView
                     android:id="@+id/progress_text"
                     android:layout_width="0dp"
-                    android:layout_marginStart="@dimen/_30dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_30dp"
                     android:layout_weight="1"
                     android:text="$450.00 / $750.00" />
 
             </LinearLayout>
 
-            <com.google.android.material.tabs.TabLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:tabIndicatorColor="@color/red_light"
-                app:tabRippleColor="@color/melon"
-                app:tabTextColor="@color/red_light"
-                android:layout_marginTop="@dimen/_10dp">
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Daily" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Weekly" />
-            </com.google.android.material.tabs.TabLayout>
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pieChart_view"
@@ -125,6 +106,29 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <TextView
+        android:id="@+id/emptyBudget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/_40dp"
+        android:text="No chart data available yet. Add costs to your saved locations to see your totals!"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/emptyBudgetImage"
+        android:layout_width="@dimen/_30dp"
+        android:layout_height="@dimen/_30dp"
+        android:src="@drawable/save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/emptyBudget"
+        android:visibility="gone"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

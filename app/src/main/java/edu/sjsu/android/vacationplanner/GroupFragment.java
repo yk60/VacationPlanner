@@ -2,26 +2,18 @@ package edu.sjsu.android.vacationplanner;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.Objects;
 
 import edu.sjsu.android.vacationplanner.group.GroupListFragment;
-import edu.sjsu.android.vacationplanner.group.ItineraryFragment;
 import edu.sjsu.android.vacationplanner.group.ToDosFragment;
 
 
@@ -52,7 +44,6 @@ public class GroupFragment extends Fragment {
         // Initialize the tab layout
         ViewPagerAdapter vpAdapter = new ViewPagerAdapter(requireActivity().getSupportFragmentManager(), getLifecycle());
         vpAdapter.addFragment(new GroupListFragment(), "Group Members");
-        vpAdapter.addFragment(new ItineraryFragment(), "Itinerary");
         vpAdapter.addFragment(new ToDosFragment(), "To Dos");
 
         tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
