@@ -5,15 +5,23 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +34,9 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
     private final boolean isSavesOpen;
     private final SharedViewModel sharedViewModel;
     private final UpdateSavesListener updateSavesListener;
-    String selectedType = null;
+    private final Uri CONTENT_URI2 = Uri.parse("content://edu.sjsu.android.vacationplanner.DataProvider");
+
+
 
     public MapAdapter(Context context, ArrayList<MyPlace> placeList, boolean isSavesOpen, UpdateSavesListener updateSavesListener) {
         this.context = context;
@@ -62,6 +72,7 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
                 myPlace.setSaved(false);
                 if (isSavesOpen) {
                     Planner.getInstance().removePlace(myPlace);
+                    deletePlace(myPlace);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, placeList.size());
                     updateSavesListener.updateTotalCost();
@@ -72,23 +83,31 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
                 myPlace.setSaved(true);
                 if (!Planner.getInstance().getSavedPlaces().contains(myPlace)) {
                     Planner.getInstance().addPlace(myPlace);
+                    addPlace(myPlace);
                     updateSavesListener.updateTotalCost();
+                } else {
+                    updatePlace(myPlace);
                 }
             }
-            // notifyItemChanged(position);
 
         });
 
         holder.costView.addTextChangedListener(new TextWatcher() {
+            private String previousText = myPlace.getCost();
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                myPlace.setCost(s.toString());
-                sharedViewModel.setCost(s.toString());
-                updateSavesListener.updateTotalCost();
-
+                String newText = s.toString();
+                if (!newText.equals(previousText)) {
+                    myPlace.setCost(newText);
+                    sharedViewModel.setCost(newText);
+                    updateSavesListener.updateTotalCost();
+                    updatePlace(myPlace);
+                    previousText = newText;
+                }
             }
 
             @Override
@@ -96,37 +115,58 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
         });
 
         holder.datetimeView.addTextChangedListener(new TextWatcher() {
+            private String previousText = myPlace.getDatetime();
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                myPlace.setDatetime(s.toString());
-                sharedViewModel.setDatetime(s.toString());
+                String newText = s.toString();
+                if (!newText.equals(previousText)) {
+                    myPlace.setDatetime(newText);
+                    sharedViewModel.setDatetime(newText);
+                    updatePlace(myPlace);
+                    previousText = newText;
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {}
         });
         holder.startTimeView.addTextChangedListener(new TextWatcher() {
+            private String previousText = myPlace.getStartTime();
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                myPlace.setStartTime(s.toString());
+                String newText = s.toString();
+                if (!newText.equals(previousText)) {
+                    myPlace.setStartTime(newText);
+                    updatePlace(myPlace);
+                    previousText = newText;
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {}
         });
         holder.endTimeView.addTextChangedListener(new TextWatcher() {
+            private String previousText = myPlace.getEndTime();
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                myPlace.setEndTime(s.toString());
+                String newText = s.toString();
+                if (!newText.equals(previousText)) {
+                    myPlace.setEndTime(newText);
+                    updatePlace(myPlace);
+                    previousText = newText;
+                }
             }
 
             @Override
@@ -135,10 +175,16 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
     
 
         holder.placeTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            private String previousType = myPlace.getType();
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedType = (String) parent.getItemAtPosition(position);
-                myPlace.setType(selectedType);
+                String selectedType = (String) parent.getItemAtPosition(position);
+                if (!selectedType.equals(previousType)) {
+                    myPlace.setType(selectedType);
+                    updatePlace(myPlace);
+                    previousType = selectedType;
+                }
             }
 
             @Override
@@ -151,11 +197,73 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
         holder.datetimeView.setText(myPlace.getDatetime());
         holder.startTimeView.setText(myPlace.getStartTime());
         holder.endTimeView.setText(myPlace.getEndTime());
-
     }
 
     @Override
     public int getItemCount() {
         return placeList.size();
     }
+
+    void addPlace(MyPlace place) {
+        ContentValues values = new ContentValues();
+        values.put("name", place.getName());
+        values.put("address", place.getAddress());
+        values.put("rating", place.getRating());
+        values.put("business_hour", place.getBusinessHour());
+        values.put("is_saved", place.isSaved() ? 1 : 0);
+        values.put("image", getBytes(place.getImage()));
+        values.put("cost", place.getCost());
+        values.put("datetime", place.getDatetime());
+        values.put("start_time", place.getStartTime());
+        values.put("end_time", place.getEndTime());
+        values.put("type", place.getType());
+
+        Uri resultUri = context.getContentResolver().insert(CONTENT_URI2, values);
+
+        if (resultUri != null) {
+            Log.d("SavesFragment", "Place added: " + resultUri.toString());
+            long rowID = ContentUris.parseId(resultUri);
+            place.setId((int) rowID);
+        } else {
+            Log.e("SavesFragment", "Failed to add place");
+        } 
+    }
+    void updatePlace(MyPlace place) {
+
+        ContentValues values = new ContentValues();
+        values.put("_id", place.getId());
+        values.put("name", place.getName());
+        values.put("address", place.getAddress());
+        values.put("rating", place.getRating());
+        values.put("business_hour", place.getBusinessHour());
+        values.put("is_saved", place.isSaved() ? 1 : 0);
+        values.put("image", getBytes(place.getImage()));
+        values.put("cost", place.getCost());
+        values.put("datetime", place.getDatetime());
+        values.put("start_time", place.getStartTime());
+        values.put("end_time", place.getEndTime());
+        values.put("type", place.getType());
+
+        int rowsUpdated = context.getContentResolver().update(CONTENT_URI2, values, "_id = ?", new String[]{String.valueOf(place.getId())}); 
+        if (rowsUpdated > 0) {
+            Log.d("MapAdapter", "Place updated: " + place.getName());
+        }
+    }
+    void deletePlace(MyPlace place){
+        int rowsDeleted = context.getContentResolver().delete(CONTENT_URI2, "_id = ?", new String[]{String.valueOf(place.getId())});
+        if (rowsDeleted > 0) {
+            Log.d("MapAdapter", "Place deleted: " + place.getName());
+        } else {
+            Log.e("MapAdapter", "Failed to delete place: " + place.getName());
+        }
+    }
+
+    private byte[] getBytes(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        return stream.toByteArray();
+    }
+
+
+
 }

@@ -63,6 +63,15 @@
                     android:layout_toStartOf="@id/CalendarButton"
                     android:layout_marginEnd="8dp"/>
 
+                <Button
+                    android:id="@+id/uninstall_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="34dp"
+                    android:layout_toStartOf="@+id/SavesButton"
+                    android:text="Uninstall" />
+
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>

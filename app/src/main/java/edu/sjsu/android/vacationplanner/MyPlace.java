@@ -8,7 +8,8 @@ import androidx.annotation.NonNull;
 
 
 public class MyPlace implements Parcelable{
-    private final String name;
+    private int id;
+    private String name;
     private String address;
     private String rating;
     private String businessHour;
@@ -19,6 +20,7 @@ public class MyPlace implements Parcelable{
     private String startTime;
     private String endTime;
     private String type;
+
 
     public MyPlace(String name, String address, String rating, String businessHour, boolean isSaved, Bitmap image) {
         this.name = name;
@@ -32,16 +34,18 @@ public class MyPlace implements Parcelable{
         this.name = name;
         this.image = image;
     }
+
    protected MyPlace(Parcel in) {
-       name = in.readString();
-       address = in.readString();
-       rating = in.readString();
-       businessHour = in.readString();
-       isSaved = in.readByte() != 0;
-       image = in.readParcelable(Bitmap.class.getClassLoader());
-       cost = in.readString();
-       datetime = in.readString();
-       type = in.readString();
+        id = in.readInt(); 
+        name = in.readString();
+        address = in.readString();
+        rating = in.readString();
+        businessHour = in.readString();
+        isSaved = in.readByte() != 0;
+        image = in.readParcelable(Bitmap.class.getClassLoader());
+        cost = in.readString();
+        datetime = in.readString();
+        type = in.readString();
 
    }
 
@@ -58,6 +62,13 @@ public class MyPlace implements Parcelable{
    };
 
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -138,17 +149,18 @@ public class MyPlace implements Parcelable{
 
    @Override
    public void writeToParcel(@NonNull Parcel parcel, int i) {
-       parcel.writeString(name);
-       parcel.writeString(address);
-       parcel.writeString(rating);
-       parcel.writeString(businessHour);
-       parcel.writeByte((byte) (isSaved ? 1 : 0));
-       parcel.writeParcelable(image, i);
-       parcel.writeString(cost);
-       parcel.writeString(datetime);
-       parcel.writeString(startTime);
-       parcel.writeString(endTime);
-       parcel.writeString(type);
+        parcel.writeInt(id); 
+        parcel.writeString(name);
+        parcel.writeString(address);
+        parcel.writeString(rating);
+        parcel.writeString(businessHour);
+        parcel.writeByte((byte) (isSaved ? 1 : 0));
+        parcel.writeParcelable(image, i);
+        parcel.writeString(cost);
+        parcel.writeString(datetime);
+        parcel.writeString(startTime);
+        parcel.writeString(endTime);
+        parcel.writeString(type);
    }
 
 

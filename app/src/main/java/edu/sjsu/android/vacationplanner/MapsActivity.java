@@ -84,7 +84,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private final Uri CONTENT_URI = Uri.parse("content://edu.sjsu.android.vacationplanner");
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

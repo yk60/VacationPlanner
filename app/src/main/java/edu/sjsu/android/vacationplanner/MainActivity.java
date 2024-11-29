@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -155,6 +156,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        Button uninstallButton = findViewById(R.id.uninstall_button);
+        uninstallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uninstall();
+            }
+        });
     }
 
     @SuppressLint("Range")
@@ -205,5 +213,12 @@ public class MainActivity extends AppCompatActivity {
 
     public static void updateGroupID(int idGroup) {
         groupID = idGroup;
+    }
+
+    public void uninstall(){
+        Intent delete = new Intent(Intent.ACTION_DELETE,
+                Uri.parse("package:" + getPackageName()));
+        startActivity(delete);
+
     }
 }

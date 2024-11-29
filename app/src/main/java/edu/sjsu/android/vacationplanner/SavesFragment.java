@@ -1,5 +1,7 @@
 package edu.sjsu.android.vacationplanner;
 
+
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -16,18 +18,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class SavesFragment extends Fragment implements UpdateSavesListener{
     private RecyclerView recyclerView;
@@ -35,6 +30,9 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
     private SharedViewModel sharedViewModel;
     private TextView totalCostView;
     private Button saveButton;
+    private AppDB appDB;
+    private Planner planner;
+    private ImageButton deleteAllButton;
 
     public SavesFragment() {
     }
@@ -42,17 +40,14 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appDB = AppDB.getInstance(getContext());
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        
-        // add sample places to planner
-        Planner planner = Planner.getInstance();
-        Bitmap defaultImage = BitmapFactory.decodeResource(getResources(), R.drawable.default_place_image);
-        if (!Planner.isSampleDataAdded){
-            planner.addPlace(new MyPlace("Sample Place 1", "address", "5.0", "9-5", true, defaultImage));
-            planner.addPlace(new MyPlace("Sample Place 2", "address", "4.0", "9-5", true, defaultImage));
-            planner.addPlace(new MyPlace("Sample Place 3", "address", "3.0", "9-5", true, defaultImage));
-            Planner.isSampleDataAdded = true;
+        planner = Planner.getInstance();
+        if(!planner.isDataLoaded){
+            loadPlacesFromDatabase();
+            planner.isDataLoaded = true;
         }
+
 
        
 
@@ -68,6 +63,7 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
         adapter = new MapAdapter(getContext(), Planner.getInstance().getSavedPlaces(), true, this);
         recyclerView.setAdapter(adapter);
         saveButton = view.findViewById(R.id.SaveButton);
+        deleteAllButton = view.findViewById(R.id.delete_all_button);
 
         sharedViewModel.getSelectedPlace().observe(getViewLifecycleOwner(), new Observer<MyPlace>() {
             @Override
@@ -75,6 +71,16 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
                 adapter.notifyDataSetChanged();
                 updateTotalCost();
             }
+        });
+
+        deleteAllButton.setOnClickListener(v -> {
+            if(appDB != null){
+                appDB.deleteAllData();
+                planner.getSavedPlaces().clear();
+                adapter.notifyDataSetChanged();
+                updateTotalCost();
+            }
+
         });
 
         saveButton.setOnClickListener(v -> {
@@ -106,4 +112,40 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
             totalCostView.setText(String.format("Total Cost: $%.2f", totalCost));
         }
     }
+
+    private void loadPlacesFromDatabase() {
+        Log.d("dbload", "data loaded");
+        Cursor cursor = appDB.getAllPlaces();
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                String address = cursor.getString(cursor.getColumnIndexOrThrow("address"));
+                String rating = cursor.getString(cursor.getColumnIndexOrThrow("rating"));
+                String businessHour = cursor.getString(cursor.getColumnIndexOrThrow("business_hour"));
+                boolean isSaved = cursor.getInt(cursor.getColumnIndexOrThrow("is_saved")) == 1;
+                byte[] imageBytes = cursor.getBlob(cursor.getColumnIndexOrThrow("image"));
+                Bitmap image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                String cost = cursor.getString(cursor.getColumnIndexOrThrow("cost"));
+                String datetime = cursor.getString(cursor.getColumnIndexOrThrow("datetime"));
+                String startTime = cursor.getString(cursor.getColumnIndexOrThrow("start_time"));
+                String endTime = cursor.getString(cursor.getColumnIndexOrThrow("end_time"));
+                String type = cursor.getString(cursor.getColumnIndexOrThrow("type"));
+
+                MyPlace place = new MyPlace(name, address, rating, businessHour, isSaved, image);
+                place.setId(id);
+                place.setCost(cost);
+                place.setDatetime(datetime);
+                place.setStartTime(startTime);
+                place.setEndTime(endTime);
+                place.setType(type);
+
+                planner.addPlace(place);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+    }
+
+    
+
 }
