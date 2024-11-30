@@ -3,6 +3,7 @@
     <style name="Base.Theme.VacationPlanner" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimaryDark">@color/teal_light</item>
     </style>
 
     <style name="Theme.VacationPlanner" parent="Base.Theme.VacationPlanner" />

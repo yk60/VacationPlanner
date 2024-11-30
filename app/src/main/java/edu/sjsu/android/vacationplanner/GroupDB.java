@@ -30,6 +30,28 @@ public class GroupDB extends SQLiteOpenHelper {
                     "%s INTEGER NOT NULL, " +
                     "%s INTEGER NOT NULL);", MEMBERS_TABLE_NAME, ID, MEMBER_NAME, MEMBER_PROFILE_PIC, GROUP_ID, IS_HOST);
 
+    // keys for trip info table
+    private static final String TRIP_TABLE_NAME = "trips";
+    private static final String TRIP_ID = "_tripID";
+    private static final String TRIP_NAME = "tripName";
+    private static final String DESTINATION = "destination";
+    private static final String START_DATE = "startDate";
+    private static final String END_DATE = "endDate";
+    private static final String BUDGET_GOAL = "budgetGoal";
+    // create table for trip info
+    static final String CREATE_TRIP_TABLE =
+            String.format("CREATE TABLE %s (" +
+                    "%s INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "%s TEXT NOT NULL, " +
+                    "%s TEXT NOT NULL, " +
+                    "%s TEXT NOT NULL, " +
+                    "%s TEXT NOT NULL, " +
+                    "%s FLOAT, " +
+                    "%s INTEGER NOT NULL);", TRIP_TABLE_NAME, TRIP_ID, TRIP_NAME, DESTINATION, START_DATE, END_DATE, BUDGET_GOAL, GROUP_ID);
+
+
+
+
     public GroupDB(@Nullable Context context) {
         super(context, DATABASE_NAME, null, VERSION);
     }
@@ -41,17 +63,23 @@ public class GroupDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_MEMBERS_TABLE);
+        sqLiteDatabase.execSQL(CREATE_TRIP_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MEMBERS_TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TRIP_TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 
     public long insert(ContentValues contentValues) {
         SQLiteDatabase database = getWritableDatabase();
         return database.insert(MEMBERS_TABLE_NAME, null, contentValues);
+    }
+    public long insertTripInfo(ContentValues contentValues) {
+        SQLiteDatabase database = getWritableDatabase();
+        return database.insert(TRIP_TABLE_NAME, null, contentValues);
     }
 
     public int update(ContentValues contentValue){
@@ -64,10 +92,22 @@ public class GroupDB extends SQLiteOpenHelper {
         return database.update(MEMBERS_TABLE_NAME, contentValue, s, strings);
     }
 
+    public int updateTrip(ContentValues contentValue, String s, String[] strings) {
+        SQLiteDatabase database = getWritableDatabase();
+        return database.update(TRIP_TABLE_NAME, contentValue, s, strings);
+    }
+
     public Cursor getAllUsers(String orderBy) {
         SQLiteDatabase database = getWritableDatabase();
         return database.query(MEMBERS_TABLE_NAME,
                 new String[]{ID, MEMBER_NAME, MEMBER_PROFILE_PIC, GROUP_ID, IS_HOST},
+                null, null, null, null, orderBy);
+    }
+
+    public Cursor getAllTripInfo(String orderBy) {
+        SQLiteDatabase database = getWritableDatabase();
+        return database.query(TRIP_TABLE_NAME,
+                new String[]{TRIP_ID, TRIP_NAME, DESTINATION, START_DATE, END_DATE, BUDGET_GOAL, GROUP_ID},
                 null, null, null, null, orderBy);
     }
 

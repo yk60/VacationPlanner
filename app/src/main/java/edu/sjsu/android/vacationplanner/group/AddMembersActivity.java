@@ -3,19 +3,12 @@ package edu.sjsu.android.vacationplanner.group;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,7 +20,6 @@ import java.util.Objects;
 import edu.sjsu.android.vacationplanner.MainActivity;
 import edu.sjsu.android.vacationplanner.R;
 import edu.sjsu.android.vacationplanner.User;
-import edu.sjsu.android.vacationplanner.UserDB;
 
 public class AddMembersActivity extends AppCompatActivity {
 
@@ -36,6 +28,8 @@ public class AddMembersActivity extends AppCompatActivity {
 
     private final Uri CONTENT_URI1 = Uri.parse("content://edu.sjsu.android.vacationplanner");
     private final Uri CONTENT_URI2 = Uri.parse("content://edu.sjsu.android.vacationplanner.GroupProvider");
+    private final Uri CONTENT_URI_members = CONTENT_URI2.buildUpon().appendPath("members").build();
+    private final Uri CONTENT_URI_trips = CONTENT_URI2.buildUpon().appendPath("trips").build();
 
 
     GroupListAdapter adapter;
@@ -183,7 +177,7 @@ public class AddMembersActivity extends AppCompatActivity {
     @SuppressLint("Range")
     private void removeMember(User user) {
         // to remove from host's group list
-        getContentResolver().delete(CONTENT_URI2,"memberName = ?", new String[] {user.getUsername()});
+        getContentResolver().delete(CONTENT_URI_members,"memberName = ?", new String[] {user.getUsername()});
 
         // update usersDatabase
         ContentValues updateMem = new ContentValues();
@@ -208,7 +202,7 @@ public class AddMembersActivity extends AppCompatActivity {
             addHost.put("memProfilePicID", MainActivity.getProfilePicID());
             addHost.put("groupID", id_group);
             addHost.put("isHost", 1); // 1 means they are the host
-            getContentResolver().insert(CONTENT_URI2, addHost);
+            getContentResolver().insert(CONTENT_URI_members, addHost);
 
             // to insert into host's group list
             ContentValues addMember = new ContentValues();
@@ -216,12 +210,22 @@ public class AddMembersActivity extends AppCompatActivity {
             addMember.put("memProfilePicID", user.getProfilePicID());
             addMember.put("groupID", id_group);
             addMember.put("isHost", 0); // 0 means they are not the host
-            getContentResolver().insert(CONTENT_URI2, addMember);
+            getContentResolver().insert(CONTENT_URI_members, addMember);
 
             // update usersDatabase
             ContentValues updateMem = new ContentValues();
             updateMem.put("groupID", id_group);
             getContentResolver().update(CONTENT_URI1, updateMem, "name = ?", new String[] {user.getUsername()});
+
+            // also create new trip table
+            ContentValues newTrip = new ContentValues();
+            newTrip.put("tripName", "Name of Trip");
+            newTrip.put("destination", "Destination");
+            newTrip.put("startDate", "MM/DD/YYYY");
+            newTrip.put("endDate", "MM/DD/YYYY");
+            newTrip.put("budgetGoal", 0.0);
+            newTrip.put("groupID", id_group);
+            getContentResolver().insert(CONTENT_URI_trips, newTrip);
 
             MainActivity.updateGroupID(id_group);
 
@@ -232,7 +236,7 @@ public class AddMembersActivity extends AppCompatActivity {
             addMember.put("memProfilePicID", user.getProfilePicID());
             addMember.put("groupID", MainActivity.getGroupID()); // groupID = hosts' groupID
             addMember.put("isHost", 0); // 0 means they are not the host
-            getContentResolver().insert(CONTENT_URI2, addMember);
+            getContentResolver().insert(CONTENT_URI_members, addMember);
 
             // update usersDatabase
             ContentValues updateMem = new ContentValues();

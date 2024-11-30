@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -55,47 +54,20 @@
             android:layout_gravity="bottom"
             android:layout_marginStart="@dimen/_40dp"
             android:layout_marginBottom="@dimen/_40dp"
-            android:text="October 28 - November 1"
             android:textColor="@color/white" />
 
         <ImageButton
-            android:id="@+id/editTripNameButton"
+            android:id="@+id/editTripButton"
             android:layout_width="@dimen/_40dp"
             android:layout_height="@dimen/_40dp"
-            android:contentDescription="edit trip name"
+            android:contentDescription="edit trip details"
             android:src="@drawable/edit_icon"
             android:background="@drawable/background_add_button"
             android:layout_gravity="bottom"
             android:layout_marginStart="350dp"
             android:layout_marginBottom="@dimen/_20dp"/>
 
-        <EditText
-            android:id="@+id/editTripName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginStart="36dp"
-            android:hint="Name of Trip"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_30dp"
-            android:maxLines="1"
-            android:visibility="invisible"/>
-
-        <ImageButton
-            android:id="@+id/doneButton"
-            android:layout_width="@dimen/_40dp"
-            android:layout_height="@dimen/_40dp"
-            android:contentDescription="done"
-            android:background="@drawable/background_add_button"
-            android:src="@drawable/check_icon"
-            android:layout_gravity="bottom"
-            android:layout_marginStart="350dp"
-            android:layout_marginBottom="@dimen/_20dp"
-            android:visibility="invisible"/>
-
     </FrameLayout>
-
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"

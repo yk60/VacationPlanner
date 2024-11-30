@@ -1,26 +1,44 @@
 package edu.sjsu.android.vacationplanner;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.Objects;
+
 public class HomeFragment extends Fragment {
 
+    private final Uri CONTENT_URI2 = Uri.parse("content://edu.sjsu.android.vacationplanner.GroupProvider");
+    private final Uri CONTENT_URI_trips = CONTENT_URI2.buildUpon().appendPath("trips").build();
+
     private TextView tripName;
-    private static String tripNameInput = "Name of Trip";
     private TextView tripDestination;
     private TextView tripDate;
-    EditText editName;
-    ImageButton editTripNameButton;
-    ImageButton doneEditingButton;
+    ImageButton editTripButton;
+    private Dialog editTripInfoDialog;
+
+    private static String tripNameString = "Name of Trip";
+    private static String destinationString = "Destination";
+    private static String tripStartDate = "MM/DD/YYYY";
+    private static String tripEndDate = "MM/DD/YYYY";
+    private static String tripDateString = tripStartDate + " - " + tripEndDate; // default
 
     public HomeFragment() {
         // Required empty public constructor
@@ -36,53 +54,144 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // initialize widgets
         tripName = view.findViewById(R.id.tripName);
         tripDestination = view.findViewById(R.id.tripDestination);
         tripDate = view.findViewById(R.id.tripDate);
-        editName = view.findViewById(R.id.editTripName);
-        doneEditingButton = view.findViewById(R.id.doneButton);
+        editTripButton = view.findViewById(R.id.editTripButton);
+        editTripInfoDialog = new Dialog(requireContext());
 
-        editTripNameButton = view.findViewById(R.id.editTripNameButton);
-        editTripNameButton.setOnClickListener(this::editTripName);
+        //initialize string variables w/ info from database
+        getTripInfo();
+
+        // set text
+        setTripInfo();
+
+        // set OnClickListener
+        editTripButton.setOnClickListener(this::showDialog);
 
 
         return view;
     }
 
-    private void editTripName(View view) {
-        tripName.setVisibility(View.INVISIBLE);
-        editName.setVisibility(View.VISIBLE);
-        editName.setText("");
-
-        editTripNameButton.setVisibility(View.INVISIBLE);
-        doneEditingButton.setVisibility(View.VISIBLE);
-        doneEditingButton.setOnClickListener(this::doneEditing);
+    private void setTripInfo() {
+        tripName.setText(tripNameString);
+        tripDate.setText(tripDateString);
+        tripDestination.setText(destinationString);
+        tripDate.setText(tripDateString);
     }
 
-    private void doneEditing(View view) {
-        if (isValidInput(editName.getText().toString())) {
-            tripNameInput = editName.getText().toString();
-            tripName.setText(tripNameInput);
+    private void showDialog(View view) {
+        EditText tripNameInput;
+        EditText tripDestinationInput;
+        EditText startDayInput;
+        EditText endDayInput;
+        Button doneButton;
+        ImageButton closeButton;
+
+        editTripInfoDialog.setContentView(R.layout.trip_editor_popup);
+
+        // initialize widgets
+        tripNameInput = editTripInfoDialog.findViewById(R.id.editTripName);
+        tripDestinationInput = editTripInfoDialog.findViewById(R.id.editTripDestination);
+        startDayInput = editTripInfoDialog.findViewById(R.id.start_day_input);
+        endDayInput = editTripInfoDialog.findViewById(R.id.end_day_input);
+        closeButton = editTripInfoDialog.findViewById(R.id.closeButton);
+        doneButton = editTripInfoDialog.findViewById(R.id.doneButton);
+
+        // set texts to current information
+        if (!tripNameString.equals("Name of Trip")) {
+            tripNameInput.setText(tripNameString);
+            tripDestinationInput.setText(destinationString);
+            startDayInput.setText(tripStartDate);
+            endDayInput.setText(tripEndDate);
         }
+        else {
+            tripNameInput.setText("");
+            tripDestinationInput.setText("");
+            startDayInput.setText("");
+            endDayInput.setText("");
+        }
+        // set OnClickListeners
+        closeButton.setOnClickListener(view1 -> {
+            editTripInfoDialog.dismiss();
+        });
 
-        tripName.setVisibility(View.VISIBLE);
-        editName.setVisibility(View.INVISIBLE);
+        doneButton.setOnClickListener(view1 -> {
+            tripNameString = tripNameInput.getText().toString();
+            destinationString = tripDestinationInput.getText().toString();
+            tripStartDate = startDayInput.getText().toString();
+            tripEndDate = endDayInput.getText().toString();
 
-        editTripNameButton.setVisibility(View.VISIBLE);
-        doneEditingButton.setVisibility(View.INVISIBLE);
+            if(isValidInput(tripNameString) && isValidInput(destinationString) && isValidInput(tripStartDate) && isValidInput(tripEndDate)) {
+                setTripInfo();
+
+                // save to database
+                saveTripInfoToDB(tripNameString, destinationString, tripStartDate, tripEndDate);
+
+                editTripInfoDialog.dismiss();
+            }
+            else {
+                Toast.makeText(getContext(),"Please enter in a value.", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+        editTripInfoDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        editTripInfoDialog.show();
     }
+
+    private void saveTripInfoToDB(String tripNameString, String destinationString, String tripStartDate, String tripEndDate) {
+        ContentValues values = new ContentValues();
+        values.put("tripName", tripNameString);
+        values.put("destination", destinationString);
+        values.put("startDate", tripStartDate);
+        values.put("endDate", tripEndDate);
+        requireContext().getContentResolver().update(CONTENT_URI_trips, values, "groupID = ?",
+                new String[] {String.valueOf(MainActivity.getGroupID())});
+    }
+
 
     private boolean isValidInput(String string) {
         return !string.trim().isEmpty();
     }
 
+
     public static String getTripName() {
-        return tripNameInput;
+        return tripNameString;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        tripName.setText(tripNameInput);
+        getTripInfo();
+        setTripInfo();
     }
+
+    @SuppressLint("Range")
+    public void getTripInfo() {
+
+        // Sort by groupID
+        String selection = "Select * from users where groupID = " + MainActivity.getGroupID();
+
+        try (Cursor c = requireContext().getContentResolver().
+                query(CONTENT_URI_trips, null, selection, null, "groupID")) {
+
+            assert c != null;
+            if (c.moveToFirst()) {
+                do {
+                    int groupID = c.getInt(c.getColumnIndex("groupID"));
+                    if (groupID == MainActivity.getGroupID()) {
+                        tripNameString = c.getString(c.getColumnIndex("tripName"));
+                        destinationString = c.getString(c.getColumnIndex("destination"));
+                        tripStartDate = c.getString(c.getColumnIndex("startDate"));
+                        tripEndDate = c.getString(c.getColumnIndex("endDate"));
+                    }
+                } while (c.moveToNext());
+            } }
+
+        tripDateString = tripStartDate + " - " + tripEndDate;
+    }
+
+
 }

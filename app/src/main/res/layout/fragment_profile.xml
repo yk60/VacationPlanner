@@ -7,15 +7,6 @@
     android:padding="@dimen/_30dp"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="User Profile"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:background="@color/teal"
-        android:padding="5dp" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

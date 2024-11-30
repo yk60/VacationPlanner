@@ -1,8 +1,12 @@
 package edu.sjsu.android.vacationplanner;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -30,6 +34,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BudgetFragment extends Fragment {
+
+    private final Uri CONTENT_URI2 = Uri.parse("content://edu.sjsu.android.vacationplanner.GroupProvider");
+    private final Uri CONTENT_URI_trips = CONTENT_URI2.buildUpon().appendPath("trips").build();
 
     PieChart pieChart;
     Dialog budgetDialog;
@@ -64,6 +71,9 @@ public class BudgetFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_budget, container, false);
 
+        // get info from database
+        getBudgetInfoFromDB();
+
         // initialize widgets
         budgetDisplay = view.findViewById(R.id.budgetDisplay);
         budgetProgressText = view.findViewById(R.id.progress_text);
@@ -72,7 +82,7 @@ public class BudgetFragment extends Fragment {
         emptyBudgetImage = view.findViewById(R.id.emptyBudgetImage);
         
         // edit budget button
-        budgetDialog = new Dialog(getContext());
+        budgetDialog = new Dialog(requireContext());
         ImageButton editBudget = view.findViewById(R.id.editBudgetButton);
         editBudget.setOnClickListener(this::showEditBudget);
 
@@ -86,7 +96,6 @@ public class BudgetFragment extends Fragment {
         colors.add(Color.parseColor(getString(R.string.string_redlight)));
         colors.add(Color.parseColor(getString(R.string.string_wheat)));
         colors.add(Color.parseColor(getString(R.string.string_melon)));
-
         
         showPieChart();
 
@@ -110,6 +119,25 @@ public class BudgetFragment extends Fragment {
         return view;
     }
 
+    @SuppressLint("Range")
+    private void getBudgetInfoFromDB() {
+        // Sort by groupID
+        String selection = "Select * from users where groupID = " + MainActivity.getGroupID();
+        try (Cursor c = requireContext().getContentResolver().
+                query(CONTENT_URI_trips, null, selection, null, "groupID")) {
+
+            assert c != null;
+            if (c.moveToFirst()) {
+                do {
+                    int groupID = c.getInt(c.getColumnIndex("groupID"));
+                    if (groupID == MainActivity.getGroupID()) {
+                        float budgetGoal = c.getFloat(c.getColumnIndex("budgetGoal"));
+                        budgetGoalInput = (double) budgetGoal;
+                    }
+                } while (c.moveToNext());
+            } }
+    }
+
     private void showEditBudget(View view) {
         TextView totalBudgetInput;
         Button doneButton;
@@ -124,16 +152,23 @@ public class BudgetFragment extends Fragment {
             if(isValidInput(input)) {
                 budgetGoalInput = Double.parseDouble(input);
                 setProgress();
+                saveBudgetGoalToDB(budgetGoalInput);
                 budgetDialog.dismiss();
             }
             else {
                 Toast.makeText(getContext(),"Please enter in a value.", Toast.LENGTH_SHORT).show();
             }
-
         });
 
         budgetDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         budgetDialog.show();
+    }
+
+    private void saveBudgetGoalToDB(Double budgetGoalInput) {
+        ContentValues values = new ContentValues();
+        values.put("budgetGoal", budgetGoalInput);
+        requireContext().getContentResolver().update(CONTENT_URI_trips, values, "groupID = ?",
+                new String[] {String.valueOf(MainActivity.getGroupID())});
     }
 
     private boolean isValidInput(String input) {
@@ -217,6 +252,7 @@ public class BudgetFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        getBudgetInfoFromDB();
         setProgress();
     }
 }

@@ -1,9 +1,7 @@
 package edu.sjsu.android.vacationplanner.group;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,15 +13,12 @@ import androidx.navigation.fragment.NavHostFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import edu.sjsu.android.vacationplanner.MainActivity;
 import edu.sjsu.android.vacationplanner.R;
@@ -33,8 +28,8 @@ import edu.sjsu.android.vacationplanner.User;
 public class GroupListFragment extends Fragment {
 
     private final Uri CONTENT_URI2 = Uri.parse("content://edu.sjsu.android.vacationplanner.GroupProvider");
+    private final Uri CONTENT_URI_members = CONTENT_URI2.buildUpon().appendPath("members").build();
 
-    public static final String TITLE = "Group Members";
     private ListView userListView;
     Activity context;
     View view;
@@ -68,7 +63,7 @@ public class GroupListFragment extends Fragment {
         userListView.setAdapter(adapter);
 
         // show that todos are empty if there are none
-        TextView emptyText = (TextView) view.findViewById(R.id.emptyMembersList);
+        TextView emptyText = view.findViewById(R.id.emptyMembersList);
         userListView.setEmptyView(emptyText);
 
         return view;
@@ -120,7 +115,7 @@ public class GroupListFragment extends Fragment {
 
         final String[] selectColumns = {"memberName", "memProfilePicID", "groupID", "isHost"};
         try (Cursor c = requireActivity().getContentResolver().
-                query(CONTENT_URI2, null, null, selectColumns, "groupID")) {
+                query(CONTENT_URI_members, null, null, selectColumns, "groupID")) {
 
             assert c != null;
             if (c.moveToFirst()) {
