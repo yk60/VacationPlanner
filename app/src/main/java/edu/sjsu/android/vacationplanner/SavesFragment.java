@@ -20,8 +20,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class SavesFragment extends Fragment implements UpdateSavesListener{
@@ -33,6 +35,7 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
     private AppDB appDB;
     private Planner planner;
     private ImageButton deleteAllButton;
+    private Button doneButton;
 
     public SavesFragment() {
     }
@@ -48,9 +51,6 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
             planner.isDataLoaded = true;
         }
 
-
-       
-
     }
 
     @Override
@@ -60,10 +60,11 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         totalCostView = view.findViewById(R.id.expected_cost);
-        adapter = new MapAdapter(getContext(), Planner.getInstance().getSavedPlaces(), true, this);
+        adapter = new MapAdapter(getContext(), Planner.getInstance().getSavedPlaces(), true, this, sharedViewModel);
         recyclerView.setAdapter(adapter);
         saveButton = view.findViewById(R.id.SaveButton);
         deleteAllButton = view.findViewById(R.id.delete_all_button);
+        doneButton = view.findViewById(R.id.done_button);
 
         sharedViewModel.getSelectedPlace().observe(getViewLifecycleOwner(), new Observer<MyPlace>() {
             @Override
@@ -87,6 +88,23 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
             List<MyPlace> savedPlaces = Planner.getInstance().getSavedPlaces();
             sharedViewModel.updatePieChart(savedPlaces);
             updateTotalCost();
+        });
+
+        doneButton.setOnClickListener(v -> {
+            ArrayList<MyPlace> voteList = sharedViewModel.getVoteList().getValue();
+            if (voteList != null && voteList.size() == 4) {
+                sharedViewModel.setVoteList(voteList);
+                // create a new map and set count to be 0
+                LinkedHashMap<String, Integer> voteCountMap = new LinkedHashMap<>();
+                for (MyPlace place : voteList) {
+                    voteCountMap.put(place.getName(), 0);
+                }
+                sharedViewModel.setVoteCountMap(voteCountMap);
+                Toast.makeText(getContext(), "Voting page updated", Toast.LENGTH_SHORT).show();
+                Log.d("done_votelist", String.valueOf(sharedViewModel.getVoteList().getValue().size()));
+            } else {
+                Toast.makeText(getContext(), "Select 4 places to start vote", Toast.LENGTH_SHORT).show();
+            }
         });
 
         updateTotalCost();

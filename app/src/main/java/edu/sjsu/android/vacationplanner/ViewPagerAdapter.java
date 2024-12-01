@@ -38,5 +38,9 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     public CharSequence getPageTitle(int position){
         return titleArrayList.get(position);
     }
+    public void clearFragments() {
+        fragmentArrayList.clear();
+        titleArrayList.clear();
+    }
 
 }

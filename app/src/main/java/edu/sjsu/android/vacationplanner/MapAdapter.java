@@ -37,8 +37,7 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
     private final Uri CONTENT_URI2 = Uri.parse("content://edu.sjsu.android.vacationplanner.DataProvider");
 
 
-
-    public MapAdapter(Context context, ArrayList<MyPlace> placeList, boolean isSavesOpen, UpdateSavesListener updateSavesListener) {
+    public MapAdapter(Context context, ArrayList<MyPlace> placeList, boolean isSavesOpen, UpdateSavesListener updateSavesListener, SharedViewModel sharedViewModel) {
         this.context = context;
         this.placeList = placeList;
         this.isSavesOpen = isSavesOpen;
@@ -50,7 +49,7 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
     @Override
     public PlaceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.map_row_layout, parent, false);
-        return new PlaceViewHolder(view);
+        return new PlaceViewHolder(view, sharedViewModel);
       
     }
     @Override
@@ -259,6 +258,9 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
     }
 
     private byte[] getBytes(Bitmap bitmap) {
+        if (bitmap == null) {
+            return new byte[0]; 
+        }
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
         return stream.toByteArray();

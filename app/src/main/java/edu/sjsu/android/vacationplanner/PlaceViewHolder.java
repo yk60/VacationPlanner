@@ -3,6 +3,7 @@ package edu.sjsu.android.vacationplanner;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -24,6 +26,7 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -46,9 +49,10 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
     MaterialButton datePickerButton;
     Spinner placeTypeSpinner;
     ImageButton saveToCalendarButton;
+    CheckBox checkBox;
 
 
-    public PlaceViewHolder(@NonNull View itemView) {
+    public PlaceViewHolder(@NonNull View itemView, SharedViewModel sharedViewModel) {
         super(itemView);
         nameView = itemView.findViewById(R.id.place_name);
         addressView = itemView.findViewById(R.id.place_address);
@@ -63,6 +67,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         datePickerButton = itemView.findViewById(R.id.date_picker);
         placeTypeSpinner = itemView.findViewById(R.id.place_type_spinner);
         saveToCalendarButton = itemView.findViewById(R.id.saveToCalendarButton);
+        checkBox = itemView.findViewById(R.id.checkBox);
 
 
 
@@ -189,6 +194,32 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
 
         int spinnerPosition = ((ArrayAdapter) placeTypeSpinner.getAdapter()).getPosition(myPlace.getType());
         placeTypeSpinner.setSelection(spinnerPosition);
+
+        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            ArrayList<MyPlace> voteList = sharedViewModel.getVoteList().getValue();
+            if (voteList == null) {
+                return;
+            }
+            if (isChecked) {
+                if (voteList.contains(myPlace)) {
+                    Toast.makeText(itemView.getContext(), "Error: Place exists in vote list", Toast.LENGTH_SHORT).show();
+                    checkBox.setChecked(false);
+                } else {
+                    voteList.add(myPlace);
+                    Toast.makeText(itemView.getContext(), "Added place to vote list", Toast.LENGTH_SHORT).show();
+                }
+                sharedViewModel.setVoteList(voteList);
+                Log.d("after_check_votelist", String.valueOf(sharedViewModel.getVoteList().getValue().size()));
+
+
+            } else {
+                voteList.remove(myPlace);
+                Toast.makeText(itemView.getContext(), "Removed place from vote list", Toast.LENGTH_SHORT).show();
+                sharedViewModel.setVoteList(voteList);
+                Log.d("after_uncheck_votelist", String.valueOf(sharedViewModel.getVoteList().getValue().size()));
+            }
+
+        });
 
         
 

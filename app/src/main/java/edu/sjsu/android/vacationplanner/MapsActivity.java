@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
@@ -80,7 +81,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationClient;
     private final LatLng LOCATION_UNIV = new LatLng(37.335371, -121.881050);
     private final int FINE_PERMISSION_CODE = 1;
+    private SharedViewModel sharedViewModel;
     Location currentLocation;
+
 
     private final Uri CONTENT_URI = Uri.parse("content://edu.sjsu.android.vacationplanner");
 
@@ -138,16 +141,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         placeBusinessHour = findViewById(R.id.place_business_hour);
         placeImage = findViewById(R.id.place_image);
 
-
-        // add sample data to bottom sheet
-        // placeList.add(new MyPlace("SJSU", "California", "5.0", "9-5", false, R.drawable.default_place_image));
         recyclerView = findViewById(R.id.recycler_view);
         placeList = new ArrayList<>();
+        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
         mapAdapter = new MapAdapter(this, placeList, false, new UpdateSavesListener() {
             @Override
             public void updateTotalCost() {
             }
-        });
+        }, sharedViewModel);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mapAdapter);
 
@@ -219,10 +221,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         mMap.setMyLocationEnabled(true);
         getLastLocation();
-
-        // LatLng sydney = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        // mMap.addMarker(new MarkerOptions().position(sydney).title("my location"));
-        // mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
     }
 

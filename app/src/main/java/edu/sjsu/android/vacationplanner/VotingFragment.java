@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,14 +17,15 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class VotingFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private RecyclerView recyclerView;
     private VoteAdapter voteAdapter;
-    private LinkedHashMap<String, Integer> voteCountMap;
     private int page;
+    private ArrayList<MyPlace> placeList;
+    private SharedViewModel sharedViewModel;
+
 
     public VotingFragment() {
     }
@@ -42,11 +44,10 @@ public class VotingFragment extends Fragment {
         if (getArguments() != null) {
             page = getArguments().getInt(ARG_PARAM1, -1);
         }
-        voteCountMap = new LinkedHashMap<>();
-        voteCountMap.put("Place 1", 0);
-        voteCountMap.put("Place 2", 0);
-        voteCountMap.put("Place 3", 0);
-        voteCountMap.put("Place 4", 0);
+       
+        placeList = new ArrayList<>();
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
     }
 
     @Nullable
@@ -55,27 +56,60 @@ public class VotingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_voting, container, false);
         recyclerView = view.findViewById(R.id.grid_recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2)); // 2 columns
+        // reset vote count everytime fragment is created
 
-        List<MyPlace> placeList = new ArrayList<>();
-        placeList.add(new MyPlace("Place 1", null));
-        placeList.add(new MyPlace("Place 2", null));
-        placeList.add(new MyPlace("Place 3", null));
-        placeList.add(new MyPlace("Place 4", null));
 
-        voteAdapter = new VoteAdapter(placeList, voteCountMap);
-        recyclerView.setAdapter(voteAdapter);
+        sharedViewModel.getVoteList().observe(getViewLifecycleOwner(), voteList -> {
+
+            if (voteList != null && !voteList.isEmpty()) {
+                placeList = new ArrayList<>(voteList);
+                placeList.clear();
+                for (MyPlace place : voteList) {
+                    placeList.add(new MyPlace(place.getName(), place.getImage()));
+                }
+            } else {
+                ArrayList<MyPlace> placeList = new ArrayList<>();
+                placeList.add(new MyPlace("Place 1", null));
+                placeList.add(new MyPlace("Place 2", null));
+                placeList.add(new MyPlace("Place 3", null));
+                placeList.add(new MyPlace("Place 4", null));
+            }
+
+            voteAdapter = new VoteAdapter(placeList, sharedViewModel);
+            recyclerView.setAdapter(voteAdapter);
+        });
+
+        sharedViewModel.getVoteCountMap().observe(getViewLifecycleOwner(), voteCountMap -> {
+            if (voteAdapter != null) {
+                voteAdapter.updateVoteCountMap(voteCountMap);
+            }
+        });
+
 
         Button viewResultsButton = view.findViewById(R.id.view_results);
         viewResultsButton.setOnClickListener(v -> {
             StringBuilder results = new StringBuilder();
-//            results.append("Page ").append(page).append(" Results:\n");
             results.append(" Results:\n");
-
-            for (String place : voteCountMap.keySet()) {
-                results.append(place).append(": ").append(voteCountMap.get(place)).append("\n");
+            LinkedHashMap<String, Integer> voteCountMap = sharedViewModel.getVoteCountMap().getValue();
+            if (voteCountMap != null) {
+                for (String place : voteCountMap.keySet()) {
+                    results.append(place).append(": ").append(voteCountMap.get(place)).append("\n");
+                }
             }
             Toast.makeText(getContext(), results.toString(), Toast.LENGTH_LONG).show();
         });
         return view;
+    }
+
+    public void setPlaceList(ArrayList<MyPlace> placeList) {
+        this.placeList = placeList;
+        if (voteAdapter != null) {
+            ArrayList<MyPlace> tempPlaceList = new ArrayList<>();
+            for (MyPlace place : placeList) {
+                tempPlaceList.add(new MyPlace(place.getName(), place.getImage()));
+            }
+            placeList = tempPlaceList;
+            voteAdapter.updatePlaceList(this.placeList);
+        }
     }
 }

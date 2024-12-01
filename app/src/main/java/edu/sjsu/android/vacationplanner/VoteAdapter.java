@@ -10,16 +10,19 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.VoteViewHolder> {
-    private final List<MyPlace> placeList;
-    private final LinkedHashMap<String, Integer> voteCountMap;
+    private ArrayList<MyPlace> placeList;
+    private LinkedHashMap<String, Integer> voteCountMap;
+    private SharedViewModel sharedViewModel;
 
-    public VoteAdapter(List<MyPlace> placeList, LinkedHashMap<String, Integer> voteCountMap) {
+
+    public VoteAdapter(ArrayList<MyPlace> placeList, SharedViewModel sharedViewModel) {
         this.placeList = placeList;
-        this.voteCountMap = voteCountMap;
+        this.sharedViewModel = sharedViewModel;
+
     }
 
     @NonNull
@@ -39,6 +42,17 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.VoteViewHolder
     public int getItemCount() {
         return placeList.size();
     }
+
+    public void updatePlaceList(ArrayList<MyPlace> placeList) {
+        this.placeList = placeList;
+        notifyDataSetChanged();
+    }
+
+    public void updateVoteCountMap(LinkedHashMap<String, Integer> voteCountMap) {
+        this.voteCountMap = voteCountMap;
+        notifyDataSetChanged();
+    }
+
 
     public class VoteViewHolder extends RecyclerView.ViewHolder {
         TextView nameView;
@@ -60,9 +74,14 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.VoteViewHolder
             itemView.setOnClickListener(v -> {
                 String placeName = myPlace.getName();
                 Toast.makeText(itemView.getContext(), placeName + " clicked", Toast.LENGTH_SHORT).show();
-                int count = voteCountMap.get(placeName);
-                voteCountMap.put(placeName, count + 1);
+                LinkedHashMap<String, Integer> voteCountMap = sharedViewModel.getVoteCountMap().getValue();
+                if (voteCountMap != null) {
+                    int count = voteCountMap.get(placeName);
+                    voteCountMap.put(placeName, count + 1);
+                    sharedViewModel.setVoteCountMap(voteCountMap);
+                }
             });
         }
     }
+    
 }

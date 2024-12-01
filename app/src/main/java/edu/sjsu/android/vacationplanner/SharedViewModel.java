@@ -5,8 +5,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.ArrayList;
 
 public class SharedViewModel extends ViewModel {
     private final MutableLiveData<MyPlace> selectedPlace = new MutableLiveData<>();
@@ -14,6 +16,8 @@ public class SharedViewModel extends ViewModel {
     private final MutableLiveData<String> datetime = new MutableLiveData<>();
     private final MutableLiveData<Map<String, Double>> typeAmountMap;
     private final MutableLiveData<Double> actualAmount;
+    private final MutableLiveData<ArrayList<MyPlace>> voteList = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<LinkedHashMap<String, Integer>> voteCountMap = new MutableLiveData<>(new LinkedHashMap<>());
 
 
     public SharedViewModel() {
@@ -74,6 +78,20 @@ public class SharedViewModel extends ViewModel {
         }
         typeAmountMap.setValue(newTypeAmountMap);
         actualAmount.setValue(total);
+    }
+    public void setVoteList(ArrayList<MyPlace> newVoteList) {
+        voteList.setValue(newVoteList);
+    }
+
+    public LiveData<ArrayList<MyPlace>> getVoteList() {
+        return voteList;
+    }
+    public void setVoteCountMap(LinkedHashMap<String, Integer> newVoteCountMap) {
+        voteCountMap.setValue(newVoteCountMap);
+    }
+
+    public LiveData<LinkedHashMap<String, Integer>> getVoteCountMap() {
+        return voteCountMap;
     }
 
 }
