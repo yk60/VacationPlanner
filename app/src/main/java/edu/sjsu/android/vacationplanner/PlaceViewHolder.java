@@ -2,7 +2,6 @@ package edu.sjsu.android.vacationplanner;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 
@@ -10,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -145,7 +143,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
                     Toast.makeText(context, "Invalid start or end time.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                ItineraryFragment.addEvent(newEvent);
+                ItineraryFragment.setEventPosition(newEvent);
                 Toast.makeText(context, "Added event to itinerary", Toast.LENGTH_SHORT).show();
 
             }

@@ -39,6 +39,12 @@
             android:enabled="true"
             android:exported="false" />
 
+        <provider
+            android:name=".EventProvider"
+            android:authorities="edu.sjsu.android.vacationplanner.EventProvider"
+            android:enabled="true"
+            android:exported="false"/>
+
         <activity
             android:name=".login.LoginActivity"
             android:exported="true" />

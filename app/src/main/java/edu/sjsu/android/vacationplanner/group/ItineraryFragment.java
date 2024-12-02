@@ -1,10 +1,13 @@
 package edu.sjsu.android.vacationplanner.group;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 
 import edu.sjsu.android.vacationplanner.EventAdapter;
+import edu.sjsu.android.vacationplanner.EventDB;
 import edu.sjsu.android.vacationplanner.ItineraryAdapter;
 import edu.sjsu.android.vacationplanner.MyEvent;
 import edu.sjsu.android.vacationplanner.R;
@@ -38,7 +41,8 @@ import edu.sjsu.android.vacationplanner.R;
 
 public class ItineraryFragment extends Fragment {
     private static List<MyEvent> eventsList = new ArrayList<>();
-
+    private static final Uri CONTENT_URI2 = Uri.parse("content://edu.sjsu.android.vacationplanner.EventProvider");
+    private static List<String> hoursList;
 
     private TextView tripDateView;
     private TextView currentDateView;
@@ -48,12 +52,10 @@ public class ItineraryFragment extends Fragment {
     private EventAdapter eventAdapter;
     private RecyclerView itineraryRecyclerView;
     private RecyclerView eventRecyclerView;
-    private static List<String> hoursList;
 
     public ItineraryFragment() {
 
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,11 +106,13 @@ public class ItineraryFragment extends Fragment {
 
         });
 
-
-
         createEventDialog = new Dialog(getContext());
         ImageButton createEventButton = view.findViewById(R.id.create_Event);
         createEventButton.setOnClickListener(this::showCreateEvent);
+
+        Button deleteAllEventsButton = view.findViewById(R.id.delete_all_events_button);
+        deleteAllEventsButton.setOnClickListener(v -> deleteAllEvents());
+
 
         return view;
     }
@@ -167,7 +171,8 @@ public class ItineraryFragment extends Fragment {
             }
 
             MyEvent newEvent = new MyEvent(title, startTime, endTime);
-            addEvent(newEvent);
+            saveEvent(newEvent);
+            setEventPosition(newEvent);
             Toast.makeText(getContext(), "Added event to itinerary", Toast.LENGTH_SHORT).show();
 
             eventAdapter.setEvents(eventsList);
@@ -187,21 +192,82 @@ public class ItineraryFragment extends Fragment {
         return true;
     }
 
-    public static void addEvent(MyEvent myEvent){
-        String startTime = myEvent.getStartTime();
+    // add event to appropriate place in List
+    public static void setEventPosition(MyEvent event){
+        String startTime = event.getStartTime();
         if(startTime.length() == 4){
             startTime = "0" + startTime;
         }
         int position = hoursList.indexOf(startTime);
         if (position != -1) {
-            eventsList.set(position, myEvent);
+            eventsList.set(position, event);
         }
+
+    }
+  
+    public void addEventToDB(MyEvent event) {
+        ContentValues values = new ContentValues();
+        values.put("title", event.getTitle());
+        values.put("startTime", event.getStartTime());
+        values.put("endTime", event.getEndTime());
+        values.put("tripDate", tripDateView.getText().toString().split(" ")[1]);
+
+        getContext().getContentResolver().insert(CONTENT_URI2, values);
     }
 
-    public static void removeEvent(MyEvent myEvent) {
+    public void updateEvent(MyEvent event) {
+        ContentValues eventUpdate = new ContentValues();
+        eventUpdate.put("title", event.getTitle());
+        eventUpdate.put("startTime", event.getStartTime());
+        eventUpdate.put("endTime", event.getEndTime());
+        eventUpdate.put("tripDate", tripDateView.getText().toString().split(" ")[1]);
+
+        String selection = "startTime = ? AND endTime = ? AND tripDate = ?";
+        String[] selectionArgs = {event.getStartTime(), event.getEndTime(), tripDateView.getText().toString().split(" ")[1]};
+        getContext().getContentResolver().update(CONTENT_URI2, eventUpdate, selection, selectionArgs);
+    }
+
+    public static void deleteEvent(MyEvent myEvent) {
         eventsList.remove(myEvent);
     }
 
+    private void deleteAllEvents() {
+        getContext().getContentResolver().delete(CONTENT_URI2, null, null);
+        eventsList.clear();
+        initEventsList();
+        eventAdapter.setEvents(eventsList);
+        eventAdapter.notifyDataSetChanged();
+    }
+
+    public void saveEvent(MyEvent event) {
+        String selection = "startTime = ? AND endTime = ? AND tripDate = ?";
+        String[] selectionArgs = {event.getStartTime(), event.getEndTime(), tripDateView.getText().toString().split(" ")[1]};
+    
+        Cursor cursor = getContext().getContentResolver().query(CONTENT_URI2, null, selection, selectionArgs, null);
+        boolean eventExists = false;
+    
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                @SuppressLint("Range") String existingStartTime = cursor.getString(cursor.getColumnIndex("startTime"));
+                @SuppressLint("Range") String existingEndTime = cursor.getString(cursor.getColumnIndex("endTime"));
+                @SuppressLint("Range") String existingTripDate = cursor.getString(cursor.getColumnIndex("tripDate"));
+
+                if (existingStartTime.equals(event.getStartTime()) && existingEndTime.equals(event.getEndTime()) && existingTripDate.equals(tripDateView.getText().toString().split(" ")[1])) {
+                    // If the new event has same start time, end time, and trip date, update event
+                    updateEvent(event);
+                    Toast.makeText(getContext(), "Event updated", Toast.LENGTH_SHORT).show();
+                    eventExists = true;
+                    break;
+                }
+            }
+            cursor.close();
+        }
+    
+        if (!eventExists) {
+            addEventToDB(event);
+            Toast.makeText(getContext(), "Event added", Toast.LENGTH_SHORT).show();
+        }
+    }
     public void showTimePickerDialog(EditText timeInput) {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -282,4 +348,6 @@ public class ItineraryFragment extends Fragment {
         eventAdapter.setEvents(eventsList);
         eventAdapter.notifyDataSetChanged();
     }
+
+
 }
