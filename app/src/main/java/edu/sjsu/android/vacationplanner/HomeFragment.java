@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,8 +34,10 @@ public class HomeFragment extends Fragment {
     private TextView tripDate;
     ImageButton editTripButton;
     private Dialog editTripInfoDialog;
+    private TextView emptyTripInfo;
+    private FrameLayout tripInfoLayout;
 
-    private static String tripNameString = "Name of Trip";
+    private static String tripNameString = "";
     private static String destinationString = "Destination";
     private static String tripStartDate = "MM/DD/YYYY";
     private static String tripEndDate = "MM/DD/YYYY";
@@ -60,6 +63,8 @@ public class HomeFragment extends Fragment {
         tripDate = view.findViewById(R.id.tripDate);
         editTripButton = view.findViewById(R.id.editTripButton);
         editTripInfoDialog = new Dialog(requireContext());
+        emptyTripInfo = view.findViewById(R.id.emptyTripInfo);
+        tripInfoLayout = view.findViewById(R.id.tripInfoLayout);
 
         //initialize string variables w/ info from database
         getTripInfo();
@@ -75,10 +80,18 @@ public class HomeFragment extends Fragment {
     }
 
     private void setTripInfo() {
-        tripName.setText(tripNameString);
-        tripDate.setText(tripDateString);
-        tripDestination.setText(destinationString);
-        tripDate.setText(tripDateString);
+        if (tripNameString.isEmpty()) {
+            emptyTripInfo.setVisibility(View.VISIBLE);
+            tripInfoLayout.setVisibility(View.GONE);
+        } else {
+            emptyTripInfo.setVisibility(View.GONE);
+            tripInfoLayout.setVisibility(View.VISIBLE);
+            tripName.setText(tripNameString);
+            tripDate.setText(tripDateString);
+            tripDestination.setText(destinationString);
+            tripDate.setText(tripDateString);
+        }
+
     }
 
     private void showDialog(View view) {

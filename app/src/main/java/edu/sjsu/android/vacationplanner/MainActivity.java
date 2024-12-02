@@ -17,6 +17,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -39,10 +42,13 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import edu.sjsu.android.vacationplanner.databinding.ActivityMainBinding;
+import edu.sjsu.android.vacationplanner.group.AddMembersActivity;
 import edu.sjsu.android.vacationplanner.group.Note;
 
 
@@ -58,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     private CircleImageView userProfile;
     private boolean isProfileOpen = false;
+    private static ImageView notificationDot;
 
     private final Uri CONTENT_URI = Uri.parse("content://edu.sjsu.android.vacationplanner");
 
@@ -78,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
 
         // call method to get user info
         getUserProfileInfo();
+
+        // initialize notification dot
+        notificationDot = findViewById(R.id.notification_dot);
+        checkNotifications();
 
         // implementing bottom navigation
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
@@ -149,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                     navController.navigate(R.id.navigation_votingGroup);
                     return true;
                 } else if (itemId == R.id.navigation_search) {
-                    navController.navigate(R.id.navigation_search);
+                    navController.navigate(R.id.mapsActivity);
                     return true;
                 } else {
                     return false;
@@ -163,6 +174,14 @@ public class MainActivity extends AppCompatActivity {
                 uninstall();
             }
         });
+    }
+
+    public static void checkNotifications() {
+        if (Notification.notificationsList.isEmpty()){
+            notificationDot.setVisibility(View.GONE);
+        } else {
+            notificationDot.setVisibility(View.VISIBLE);
+        }
     }
 
     @SuppressLint("Range")
@@ -188,6 +207,12 @@ public class MainActivity extends AppCompatActivity {
                 } while (c.moveToNext());
             }
         }
+
+        // if this is a new user, send notification for new user
+        if (groupID == 0) {
+            Notification newUserNotification = new Notification(1, "Welcome to the Travel Planner App!", "Get started by forming a group!");
+            Notification.notificationsList.add(newUserNotification);
+        }
     }
 
 
@@ -195,6 +220,16 @@ public class MainActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.bottomsheet_layout);
+
+        // set up notifications list
+        ListView listView = dialog.findViewById(R.id.notificationsList);
+        NotificationAdapter notificationAdapter = new NotificationAdapter(getApplicationContext(), Notification.notificationsList);
+        listView.setAdapter(notificationAdapter);
+
+        TextView emptyText = dialog.findViewById(R.id.emptyNotifications);
+        listView.setEmptyView(emptyText);
+
+
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -220,5 +255,11 @@ public class MainActivity extends AppCompatActivity {
                 Uri.parse("package:" + getPackageName()));
         startActivity(delete);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkNotifications();
     }
 }

@@ -19,13 +19,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/_30dp"
-        android:text="No new notifications! Check back later."
-        android:visibility="visible"/>
+        android:layout_marginBottom="@dimen/_40dp"
+        android:text="No new notifications! Check back later."/>
 
     <ListView
         android:layout_marginTop="@dimen/_40dp"
         android:id="@+id/notificationsList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_40dp"/>
 
 </LinearLayout>

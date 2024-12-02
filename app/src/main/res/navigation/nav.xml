@@ -71,6 +71,11 @@
         android:name="edu.sjsu.android.vacationplanner.login.LoginActivity"
         android:label="activity_login"
         tools:layout="@layout/activity_login" />
+    <activity
+        android:id="@+id/mapsActivity"
+        android:name="edu.sjsu.android.vacationplanner.MapsActivity"
+        android:label="activity_maps"
+        tools:layout="@layout/activity_maps" />
 
 
 </navigation>

@@ -42,8 +42,8 @@ public class GroupDB extends SQLiteOpenHelper {
     static final String CREATE_TRIP_TABLE =
             String.format("CREATE TABLE %s (" +
                     "%s INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "%s TEXT NOT NULL, " +
-                    "%s TEXT NOT NULL, " +
+                    "%s TEXT, " +
+                    "%s TEXT, " +
                     "%s TEXT NOT NULL, " +
                     "%s TEXT NOT NULL, " +
                     "%s FLOAT, " +

@@ -186,7 +186,6 @@ public class BudgetFragment extends Fragment {
         String label = "type";
 
         //initializing data
-        //TODO: make interactive, turn into percentages (these are test values)
         typeAmountMap.put("Food and Drink",0.0);
         typeAmountMap.put("Transportation",0.0);
         typeAmountMap.put("Accommodation",0.0);

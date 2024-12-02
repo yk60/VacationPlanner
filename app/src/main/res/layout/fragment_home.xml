@@ -15,46 +15,64 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/default_place_image"/>
-
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:layout_marginTop="@dimen/_20dp"
-            android:layout_marginStart="@dimen/_40dp"
-            android:text="Upcoming Trip"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:id="@+id/tripName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:layout_marginStart="@dimen/_40dp"
-            android:text="Name of Trip"
-            android:textStyle="bold"
+            android:id="@+id/emptyTripInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Initialize your trip information!\nClick the button at the corner to edit"
             android:textColor="@color/white"
-            android:textSize="30sp"/>
-
-        <TextView
-            android:id="@+id/tripDestination"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginStart="@dimen/_40dp"
-            android:layout_marginBottom="60dp"
-            android:text="Destination"
             android:textStyle="bold"
-            android:textSize="17sp"
-            android:textColor="@color/white" />
-        <TextView
-            android:id="@+id/tripDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginStart="@dimen/_40dp"
-            android:layout_marginBottom="@dimen/_40dp"
-            android:textColor="@color/white" />
+            android:visibility="gone"/>
+
+        <FrameLayout
+            android:id="@+id/tripInfoLayout"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:layout_marginTop="@dimen/_10dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:layout_marginTop="@dimen/_20dp"
+                android:layout_marginStart="@dimen/_40dp"
+                android:text="Upcoming Trip"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tripName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:layout_marginStart="@dimen/_40dp"
+                android:text="Name of Trip"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="30sp"/>
+
+            <TextView
+                android:id="@+id/tripDestination"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="@dimen/_40dp"
+                android:layout_marginBottom="60dp"
+                android:text="Destination"
+                android:textStyle="bold"
+                android:textSize="17sp"
+                android:textColor="@color/white" />
+            <TextView
+                android:id="@+id/tripDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="@dimen/_40dp"
+                android:layout_marginBottom="@dimen/_40dp"
+                android:textColor="@color/white" />
+
+        </FrameLayout>
 
         <ImageButton
             android:id="@+id/editTripButton"

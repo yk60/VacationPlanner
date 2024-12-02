@@ -219,7 +219,7 @@ public class AddMembersActivity extends AppCompatActivity {
 
             // also create new trip table
             ContentValues newTrip = new ContentValues();
-            newTrip.put("tripName", "Name of Trip");
+            newTrip.put("tripName", "");
             newTrip.put("destination", "Destination");
             newTrip.put("startDate", "MM/DD/YYYY");
             newTrip.put("endDate", "MM/DD/YYYY");
