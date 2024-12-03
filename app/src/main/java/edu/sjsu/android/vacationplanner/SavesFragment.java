@@ -1,9 +1,13 @@
 package edu.sjsu.android.vacationplanner;
 
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -27,6 +31,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class SavesFragment extends Fragment implements UpdateSavesListener{
+
+    private final Uri CONTENT_URI2 = Uri.parse("content://edu.sjsu.android.vacationplanner.GroupProvider");
+    private final Uri CONTENT_URI_notifications = CONTENT_URI2.buildUpon().appendPath("notifications").build();
+
     private RecyclerView recyclerView;
     private MapAdapter adapter;
     private SharedViewModel sharedViewModel;
@@ -66,6 +74,14 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
         deleteAllButton = view.findViewById(R.id.delete_all_button);
         doneButton = view.findViewById(R.id.done_button);
 
+        // show message if saves list is empty
+        TextView emptyText = view.findViewById(R.id.emptySavesPage);
+        if (Planner.getInstance().getSavedPlaces().isEmpty()) {
+            emptyText.setVisibility(View.VISIBLE);
+        } else {
+            emptyText.setVisibility(View.GONE);
+        }
+
         sharedViewModel.getSelectedPlace().observe(getViewLifecycleOwner(), new Observer<MyPlace>() {
             @Override
             public void onChanged(MyPlace place) {
@@ -102,6 +118,11 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
                 sharedViewModel.setVoteCountMap(voteCountMap);
                 Toast.makeText(getContext(), "Voting page updated", Toast.LENGTH_SHORT).show();
                 Log.d("done_votelist", String.valueOf(sharedViewModel.getVoteList().getValue().size()));
+
+                /* TODO: uncomment this
+                // notify group that voting has begun, and call MainActivity.checkNotifications() to update notifications list
+                createNotification();
+                MainActivity.checkNotifications();*/
             } else {
                 Toast.makeText(getContext(), "Select 4 places to start vote", Toast.LENGTH_SHORT).show();
             }
@@ -162,6 +183,21 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
             } while (cursor.moveToNext());
             cursor.close();
         }
+    }
+
+    private void createNotification() {
+        Notification.notificationsList.add(new Notification(Notification.notificationsList.size(), "Voting has Begun!", "Go to the Planning Page to cast your vote for the group's activities."));
+
+        ContentValues notificationVals = new ContentValues();
+        notificationVals.put("notifTitle", "Voting has Begun!");
+        notificationVals.put("notifDescription", "Go to the Planning Page to cast your vote for the group's activities.");
+        notificationVals.put("notifID", Notification.notificationsList.size());
+        notificationVals.put("groupID", MainActivity.getGroupID());
+
+        Context context = this.getContext();
+        assert context != null;
+        ContentResolver resolver = context.getContentResolver();
+        resolver.insert(CONTENT_URI_notifications, notificationVals);
     }
 
     
