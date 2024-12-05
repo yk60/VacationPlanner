@@ -18,7 +18,7 @@ public class SharedViewModel extends ViewModel {
     private final MutableLiveData<Double> actualAmount;
     private final MutableLiveData<ArrayList<MyPlace>> voteList = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<LinkedHashMap<String, Integer>> voteCountMap = new MutableLiveData<>(new LinkedHashMap<>());
-
+    private final MutableLiveData<Map<Integer, List<MyEvent>>> eventsMap = new MutableLiveData<>(new HashMap<>());
 
     public SharedViewModel() {
         Map<String, Double> initialTypeAmountMap = new HashMap<>();
@@ -28,7 +28,7 @@ public class SharedViewModel extends ViewModel {
         initialTypeAmountMap.put("Activities", 0.0);
         initialTypeAmountMap.put("Other", 0.0);
         typeAmountMap = new MutableLiveData<>(initialTypeAmountMap);
-        actualAmount =new MutableLiveData<>(0.0);
+        actualAmount = new MutableLiveData<>(0.0);
     }
 
     public void selectPlace(MyPlace place) {
@@ -94,4 +94,25 @@ public class SharedViewModel extends ViewModel {
         return voteCountMap;
     }
 
+    public LiveData<Map<Integer, List<MyEvent>>> getEventsMap() {
+        return eventsMap;
+    }
+
+    // Set the event list for the given day
+    public void setEventsForDay(int day, List<MyEvent> events) {
+        Map<Integer, List<MyEvent>> currentEventsMap = eventsMap.getValue();
+        if (currentEventsMap != null) {
+            currentEventsMap.put(day, events);
+            eventsMap.setValue(currentEventsMap);
+        }
+    }
+
+    // Get the event list for the given day
+    public List<MyEvent> getEventsForDay(int day) {
+        Map<Integer, List<MyEvent>> currentEventsMap = eventsMap.getValue();
+        if (currentEventsMap != null) {
+            return currentEventsMap.getOrDefault(day, new ArrayList<>());
+        }
+        return new ArrayList<>();
+    }
 }

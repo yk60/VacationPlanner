@@ -44,6 +44,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
     EditText datetimeView;
     EditText startTimeView;
     EditText endTimeView;
+    TextView tripDateView;
     MaterialButton datePickerButton;
     Spinner placeTypeSpinner;
     ImageButton saveToCalendarButton;
@@ -62,6 +63,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         datetimeView = itemView.findViewById(R.id.place_datetime);
         startTimeView = itemView.findViewById(R.id.startTime);
         endTimeView = itemView.findViewById(R.id.endTime);
+        tripDateView = itemView.findViewById(R.id.trip_date);
         datePickerButton = itemView.findViewById(R.id.date_picker);
         placeTypeSpinner = itemView.findViewById(R.id.place_type_spinner);
         saveToCalendarButton = itemView.findViewById(R.id.saveToCalendarButton);
@@ -137,14 +139,21 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
                 String title = nameView.getText().toString();
                 String startTime = startTimeView.getText().toString();
                 String endTime = endTimeView.getText().toString();
-                MyEvent newEvent = new MyEvent(title, startTime, endTime);
+                String tripDate = tripDateView.getText().toString().split(" ")[1];
+                MyEvent newEvent = new MyEvent(title, startTime, endTime, tripDate);
                 Context context = itemView.getContext();
                 if (!ItineraryFragment.isValidHour(startTime, endTime)) {
                     Toast.makeText(context, "Invalid start or end time.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                ItineraryFragment.setEventPosition(newEvent);
-                Toast.makeText(context, "Added event to itinerary", Toast.LENGTH_SHORT).show();
+                FragmentActivity activity = (FragmentActivity) context;
+                ItineraryFragment itineraryFragment = (ItineraryFragment) activity.getSupportFragmentManager().findFragmentByTag("ITINERARY_FRAGMENT_TAG");
+                if (itineraryFragment != null) {
+                    itineraryFragment.setEventPosition(newEvent);
+                    Toast.makeText(context, "Added event to itinerary", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "ItineraryFragment not found", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -172,6 +181,8 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
             endTimeView.setVisibility(View.VISIBLE);
             placeTypeSpinner.setVisibility(View.VISIBLE);
             saveToCalendarButton.setVisibility(View.VISIBLE);
+            checkBox.setVisibility(View.VISIBLE);
+
 
 
         } else {
@@ -182,6 +193,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
             endTimeView.setVisibility(View.GONE);
             placeTypeSpinner.setVisibility(View.GONE);
             saveToCalendarButton.setVisibility(View.GONE);
+            checkBox.setVisibility(View.GONE);
 
         }
 
