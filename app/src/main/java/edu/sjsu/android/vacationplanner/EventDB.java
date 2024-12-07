@@ -16,6 +16,7 @@ public class EventDB extends SQLiteOpenHelper {
     private static final String START_TIME = "startTime";
     private static final String END_TIME = "endTime";
     private static final String TRIP_DATE = "tripDate";
+    private static final String GROUP_ID = "groupID";
 
     private static EventDB instance;
 
@@ -37,7 +38,8 @@ public class EventDB extends SQLiteOpenHelper {
                 "%s TEXT NOT NULL, " +
                 "%s TEXT NOT NULL, " +
                 "%s TEXT NOT NULL, " +
-                "%s INTEGER NOT NULL);", TABLE_NAME, ID, TITLE, START_TIME, END_TIME, TRIP_DATE);
+                "%s INTEGER NOT NULL, " +
+                "%s INTEGER NOT NULL);", TABLE_NAME, ID, TITLE, START_TIME, END_TIME, TRIP_DATE, GROUP_ID);
         db.execSQL(CREATE_TABLE);
     }
 
@@ -54,7 +56,7 @@ public class EventDB extends SQLiteOpenHelper {
 
     public Cursor getAllEvents() {
         SQLiteDatabase database = getWritableDatabase();
-        return database.query(TABLE_NAME, null, null, null, null, null, null);
+        return database.query(TABLE_NAME, new String[]{ID, TITLE, START_TIME, END_TIME, TRIP_DATE, GROUP_ID}, null, null, null, null, null);
     }
 
     public int updateEvent(ContentValues contentValues, String selection, String[] selectionArgs) {

@@ -7,6 +7,22 @@
     tools:context=".SavesFragment">
 
 
+    <TextView
+        android:id="@+id/votingInstructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_20dp"
+        android:text="To set up voting select 4 places.\nThen press DONE to start vote"
+        android:textColor="@color/quantum_grey600"
+        android:textStyle="italic"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/done_button"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.014" />
+
     <Button
         android:id="@+id/done_button"
         android:layout_width="wrap_content"

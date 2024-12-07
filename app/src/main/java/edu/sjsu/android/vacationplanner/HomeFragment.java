@@ -84,6 +84,8 @@ public class HomeFragment extends Fragment {
             emptyTripInfo.setVisibility(View.VISIBLE);
             tripInfoLayout.setVisibility(View.GONE);
         } else {
+            tripDateString = tripStartDate + " - " + tripEndDate;
+
             emptyTripInfo.setVisibility(View.GONE);
             tripInfoLayout.setVisibility(View.VISIBLE);
             tripName.setText(tripNameString);
@@ -113,7 +115,7 @@ public class HomeFragment extends Fragment {
         doneButton = editTripInfoDialog.findViewById(R.id.doneButton);
 
         // set texts to current information
-        if (!tripNameString.equals("Name of Trip")) {
+        if (!tripNameString.isEmpty()) {
             tripNameInput.setText(tripNameString);
             tripDestinationInput.setText(destinationString);
             startDayInput.setText(tripStartDate);

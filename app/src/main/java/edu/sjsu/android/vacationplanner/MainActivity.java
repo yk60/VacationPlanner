@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
     private static ImageView notificationDot;
 
     private final Uri CONTENT_URI = Uri.parse("content://edu.sjsu.android.vacationplanner");
+    private final Uri CONTENT_URI2 = Uri.parse("content://edu.sjsu.android.vacationplanner.GroupProvider");
+    private final Uri CONTENT_URI_notifications = CONTENT_URI2.buildUpon().appendPath("notifications").build();
 
     private static String username = "";
     private static int profilePicID = 0;
@@ -85,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
 
         // call method to get user info
         getUserProfileInfo();
+
+        // get notifications from db
+        getNotificationsFromDB();
 
         // initialize notification dot
         notificationDot = findViewById(R.id.notification_dot);
@@ -176,6 +181,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("Range")
+    private void getNotificationsFromDB() {
+        Notification.notificationsList.clear();
+        // if this is a new user, send notification for new user
+        if (groupID == 0) {
+            Notification newUserNotification = new Notification(1, "Welcome to the Travel Planner App!", "Get started by forming a group!");
+            Notification.notificationsList.add(newUserNotification);
+        }
+
+        final String[] selectColumns = {"notifID", "notifTitle", "notifDescription", "groupID"};
+        try (Cursor c = getContentResolver().
+                query(CONTENT_URI_notifications, null, null, selectColumns, "groupID")) {
+            assert c != null;
+            if (c.moveToFirst()) {
+                do {
+                    int idGroup = c.getInt(c.getColumnIndex("groupID"));
+                    if (idGroup == MainActivity.getGroupID()) {
+                        int notifID = c.getInt(c.getColumnIndex("notifID"));
+                        String notifTitle = c.getString(c.getColumnIndex("notifTitle"));
+                        String notifDesc = c.getString(c.getColumnIndex("notifDescription"));
+                        Notification.notificationsList.add(new Notification(notifID, notifTitle, notifDesc));
+                    }
+                } while (c.moveToNext());
+            } }
+    }
+
     public static void checkNotifications() {
         if (Notification.notificationsList.isEmpty()){
             notificationDot.setVisibility(View.GONE);
@@ -206,12 +237,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } while (c.moveToNext());
             }
-        }
-
-        // if this is a new user, send notification for new user
-        if (groupID == 0) {
-            Notification newUserNotification = new Notification(1, "Welcome to the Travel Planner App!", "Get started by forming a group!");
-            Notification.notificationsList.add(newUserNotification);
         }
     }
 
@@ -249,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
     public static void updateGroupID(int idGroup) {
         groupID = idGroup;
     }
+    public static void updateHostID() { hostID = 1; }
 
     public void uninstall(){
         Intent delete = new Intent(Intent.ACTION_DELETE,

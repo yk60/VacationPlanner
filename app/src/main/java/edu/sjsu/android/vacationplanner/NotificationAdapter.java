@@ -1,7 +1,9 @@
 package edu.sjsu.android.vacationplanner;
 
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,9 @@ import java.util.List;
 
 
 public class NotificationAdapter  extends ArrayAdapter<Notification> {
+
+    private final Uri CONTENT_URI2 = Uri.parse("content://edu.sjsu.android.vacationplanner.GroupProvider");
+    private final Uri CONTENT_URI_notifications = CONTENT_URI2.buildUpon().appendPath("notifications").build();
 
     public NotificationAdapter(@NonNull Context context, List<Notification> notificationList) {
         super(context, 0, notificationList);
@@ -42,6 +47,10 @@ public class NotificationAdapter  extends ArrayAdapter<Notification> {
         title.setText(notification.getTitle());
         desc.setText(notification.getDescription());
         button.setOnClickListener(view -> {
+            Context context = this.getContext();
+            ContentResolver result = (ContentResolver) context.getContentResolver();
+            result.delete(CONTENT_URI_notifications,"notifID = ?", new String[] {String.valueOf(notification.getId())});
+
             Notification.notificationsList.remove(Notification.getNotificationForID(notification.getId()));
             this.notifyDataSetChanged();
             MainActivity.checkNotifications();

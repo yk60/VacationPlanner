@@ -76,10 +76,13 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
 
         // show message if saves list is empty
         TextView emptyText = view.findViewById(R.id.emptySavesPage);
+        TextView instructions = view.findViewById(R.id.votingInstructions);
         if (Planner.getInstance().getSavedPlaces().isEmpty()) {
             emptyText.setVisibility(View.VISIBLE);
+            instructions.setVisibility(View.GONE);
         } else {
             emptyText.setVisibility(View.GONE);
+            instructions.setVisibility(View.VISIBLE);
         }
 
         sharedViewModel.getSelectedPlace().observe(getViewLifecycleOwner(), new Observer<MyPlace>() {
@@ -119,10 +122,10 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
                 Toast.makeText(getContext(), "Voting page updated", Toast.LENGTH_SHORT).show();
                 Log.d("done_votelist", String.valueOf(sharedViewModel.getVoteList().getValue().size()));
 
-                /* TODO: uncomment this
                 // notify group that voting has begun, and call MainActivity.checkNotifications() to update notifications list
                 createNotification();
-                MainActivity.checkNotifications();*/
+                MainActivity.checkNotifications();
+
             } else {
                 Toast.makeText(getContext(), "Select 4 places to start vote", Toast.LENGTH_SHORT).show();
             }

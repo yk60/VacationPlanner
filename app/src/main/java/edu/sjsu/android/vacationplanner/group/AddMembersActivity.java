@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import edu.sjsu.android.vacationplanner.MainActivity;
+import edu.sjsu.android.vacationplanner.Notification;
 import edu.sjsu.android.vacationplanner.R;
 import edu.sjsu.android.vacationplanner.User;
 
@@ -30,7 +31,7 @@ public class AddMembersActivity extends AppCompatActivity {
     private final Uri CONTENT_URI2 = Uri.parse("content://edu.sjsu.android.vacationplanner.GroupProvider");
     private final Uri CONTENT_URI_members = CONTENT_URI2.buildUpon().appendPath("members").build();
     private final Uri CONTENT_URI_trips = CONTENT_URI2.buildUpon().appendPath("trips").build();
-
+    private final Uri CONTENT_URI_notifications = CONTENT_URI2.buildUpon().appendPath("notifications").build();
 
     GroupListAdapter adapter;
     private SearchView searchView;
@@ -228,6 +229,7 @@ public class AddMembersActivity extends AppCompatActivity {
             getContentResolver().insert(CONTENT_URI_trips, newTrip);
 
             MainActivity.updateGroupID(id_group);
+            MainActivity.updateHostID();
 
         } else {
             // to insert into host's group list
@@ -244,8 +246,21 @@ public class AddMembersActivity extends AppCompatActivity {
             getContentResolver().update(CONTENT_URI1, updateMem, "name = ?", new String[] {user.getUsername()});
         }
 
+        // create new notification in table
+        createNotification(user);
+
     }
 
+    private void createNotification(User user) {
+        Notification.notificationsList.add(new Notification(Notification.notificationsList.size(), "New Member Added to Group", user.getUsername() + " has been added to the group!"));
+
+        ContentValues notificationVals = new ContentValues();
+        notificationVals.put("notifTitle", "New Member Added to Group");
+        notificationVals.put("notifDescription", user.getUsername() + " has been added to the group!");
+        notificationVals.put("notifID", Notification.notificationsList.size());
+        notificationVals.put("groupID", MainActivity.getGroupID());
+        getContentResolver().insert(CONTENT_URI_notifications, notificationVals);
+    }
 
 
     @SuppressLint("Range")

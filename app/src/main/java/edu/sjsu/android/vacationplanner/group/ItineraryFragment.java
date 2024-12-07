@@ -41,6 +41,7 @@ import java.util.Map;
 
 import edu.sjsu.android.vacationplanner.EventAdapter;
 import edu.sjsu.android.vacationplanner.ItineraryAdapter;
+import edu.sjsu.android.vacationplanner.MainActivity;
 import edu.sjsu.android.vacationplanner.MyEvent;
 import edu.sjsu.android.vacationplanner.R;
 import edu.sjsu.android.vacationplanner.SharedViewModel;
@@ -71,7 +72,6 @@ public class ItineraryFragment extends Fragment {
         loadEventsFromDatabase();
         // restore all event data for current day and update itinerary
         InitEventsList();
-
     }
 
     @Override
@@ -95,6 +95,11 @@ public class ItineraryFragment extends Fragment {
         tripDateView = view.findViewById(R.id.trip_date);
         currentDateView = view.findViewById(R.id.current_date);
         currentCalendar = Calendar.getInstance();
+
+        // set current date
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE MM/dd", Locale.getDefault());
+        String date = dateFormat.format(currentCalendar.getTime());
+        currentDateView.setText(date);
 
         ImageButton prevDayButton = view.findViewById(R.id.prev_day);
         prevDayButton.setOnClickListener(v -> {
@@ -257,8 +262,8 @@ public class ItineraryFragment extends Fragment {
     }
 
     public void saveEvent(MyEvent event) {
-        String selection = "startTime = ? AND endTime = ? AND tripDate = ?";
-        String[] selectionArgs = {event.getStartTime(), event.getEndTime(), tripDateView.getText().toString().split(" ")[1]};
+        String selection = "startTime = ? AND endTime = ? AND tripDate = ? AND groupID = ?";
+        String[] selectionArgs = {event.getStartTime(), event.getEndTime(), tripDateView.getText().toString().split(" ")[1], String.valueOf(MainActivity.getGroupID())};
 
         Cursor cursor = getContext().getContentResolver().query(CONTENT_URI2, null, selection, selectionArgs, null);
         boolean eventExists = false;
@@ -268,8 +273,9 @@ public class ItineraryFragment extends Fragment {
                 @SuppressLint("Range") String existingStartTime = cursor.getString(cursor.getColumnIndex("startTime"));
                 @SuppressLint("Range") String existingEndTime = cursor.getString(cursor.getColumnIndex("endTime"));
                 @SuppressLint("Range") String existingTripDate = cursor.getString(cursor.getColumnIndex("tripDate"));
+                @SuppressLint("Range") int group = cursor.getInt(cursor.getColumnIndex("groupID"));
 
-                if (existingStartTime.equals(event.getStartTime()) && existingEndTime.equals(event.getEndTime()) && existingTripDate.equals(tripDateView.getText().toString().split(" ")[1])) {
+                if (existingStartTime.equals(event.getStartTime()) && existingEndTime.equals(event.getEndTime()) && existingTripDate.equals(tripDateView.getText().toString().split(" ")[1]) && group==MainActivity.getGroupID()) {
                     // If the new event has same start time, end time, and trip date, update event
                     updateEvent(event);
                     Toast.makeText(getContext(), "Event updated", Toast.LENGTH_SHORT).show();
@@ -292,6 +298,7 @@ public class ItineraryFragment extends Fragment {
         values.put("startTime", event.getStartTime());
         values.put("endTime", event.getEndTime());
         values.put("tripDate", tripDateView.getText().toString().split(" ")[1]);
+        values.put("groupID", MainActivity.getGroupID());
 
         getContext().getContentResolver().insert(CONTENT_URI2, values);
         List<MyEvent> eventsList = sharedViewModel.getEventsForDay(currentDay);
@@ -306,8 +313,8 @@ public class ItineraryFragment extends Fragment {
         eventUpdate.put("endTime", event.getEndTime());
         eventUpdate.put("tripDate", tripDateView.getText().toString().split(" ")[1]);
 
-        String selection = "startTime = ? AND endTime = ? AND tripDate = ?";
-        String[] selectionArgs = {event.getStartTime(), event.getEndTime(), tripDateView.getText().toString().split(" ")[1]};
+        String selection = "startTime = ? AND endTime = ? AND tripDate = ? AND groupID = ?";
+        String[] selectionArgs = {event.getStartTime(), event.getEndTime(), tripDateView.getText().toString().split(" ")[1], String.valueOf(MainActivity.getGroupID())};
         getContext().getContentResolver().update(CONTENT_URI2, eventUpdate, selection, selectionArgs);
 
         List<MyEvent> eventsList = sharedViewModel.getEventsForDay(currentDay);
@@ -350,24 +357,27 @@ public class ItineraryFragment extends Fragment {
         return eventsList;
     }
 
+    @SuppressLint("Range")
     private void loadEventsFromDatabase() {
         Map<Integer, List<MyEvent>> eventsMap = new HashMap<>();
-        Cursor cursor = getContext().getContentResolver().query(CONTENT_URI2, null, null, null, null);
+        Cursor cursor = requireContext().getContentResolver().query(CONTENT_URI2, null, null, null, null);
     
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex("title"));
-                @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
-                @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("endTime"));
-                @SuppressLint("Range") String tripDate = cursor.getString(cursor.getColumnIndex("tripDate"));
-    
-                MyEvent event = new MyEvent(title, startTime, endTime, tripDate);
-                int day = Integer.parseInt(tripDate);
-    
-                if (!eventsMap.containsKey(day)) {
-                    eventsMap.put(day, new ArrayList<>());
+                if (cursor.getInt(cursor.getColumnIndex("groupID")) == MainActivity.getGroupID()) {
+                    @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex("title"));
+                    @SuppressLint("Range") String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
+                    @SuppressLint("Range") String endTime = cursor.getString(cursor.getColumnIndex("endTime"));
+                    @SuppressLint("Range") String tripDate = cursor.getString(cursor.getColumnIndex("tripDate"));
+
+                    MyEvent event = new MyEvent(title, startTime, endTime, tripDate);
+                    int day = Integer.parseInt(tripDate);
+
+                    if (!eventsMap.containsKey(day)) {
+                        eventsMap.put(day, new ArrayList<>());
+                    }
+                    eventsMap.get(day).add(event);
                 }
-                eventsMap.get(day).add(event);
             }
             cursor.close();
         }
@@ -451,11 +461,11 @@ public class ItineraryFragment extends Fragment {
         timePickerDialog.show();
     }
 
-    
-
     @Override
     public void onResume() {
         super.onResume();
+        loadEventsFromDatabase();
+        InitEventsList();
         sharedViewModel.getEventsMap().observe(getViewLifecycleOwner(), eventsMap -> {
             List<MyEvent> events = sharedViewModel.getEventsForDay(currentDay);
             eventAdapter.setEvents(events);

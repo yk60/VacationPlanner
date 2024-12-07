@@ -74,7 +74,10 @@ public class GroupListFragment extends Fragment {
         super.onStart();
         // initialize group members list by getting the information from database
         User.usersList = initializeGroup();
+        initializeView();
+    }
 
+    private void initializeView() {
         Button button = view.findViewById(R.id.addMembers_button);
         hostNameLayout = view.findViewById(R.id.hostNameLayout);
         // if (user doesn't have a group yet) OR (user has a group, and is the host)
@@ -92,10 +95,9 @@ public class GroupListFragment extends Fragment {
             nameOfHost = view.findViewById(R.id.hostName);
             String s = "Host: " + hostname;
             nameOfHost.setText(s);
-
         }
-
     }
+
 
     @Override
     public void onResume()
@@ -104,6 +106,7 @@ public class GroupListFragment extends Fragment {
         // Set adapter
         MembersListAdapter adapter = new MembersListAdapter(context, User.usersList);
         userListView.setAdapter(adapter);
+        initializeView();
     }
 
     @SuppressLint("Range")

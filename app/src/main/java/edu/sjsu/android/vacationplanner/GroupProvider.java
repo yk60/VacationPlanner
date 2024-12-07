@@ -31,6 +31,7 @@ public class GroupProvider extends ContentProvider {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         matcher.addURI(AUTHORITY, "members", 1); // to access group members table
         matcher.addURI(AUTHORITY, "trips", 2); // to access trips table
+        matcher.addURI(AUTHORITY, "notifications", 3); // to access notifications table
         return matcher;
     }
 
@@ -44,8 +45,11 @@ public class GroupProvider extends ContentProvider {
                 sortOrder = sortOrder == null ? "_id" : sortOrder;
                 return database.getAllUsers(sortOrder);
             case 2:
-                sortOrder = sortOrder == null ? "_id" : sortOrder;
+                sortOrder = sortOrder == null ? "_tripID" : sortOrder;
                 return database.getAllTripInfo(sortOrder);
+            case 3:
+                sortOrder = sortOrder == null ? "_notificationID" : sortOrder;
+                return database.getAllNotifications(sortOrder);
         }
         return null;
     }
@@ -68,6 +72,9 @@ public class GroupProvider extends ContentProvider {
             case 2:
                 rowID = database.insertTripInfo(contentValues);
                 break;
+            case 3:
+                rowID = database.insertNotification(contentValues);
+                break;
         }
         if (rowID > 0) {
             Uri _uri = ContentUris.withAppendedId(uri, rowID);
@@ -79,7 +86,13 @@ public class GroupProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-        return database.deleteMember(s, strings);
+        switch (uriMatcher.match(uri)) {
+            case 1:
+                return database.deleteMember(s, strings);
+            case 3:
+                return database.deleteNotification(s, strings);
+        }
+        return 0;
     }
 
     @Override

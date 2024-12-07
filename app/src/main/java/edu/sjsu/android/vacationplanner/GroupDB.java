@@ -50,6 +50,21 @@ public class GroupDB extends SQLiteOpenHelper {
                     "%s INTEGER NOT NULL);", TRIP_TABLE_NAME, TRIP_ID, TRIP_NAME, DESTINATION, START_DATE, END_DATE, BUDGET_GOAL, GROUP_ID);
 
 
+    // keys for notifications table
+    private static final String NOTIFICATION_TABLE_NAME = "notifications";
+    private static final String NOTIFICATION_ID = "_notificationID";
+    private static final String NOTIF_TITLE = "notifTitle";
+    private static final String NOTIF_DESC = "notifDescription";
+    private static final String NOTIF_ID = "notifID";
+
+    // create table for notifications
+    static final String CREATE_NOTIFICATION_TABLE =
+            String.format("CREATE TABLE %s (" +
+                    "%s INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "%s TEXT, " +
+                    "%s TEXT, " +
+                    "%s INTEGER, " +
+                    "%s INTEGER);", NOTIFICATION_TABLE_NAME, NOTIFICATION_ID, NOTIF_TITLE, NOTIF_DESC, NOTIF_ID, GROUP_ID);
 
 
     public GroupDB(@Nullable Context context) {
@@ -64,12 +79,14 @@ public class GroupDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_MEMBERS_TABLE);
         sqLiteDatabase.execSQL(CREATE_TRIP_TABLE);
+        sqLiteDatabase.execSQL(CREATE_NOTIFICATION_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MEMBERS_TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TRIP_TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + NOTIFICATION_TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 
@@ -80,6 +97,10 @@ public class GroupDB extends SQLiteOpenHelper {
     public long insertTripInfo(ContentValues contentValues) {
         SQLiteDatabase database = getWritableDatabase();
         return database.insert(TRIP_TABLE_NAME, null, contentValues);
+    }
+    public long insertNotification(ContentValues contentValues) {
+        SQLiteDatabase database = getWritableDatabase();
+        return database.insert(NOTIFICATION_TABLE_NAME, null, contentValues);
     }
 
     public int update(ContentValues contentValue){
@@ -97,6 +118,7 @@ public class GroupDB extends SQLiteOpenHelper {
         return database.update(TRIP_TABLE_NAME, contentValue, s, strings);
     }
 
+
     public Cursor getAllUsers(String orderBy) {
         SQLiteDatabase database = getWritableDatabase();
         return database.query(MEMBERS_TABLE_NAME,
@@ -110,10 +132,21 @@ public class GroupDB extends SQLiteOpenHelper {
                 new String[]{TRIP_ID, TRIP_NAME, DESTINATION, START_DATE, END_DATE, BUDGET_GOAL, GROUP_ID},
                 null, null, null, null, orderBy);
     }
+    public Cursor getAllNotifications(String orderBy) {
+        SQLiteDatabase database = getWritableDatabase();
+        return database.query(NOTIFICATION_TABLE_NAME,
+                new String[]{NOTIFICATION_ID, NOTIF_TITLE, NOTIF_DESC, NOTIF_ID, GROUP_ID},
+                null, null, null, null, orderBy);
+    }
 
     public int deleteMember(String selection, String[] selectionArgs){
         SQLiteDatabase database = getWritableDatabase();
         return database.delete(MEMBERS_TABLE_NAME, selection, selectionArgs);
+    }
+
+    public int deleteNotification(String selection, String[] selectionArgs) {
+        SQLiteDatabase database = getWritableDatabase();
+        return database.delete(NOTIFICATION_TABLE_NAME, selection, selectionArgs);
     }
 
 }

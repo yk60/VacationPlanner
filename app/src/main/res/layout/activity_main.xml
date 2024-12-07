@@ -45,24 +45,25 @@
 
                 <ImageButton
                     android:id="@+id/CalendarButton"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginEnd="9dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_toStartOf="@id/home_notifications"
                     android:layout_centerInParent="true"
+                    android:scaleType="fitCenter"
                     android:contentDescription="Calendar"
-                    android:background="@drawable/calendar"/>
+                    android:background="@drawable/home_calendar"/>
 
                 <ImageButton
                     android:id="@+id/SavesButton"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_centerInParent="true"
                     android:scaleType="fitCenter"
                     android:contentDescription="Save"
-                    android:background="@drawable/save"
+                    android:background="@drawable/bookmark"
                     android:layout_toStartOf="@id/CalendarButton"
-                    android:layout_marginEnd="15dp"/>
+                    android:layout_marginEnd="9dp"/>
 
                 <Button
                     android:id="@+id/uninstall_button"
