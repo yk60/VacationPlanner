@@ -83,7 +83,8 @@
             android:id="@+id/delete_all_events_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Delete All Events" />
+            android:text="Delete All Events"
+            style="@style/clearButton" />
     </LinearLayout>
 
     <ScrollView

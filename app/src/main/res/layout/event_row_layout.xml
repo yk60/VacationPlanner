@@ -7,11 +7,14 @@
     style="@style/eventItemBorder">
 
 <TextView
-       android:id="@+id/event_detail"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:textSize="16sp"
-       android:text="no event"
-       android:padding="8dp" />
+        android:id="@+id/event_detail"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textSize="16sp"
+        android:text="no event"
+        android:padding="8dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeStepGranularity="1sp" />
 
 </LinearLayout>

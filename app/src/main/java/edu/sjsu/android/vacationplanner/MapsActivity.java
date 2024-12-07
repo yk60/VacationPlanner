@@ -153,7 +153,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mapAdapter);
 
-        NestedScrollView nestedScrollView = findViewById(R.id.scroll_view);
+        NestedScrollView nestedScrollView = findViewById(R.id.bottom_sheet);
         BottomSheetBehavior<NestedScrollView> bottomSheetBehavior = BottomSheetBehavior.from(nestedScrollView);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         bottomSheetBehavior.setPeekHeight(100);
@@ -165,11 +165,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        // placesClient = Places.createClient(this);
 
-        findViewById(R.id.Restaurants_button).setOnClickListener(v -> searchNearbyPlaces("restaurant", LOCATION_UNIV));
-        findViewById(R.id.Hotels_button).setOnClickListener(v -> searchNearbyPlaces("hotel", LOCATION_UNIV));
-        findViewById(R.id.ThingsToDo_button).setOnClickListener(v -> searchNearbyPlaces("tourist_attraction", LOCATION_UNIV));
+        
+        findViewById(R.id.Restaurants_button).setOnClickListener(v -> {
+            Toast.makeText(this, "Searching for restaurants near " + LOCATION_UNIV, Toast.LENGTH_SHORT).show();
+            searchNearbyPlaces("restaurant", LOCATION_UNIV);
+        });
+    
+        findViewById(R.id.Hotels_button).setOnClickListener(v -> {
+            Toast.makeText(this, "Searching for hotels near " + LOCATION_UNIV, Toast.LENGTH_SHORT).show();
+            searchNearbyPlaces("hotel", LOCATION_UNIV);
+        });
+    
+        findViewById(R.id.ThingsToDo_button).setOnClickListener(v -> {
+            Toast.makeText(this, "Searching for things to do near " + LOCATION_UNIV, Toast.LENGTH_SHORT).show();
+            searchNearbyPlaces("tourist_attraction", LOCATION_UNIV);
+        });
+
+
     }
 
     private void getLastLocation() {
@@ -214,6 +227,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapLongClickListener(p -> deleteAllLocations());
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setZoomControlsEnabled(true);
+
+        int padding = (int) (getResources().getDisplayMetrics().density * 50);
+        mMap.setPadding(0, 0, 0, padding);
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
@@ -277,6 +293,51 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapAdapter.notifyDataSetChanged();
     }
 
+    private void getPlaceDetails(Place place, List<MyPlace> searchResults) {
+        String name = place.getName();
+        String address = place.getAddress();
+        String rating = place.getRating() != null ? place.getRating().toString() : "N/A";
+        String businessHour = place.getOpeningHours() != null ? place.getOpeningHours().getWeekdayText().toString() : "N/A";
+        LatLng latLng = place.getLatLng();
+
+        Bitmap defaultImage = BitmapFactory.decodeResource(getResources(), R.drawable.default_place_image);
+        MyPlace myPlace = new MyPlace(name, address, rating, businessHour, false, defaultImage);
+
+        getPhotoMetadata(place, myPlace);
+
+        if (!searchResults.contains(myPlace)) {
+            searchResults.add(myPlace);
+        }
+        if (latLng != null) {
+            mMap.addMarker(new MarkerOptions().position(latLng).title(name));
+        }
+    }
+
+    public void getPhotoMetadata(Place place, MyPlace myPlace){
+        final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
+        if (metadata != null && !metadata.isEmpty()) {
+            final PhotoMetadata photoMetadata = metadata.get(0);
+            final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                    .setMaxWidth(500)
+                    .setMaxHeight(300)
+                    .build();
+            placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
+                Bitmap bitmap = fetchPhotoResponse.getBitmap();
+                myPlace.setImage(bitmap);
+                mapAdapter.notifyDataSetChanged();
+            }).addOnFailureListener((exception) -> {
+                if (exception instanceof ApiException) {
+                    final ApiException apiException = (ApiException) exception;
+                    Log.e(TAG, "Place not found: " + apiException.getMessage());
+                    final int statusCode = apiException.getStatusCode();
+                    Log.e(TAG, "Status code: " + statusCode);
+                } else {
+                    Log.e(TAG, "Place not found: " + exception.getMessage());
+                }
+            });
+        } 
+    }
+
     // Get multiple search results from the input query. For each result, call searchResult to get and save place info
     private void searchPlaces(String query) {
         if (placesClient == null) {
@@ -317,43 +378,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
             Place place = response.getPlace();
-            String name = place.getName();
-            String address = place.getAddress();
-            String rating = place.getRating() != null ? place.getRating().toString() : "N/A";
-            String businessHour = place.getOpeningHours() != null ? place.getOpeningHours().getWeekdayText().toString() : "N/A";
-
-            Log.i(TAG, "Place found: " + name);
-
-            Bitmap defaultImage = BitmapFactory.decodeResource(getResources(), R.drawable.default_place_image);
-            MyPlace myPlace = new MyPlace(name, address, rating, businessHour, false, defaultImage);
-
-            // Get the photo metadata
-            final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
-            if (metadata != null && !metadata.isEmpty()) {
-                Log.w(TAG, "photo metadata found");
-
-                final PhotoMetadata photoMetadata = metadata.get(0);
-                final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
-                        .setMaxWidth(500)
-                        .setMaxHeight(300)
-                        .build();
-                placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
-                    Bitmap bitmap = fetchPhotoResponse.getBitmap();
-                    myPlace.setImage(bitmap);
-
-                    mapAdapter.notifyDataSetChanged();
-                }).addOnFailureListener((exception) -> {
-                    if (exception instanceof ApiException) {
-                        final ApiException apiException = (ApiException) exception;
-                        Log.e(TAG, "Place not found: " + apiException.getMessage());
-                        final int statusCode = apiException.getStatusCode();
-                        Log.e(TAG, "Status code: " + statusCode);
-                    } else {
-                        Log.e(TAG, "Place not found: " + exception.getMessage());
-                    }
-                });
-            }
-            searchResults.add(myPlace);
+            getPlaceDetails(place, searchResults);          
             updateBottomSheet(searchResults);
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) {
@@ -361,6 +386,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
+
 
     @NonNull
     @Override
@@ -399,9 +425,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    // TODO: get rid of hard coded current location
     public void searchNearbyPlaces(String query, LatLng location) {
         deleteAllLocations();
-        final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS, Place.Field.RATING);
+        final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS, Place.Field.RATING, Place.Field.OPENING_HOURS, Place.Field.PHOTO_METADATAS);
         CircularBounds circle = CircularBounds.newInstance(location, 1000);
         final List<String> includedTypes = Arrays.asList(query);
 
@@ -410,21 +437,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setMaxResultCount(10)
                 .build();
 
-        // Call placesClient.searchNearby() to perform the search.
         placesClient.searchNearby(searchNearbyRequest)
         .addOnSuccessListener(response -> {
             List<Place> places = response.getPlaces();
             List<MyPlace> searchResults = new ArrayList<>();
-            for (Place place : places) {
-                String name = place.getName();
-                String address = place.getAddress();
-                String rating = place.getRating() != null ? place.getRating().toString() : "N/A";
-                LatLng latLng = place.getLatLng();
-                MyPlace myPlace = new MyPlace(name, address, rating, null, false, null);
-                searchResults.add(myPlace);
-                if (latLng != null) {
-                    mMap.addMarker(new MarkerOptions().position(latLng).title(name));
+            // update camera position to show first place from search result
+            if (!places.isEmpty()) {
+                Place firstPlace = places.get(0);
+                LatLng firstPlaceLatLng = firstPlace.getLatLng();
+                if (firstPlaceLatLng != null) {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(firstPlaceLatLng, 15));
                 }
+            }
+            for (Place place : places) {
+                getPlaceDetails(place, searchResults);
             }
             updateBottomSheet(searchResults);
         })
