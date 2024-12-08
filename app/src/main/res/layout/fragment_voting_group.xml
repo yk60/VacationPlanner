@@ -15,17 +15,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Voting" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Result" />
 
     </com.google.android.material.tabs.TabLayout>
+    <TextView
+        android:id="@+id/initial_voting_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Voting has not yet started"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:visibility="visible"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/VotingViewPager2"

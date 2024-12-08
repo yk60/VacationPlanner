@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".VotingFragment" >
+    
+    <TextView
+        android:id="@+id/initial_voting_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Voting has not yet started"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:visibility="visible"
+        android:layout_gravity="center"/>
 
     <GridLayout
         android:id="@+id/gridView"

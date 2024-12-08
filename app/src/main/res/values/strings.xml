@@ -21,4 +21,6 @@
 
     <string name="save_pressed">saved</string>
     <string name="save_not_pressed">save</string>
+
+    <string name="uninstall">Uninstall</string>
 </resources>

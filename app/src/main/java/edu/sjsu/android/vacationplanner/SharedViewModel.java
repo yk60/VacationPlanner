@@ -115,4 +115,9 @@ public class SharedViewModel extends ViewModel {
         }
         return new ArrayList<>();
     }
+
+    public boolean isVotingStarted() {
+        ArrayList<MyPlace> currentVoteList = voteList.getValue();
+        return currentVoteList != null && !currentVoteList.isEmpty();
+    }
 }

@@ -57,8 +57,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Cost">
+            android:layout_height="wrap_content">
             <EditText
                 android:id="@+id/place_cost"
                 android:layout_width="match_parent"
@@ -66,22 +65,39 @@
                 android:ems="10"
                 android:minHeight="50dp"
                 android:inputType="numberDecimal"
-                android:hint="cost" />
+                android:hint="Cost" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Date">
-            <EditText
-                android:id="@+id/place_datetime"
-                android:layout_width="match_parent"
+            android:orientation="horizontal">
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:minHeight="50dp"
-                android:inputType="datetime"
-                android:hint="MM/DD/YYYY" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_weight="1">
+                <EditText
+                    android:id="@+id/place_datetime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:minHeight="50dp"
+                    android:inputType="datetime"
+                    android:hint="MM/DD/YYYY" />
+            </com.google.android.material.textfield.TextInputLayout>
+            
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/date_picker"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:scaleType="centerInside"
+                style="@style/clearButton"
+                app:icon="@drawable/calendar"
+                app:iconGravity="textStart"
+                app:iconSize="24dp"/>
+
+        </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -113,12 +129,9 @@
             android:id="@+id/place_type_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/place_types" />
+            android:entries="@array/place_types"
+            android:paddingTop="8dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/date_picker"
-            style="@style/clearButton"
-            android:text="Date picker"/>
     </LinearLayout>
 
     <FrameLayout

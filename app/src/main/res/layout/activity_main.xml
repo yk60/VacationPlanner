@@ -34,6 +34,18 @@
                     android:src="@drawable/ic_launcher_background"
                     android:layout_alignParentStart="true"/>
 
+                <ImageView
+                    android:id="@+id/notification_dot"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/background_add_button"
+                    android:layout_alignTop="@id/home_notifications"
+                    android:layout_alignEnd="@id/home_notifications"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="5dp"
+                    app:tint="@color/red_light" />
+
                 <ImageButton
                     android:id="@+id/home_notifications"
                     android:layout_width="40dp"
@@ -42,6 +54,7 @@
                     android:layout_centerInParent="true"
                     android:layout_alignParentEnd="true"
                     android:background="@drawable/round_notifications_none_24"/>
+
 
                 <ImageButton
                     android:id="@+id/CalendarButton"
@@ -63,16 +76,7 @@
                     android:contentDescription="Save"
                     android:background="@drawable/bookmark"
                     android:layout_toStartOf="@id/CalendarButton"
-                    android:layout_marginEnd="9dp"/>
-
-                <Button
-                    android:id="@+id/uninstall_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="34dp"
-                    android:layout_toStartOf="@+id/SavesButton"
-                    android:text="Uninstall" />
+                    android:layout_marginEnd="8dp"/>
 
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
@@ -109,16 +113,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:navGraph="@navigation/nav"/>
 
-    <ImageView
-        android:id="@+id/notification_dot"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:src="@drawable/background_add_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        app:tint="@color/red_light"
-        android:visibility="gone"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

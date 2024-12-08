@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                     navController.navigate(R.id.navigation_budget);
                     return true;
                 } else if (itemId == R.id.navigation_planning) {
-                    navController.navigate(R.id.navigation_votingGroup);
+                    navController.navigate(R.id.navigation_voting);
                     return true;
                 } else if (itemId == R.id.navigation_search) {
                     navController.navigate(R.id.mapsActivity);
@@ -172,13 +172,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        Button uninstallButton = findViewById(R.id.uninstall_button);
-        uninstallButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uninstall();
-            }
-        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.unin){
+            Intent delete = new Intent(Intent.ACTION_DELETE,
+                    Uri.parse("package:" + getPackageName()));
+            startActivity(delete);
+            return true;
+        }
+        else return super.onOptionsItemSelected(item);
     }
 
     @SuppressLint("Range")
@@ -275,13 +285,6 @@ public class MainActivity extends AppCompatActivity {
         groupID = idGroup;
     }
     public static void updateHostID() { hostID = 1; }
-
-    public void uninstall(){
-        Intent delete = new Intent(Intent.ACTION_DELETE,
-                Uri.parse("package:" + getPackageName()));
-        startActivity(delete);
-
-    }
 
     @Override
     protected void onResume() {

@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -125,6 +127,10 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
                 // notify group that voting has begun, and call MainActivity.checkNotifications() to update notifications list
                 createNotification();
                 MainActivity.checkNotifications();
+                
+                // open the planning page
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+                navController.navigate(R.id.navigation_voting);
 
             } else {
                 Toast.makeText(getContext(), "Select 4 places to start vote", Toast.LENGTH_SHORT).show();
