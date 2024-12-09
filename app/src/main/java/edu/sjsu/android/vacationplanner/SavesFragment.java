@@ -163,6 +163,8 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
 
     private void loadPlacesFromDatabase() {
         Log.d("dbload", "data loaded");
+        Planner.getInstance().getSavedPlaces().clear();
+        
         Cursor cursor = appDB.getAllPlaces();
         if (cursor != null && cursor.moveToFirst()) {
             do {

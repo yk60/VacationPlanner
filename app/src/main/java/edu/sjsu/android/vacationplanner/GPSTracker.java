@@ -15,7 +15,6 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 
 public class GPSTracker {
 
@@ -74,7 +73,6 @@ public class GPSTracker {
                 new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
                         android.Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
     }
-
     private void onSuccess(Location location) {
         if (location != null) {
             double latitude = location.getLatitude();
@@ -82,13 +80,9 @@ public class GPSTracker {
             Toast.makeText(context, "Current location: \n" +
                             "Lat " + latitude + "\nLong: " + longitude,
                     Toast.LENGTH_LONG).show();
-//                locationListener.onLocationReceived(location);
-//            mapsActivity.searchNearbyPlaces(new LatLng(latitude, longitude));
-
-
-        } else
-            Toast.makeText(context, "Unable to get location",
-                    Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(context, "Unable to get location", Toast.LENGTH_LONG).show();
+        }
     }
     public interface LocationListener {
         void onLocationReceived(Location location);

@@ -79,6 +79,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private MapAdapter mapAdapter;
     private RecyclerView recyclerView;
     private FusedLocationProviderClient fusedLocationClient;
+    private LatLng LOCATION_CURRENT = null;
     private final LatLng LOCATION_UNIV = new LatLng(37.335371, -121.881050);
     private final int FINE_PERMISSION_CODE = 1;
     private SharedViewModel sharedViewModel;
@@ -93,6 +94,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.FloatingHomeButton.setOnClickListener(this::getLocation);
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, FINE_PERMISSION_CODE);
+        }
 
         String apiKey = BuildConfig.MAPS_API_KEY;
         if (TextUtils.isEmpty(apiKey) || apiKey.equals("DEFAULT_API_KEY")) {
@@ -118,13 +123,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // Search and move to place
             @Override
             public void onPlaceSelected(@NonNull Place place) {
+                deleteAllLocations();
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
 
                 LatLng latLng = place.getLatLng();
                 if (latLng != null) {
                     Log.i(TAG, "LatLng: " + latLng.toString());
                     mMap.addMarker(new MarkerOptions().position(latLng).title(place.getName()));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+
+                    LOCATION_CURRENT = latLng;
+                    Log.i(TAG, "Updated LOCATION_CURRENT: " + LOCATION_CURRENT.toString());
+                } else{
+                    LOCATION_CURRENT = LOCATION_UNIV;
                 }
 
                 searchPlaces(place.getName());
@@ -166,24 +177,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        
+        if(LOCATION_CURRENT == null){
+            LOCATION_CURRENT = LOCATION_UNIV;
+        }
         findViewById(R.id.Restaurants_button).setOnClickListener(v -> {
-            Toast.makeText(this, "Searching for restaurants near " + LOCATION_UNIV, Toast.LENGTH_SHORT).show();
-            searchNearbyPlaces("restaurant", LOCATION_UNIV);
+            Toast.makeText(this, "Searching for restaurants near " + LOCATION_CURRENT, Toast.LENGTH_SHORT).show();
+            searchNearbyPlaces("restaurant", LOCATION_CURRENT);
         });
     
         findViewById(R.id.Hotels_button).setOnClickListener(v -> {
-            Toast.makeText(this, "Searching for hotels near " + LOCATION_UNIV, Toast.LENGTH_SHORT).show();
-            searchNearbyPlaces("hotel", LOCATION_UNIV);
+            Toast.makeText(this, "Searching for hotels near " + LOCATION_CURRENT, Toast.LENGTH_SHORT).show();
+            searchNearbyPlaces("hotel", LOCATION_CURRENT);
         });
     
         findViewById(R.id.ThingsToDo_button).setOnClickListener(v -> {
-            Toast.makeText(this, "Searching for things to do near " + LOCATION_UNIV, Toast.LENGTH_SHORT).show();
-            searchNearbyPlaces("tourist_attraction", LOCATION_UNIV);
+            Toast.makeText(this, "Searching for things to do near " + LOCATION_CURRENT, Toast.LENGTH_SHORT).show();
+            searchNearbyPlaces("tourist_attraction", LOCATION_CURRENT);
         });
 
 
     }
+
 
     private void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -262,29 +276,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    // by default, current location will be set to Googleplex or the place saved in the emulator
+    // current location gets updated after the user selects a place from the search result
     public void getLocation(View view) {
+        deleteAllLocations();
         GPSTracker tracker = new GPSTracker(this, this);
         tracker.getLocation();
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LOCATION_UNIV, 10f));
-
-
-    }
-
-    private void getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-            return;
-        }
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, location -> {
-                    if (location != null) {
-                        LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
-                        mMap.addMarker(new MarkerOptions().position(currentLocation).title("Current Location"));
-                    } else {
-                        Log.e(TAG, "Current location is null");
-                    }
-                });
+        if (mMap != null && LOCATION_CURRENT != null) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LOCATION_CURRENT, 15f));
+            mMap.addMarker(new MarkerOptions().position(LOCATION_CURRENT).title("Current Location"));
+        } else {
+            Log.e(TAG, "Current location is null");
+        }  
     }
 
     private void updateBottomSheet(List<MyPlace> places) {
@@ -300,16 +303,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String businessHour = place.getOpeningHours() != null ? place.getOpeningHours().getWeekdayText().toString() : "N/A";
         LatLng latLng = place.getLatLng();
 
+        Log.i(TAG, "Place found: " + name);
         Bitmap defaultImage = BitmapFactory.decodeResource(getResources(), R.drawable.default_place_image);
         MyPlace myPlace = new MyPlace(name, address, rating, businessHour, false, defaultImage);
 
         getPhotoMetadata(place, myPlace);
 
-        if (!searchResults.contains(myPlace)) {
-            searchResults.add(myPlace);
-        }
+        searchResults.add(myPlace);
         if (latLng != null) {
             mMap.addMarker(new MarkerOptions().position(latLng).title(name));
+        } else{
+            Log.e("error", "latlng is null, no marker added");
         }
     }
 
@@ -371,14 +375,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         // Specify the fields to return.
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.RATING, Place.Field.OPENING_HOURS, Place.Field.PHOTO_METADATAS);
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS, Place.Field.RATING, Place.Field.OPENING_HOURS, Place.Field.PHOTO_METADATAS);
 
         // Construct a request object, passing the place ID and fields array
         FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields).build();
 
         placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
             Place place = response.getPlace();
-            getPlaceDetails(place, searchResults);          
+            getPlaceDetails(place, searchResults);
             updateBottomSheet(searchResults);
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) {
@@ -441,6 +445,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         .addOnSuccessListener(response -> {
             List<Place> places = response.getPlaces();
             List<MyPlace> searchResults = new ArrayList<>();
+        
             // update camera position to show first place from search result
             if (!places.isEmpty()) {
                 Place firstPlace = places.get(0);
@@ -448,9 +453,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (firstPlaceLatLng != null) {
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(firstPlaceLatLng, 15));
                 }
+            } else{
+                Log.e("error", "places list is empty");
             }
             for (Place place : places) {
-                getPlaceDetails(place, searchResults);
+                searchPlace(place.getId(), searchResults);
             }
             updateBottomSheet(searchResults);
         })
