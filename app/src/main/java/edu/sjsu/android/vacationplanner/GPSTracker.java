@@ -19,9 +19,7 @@ import com.google.android.gms.location.LocationServices;
 public class GPSTracker {
 
     private Context context;
-    private LocationListener locationListener;
     private MapsActivity mapsActivity;
-
 
     public GPSTracker(Context context, MapsActivity mapsActivity) {
         this.context = context;

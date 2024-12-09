@@ -17,16 +17,20 @@
 
 
     </com.google.android.material.tabs.TabLayout>
+
     <TextView
         android:id="@+id/initial_voting_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
         android:text="Voting has not yet started"
         android:textAlignment="center"
+        android:textColor="@color/quantum_grey600"
         android:textSize="18sp"
         android:visibility="visible"
-        android:layout_gravity="center"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout"/>
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+        tools:layout_editor_absoluteX="0dp" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/VotingViewPager2"

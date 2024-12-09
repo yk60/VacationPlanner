@@ -23,4 +23,8 @@
     <string name="save_not_pressed">save</string>
 
     <string name="uninstall">Uninstall</string>
+    <string name="restaurants">Restaurants</string>
+    <string name="hotels">Hotels</string>
+    <string name="things_to_do">Things to do</string>
+    <string name="home">Home</string>
 </resources>

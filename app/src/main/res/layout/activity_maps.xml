@@ -41,7 +41,7 @@
         android:id="@+id/Restaurants_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Restaurants" 
+        android:text="@string/restaurants"
         app:layout_constraintTop_toBottomOf="@+id/autocomplete_fragment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/Hotels_button"
@@ -52,7 +52,7 @@
         android:id="@+id/Hotels_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hotels"
+        android:text="@string/hotels"
         app:layout_constraintTop_toBottomOf="@+id/autocomplete_fragment"
         app:layout_constraintStart_toEndOf="@+id/Restaurants_button"
         app:layout_constraintEnd_toStartOf="@+id/ThingsToDo_button"
@@ -64,7 +64,7 @@
         android:id="@+id/ThingsToDo_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Things to do"
+        android:text="@string/things_to_do"
         app:layout_constraintTop_toBottomOf="@+id/autocomplete_fragment"
         app:layout_constraintStart_toEndOf="@+id/Hotels_button"
         app:layout_constraintEnd_toEndOf="parent"
@@ -106,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|start"
             android:clickable="true"
-            android:contentDescription="Home"
+            android:contentDescription="@string/home"
 
             android:src="@drawable/home_icon" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

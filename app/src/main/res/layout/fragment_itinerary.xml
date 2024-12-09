@@ -66,7 +66,7 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -75,16 +75,19 @@
         <ImageButton
             android:id="@+id/create_Event"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:contentDescription="create_event_button"
+            app:tint="@color/black"
             android:src="@drawable/planning_icon" />
 
-        <Button
+        <ImageButton
             android:id="@+id/delete_all_events_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Delete All Events"
-            style="@style/clearButton" />
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:contentDescription="Delete All Events"
+            app:tint="@color/black"
+            android:src="@drawable/recycle_bin" />
     </LinearLayout>
 
     <ScrollView

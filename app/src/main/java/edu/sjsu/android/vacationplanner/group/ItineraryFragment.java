@@ -119,7 +119,7 @@ public class ItineraryFragment extends Fragment {
         ImageButton createEventButton = view.findViewById(R.id.create_Event);
         createEventButton.setOnClickListener(this::showCreateEvent);
 
-        Button deleteAllEventsButton = view.findViewById(R.id.delete_all_events_button);
+        ImageButton deleteAllEventsButton = view.findViewById(R.id.delete_all_events_button);
         deleteAllEventsButton.setOnClickListener(v -> {
             deleteAllEvents();
             Toast.makeText(getContext(), "Deleted all events", Toast.LENGTH_SHORT).show();

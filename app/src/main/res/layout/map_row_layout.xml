@@ -91,11 +91,13 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:scaleType="centerInside"
+                android:scaleType="fitCenter"
+                android:contentDescription="date picker"
                 style="@style/clearButton"
                 app:icon="@drawable/calendar"
                 app:iconGravity="textStart"
-                app:iconSize="24dp"/>
+                app:iconSize="24dp"
+                app:iconTint="@android:color/black" />
 
         </LinearLayout>
 
