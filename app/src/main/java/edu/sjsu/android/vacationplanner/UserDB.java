@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-// TODO: create a database for user (id, name, password, plannerID(foreign key to link two tables)
+import java.util.Random;
+
+
 public class UserDB extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "usersDatabase";
@@ -43,6 +45,9 @@ public class UserDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_TABLE);
+
+        // initialize with test users
+        populateWithDefaultTestUsers(sqLiteDatabase);
     }
 
     @Override
@@ -78,6 +83,43 @@ public class UserDB extends SQLiteOpenHelper {
                                         String[] selectionArgs){
         SQLiteDatabase database = getWritableDatabase();
         return database.update(TABLE_NAME, values, selection, selectionArgs);
+    }
+
+
+
+    public ContentValues addTestUser(String name, String password) {
+        ContentValues values = new ContentValues();
+        values.put("name", name);
+        values.put("password", password);
+
+        // initialize with random profile pic
+        int[] profileImgs = new int[]{R.drawable.profile5, R.drawable.profile2,R.drawable.profile3,R.drawable.profile4, R.drawable.profile1};
+        int rnd = new Random().nextInt(profileImgs.length);
+        values.put("profilePicID", profileImgs[rnd]);
+
+        values.put("groupID", 0); // indicates no group
+        values.put("hostID", 0); // indicates they're not host
+
+        return values;
+    }
+
+    private void populateWithDefaultTestUsers(SQLiteDatabase database) {
+        database.insert(TABLE_NAME, null, addTestUser("aliceGreen009", "123"));
+        database.insert(TABLE_NAME, null, addTestUser("jimmyTraveller", "123"));
+        database.insert(TABLE_NAME, null, addTestUser("travelByTrain", "123"));
+        database.insert(TABLE_NAME, null, addTestUser("seasonedTraveller", "123"));
+        database.insert(TABLE_NAME, null, addTestUser("toothpaste07", "123"));
+        database.insert(TABLE_NAME, null, addTestUser("grizzlyBear", "123"));
+        database.insert(TABLE_NAME, null, addTestUser("gorilla883", "123"));
+        database.insert(TABLE_NAME, null, addTestUser("applesauce", "123"));
+        database.insert(TABLE_NAME, null, addTestUser("notebookUser", "123"));
+        database.insert(TABLE_NAME, null, addTestUser("aroundTheWorld", "123"));
+        database.insert(TABLE_NAME, null, addTestUser("monkeyFriend", "123"));
+        database.insert(TABLE_NAME, null, addTestUser("crystalClear5", "123"));
+        database.insert(TABLE_NAME, null, addTestUser("meowCat333", "123"));
+        database.insert(TABLE_NAME, null, addTestUser("luckyStar", "123"));
+        database.insert(TABLE_NAME, null, addTestUser("suitcaseCollector", "123"));
+        database.insert(TABLE_NAME, null, addTestUser("photographyLover25", "123"));
     }
 
 }
