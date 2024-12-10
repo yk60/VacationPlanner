@@ -42,8 +42,6 @@ public class VotingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        // reset votelist when app restarts
-//        sharedViewModel.setVoteList(new ArrayList<>());
     }
 
     @Nullable

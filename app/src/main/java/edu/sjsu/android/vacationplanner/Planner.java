@@ -1,11 +1,10 @@
 package edu.sjsu.android.vacationplanner;
 
 import java.util.ArrayList;
-
+// A singleton class to save the saved places
 public class Planner {
     private static Planner instance;
     private static ArrayList<MyPlace> savedPlaces;
-    public static boolean isSampleDataAdded = false;
     public boolean isDataLoaded = false;
 
     public Planner() {

@@ -65,7 +65,7 @@ import java.util.List;
 import edu.sjsu.android.vacationplanner.databinding.ActivityMapsBinding;
 import edu.sjsu.android.vacationplanner.group.ItineraryFragment;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<Cursor>, GPSTracker.LocationListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<Cursor> {
     @Nullable
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
@@ -420,15 +420,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-
-    }
-
-    @Override
-    public void onLocationReceived(Location location) {
-        LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(currentLocation).title("Current Location"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
-        searchNearbyPlaces("tourist_attraction", currentLocation);
 
     }
 

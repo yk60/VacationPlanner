@@ -82,10 +82,5 @@ public class GPSTracker {
             Toast.makeText(context, "Unable to get location", Toast.LENGTH_LONG).show();
         }
     }
-    public interface LocationListener {
-        void onLocationReceived(Location location);
-    }
-
-
 
 }

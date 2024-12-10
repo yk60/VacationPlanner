@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+
  // used ViewModel to allow data sharing across different fragments and activities
  // and allow data to stay saved even when the user navigates to different parts of the app
 public class SharedViewModel extends ViewModel {

@@ -30,11 +30,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import edu.sjsu.android.vacationplanner.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
     private ImageButton calendarButton;
     private ImageButton savesButton;
     private ImageButton notificationsButton;
