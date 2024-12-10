@@ -227,6 +227,7 @@ public class ItineraryFragment extends Fragment {
 
             MyEvent newEvent = new MyEvent(title, startTime, endTime, tripDateView.getText().toString().split(" ")[1]);
             saveEvent(newEvent);
+            loadEventsFromDatabase();
             setEventPosition(newEvent);
             Toast.makeText(getContext(), "Added event to itinerary", Toast.LENGTH_SHORT).show();
 
