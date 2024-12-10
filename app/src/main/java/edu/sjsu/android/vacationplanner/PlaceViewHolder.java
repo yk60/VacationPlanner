@@ -70,8 +70,6 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         saveToCalendarButton = itemView.findViewById(R.id.saveToCalendarButton);
         checkBox = itemView.findViewById(R.id.checkBox);
 
-
-        // new 
         itemView.findViewById(R.id.saveToCalendarButton).setOnClickListener(view -> {
             String title = nameView.getText().toString();
             String startTime = startTimeView.getText().toString();
@@ -163,10 +161,6 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-
-
-
-
     }
     // converts date in MM/DD/YYYY format to trip date number(String)
     private String convertDateToDay(String date, String tripStartDate) {
@@ -187,7 +181,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
             return String.valueOf(day);
         } catch (ParseException e) {
             e.printStackTrace();
-            Log.e("error", "error converting");
+            Log.d("error", "error converting");
             return "1";
         }
     }
@@ -260,9 +254,6 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
             }
 
         });
-
-        
-
 
     }
 }

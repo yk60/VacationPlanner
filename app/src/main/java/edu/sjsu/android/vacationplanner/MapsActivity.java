@@ -75,7 +75,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private TextView placeRating;
     private TextView placeBusinessHour;
     private ImageView placeImage;
-    private boolean isSaved = false;
     private ArrayList<MyPlace> placeList;
     private MapAdapter mapAdapter;
     private RecyclerView recyclerView;
@@ -346,7 +345,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } 
     }
 
-    // Get multiple search results from the input query. For each result, call searchResult to get and save place info
+    // Get multiple search results from the input query. For each result, call searchPlace to get place info
     private void searchPlaces(String query) {
         if (placesClient == null) {
             Log.e(TAG, "PlacesClient is null");
@@ -372,7 +371,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-
+    // get place details and add them to the searchResult list
     private void searchPlace(String placeId, List<MyPlace> searchResults) {
         if (placesClient == null) {
             Log.e(TAG, "PlacesClient is null");
@@ -433,6 +432,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    // creates a circular bound around the received location then builds and executes the search request
     public void searchNearbyPlaces(String query, LatLng location) {
         deleteAllLocations();
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS, Place.Field.RATING, Place.Field.OPENING_HOURS, Place.Field.PHOTO_METADATAS);
