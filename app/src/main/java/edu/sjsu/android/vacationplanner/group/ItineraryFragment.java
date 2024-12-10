@@ -464,8 +464,6 @@ public class ItineraryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadEventsFromDatabase();
-        InitEventsList();
         sharedViewModel.getEventsMap().observe(getViewLifecycleOwner(), eventsMap -> {
             List<MyEvent> events = sharedViewModel.getEventsForDay(currentDay);
             eventAdapter.setEvents(events);

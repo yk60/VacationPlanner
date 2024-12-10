@@ -82,9 +82,11 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
         if (Planner.getInstance().getSavedPlaces().isEmpty()) {
             emptyText.setVisibility(View.VISIBLE);
             instructions.setVisibility(View.GONE);
+            doneButton.setVisibility(View.GONE);
         } else {
             emptyText.setVisibility(View.GONE);
             instructions.setVisibility(View.VISIBLE);
+            doneButton.setVisibility(View.VISIBLE);
         }
 
         sharedViewModel.getSelectedPlace().observe(getViewLifecycleOwner(), new Observer<MyPlace>() {
