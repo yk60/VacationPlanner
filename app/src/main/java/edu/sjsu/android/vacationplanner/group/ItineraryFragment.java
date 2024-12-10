@@ -240,7 +240,6 @@ public class ItineraryFragment extends Fragment {
         createEventDialog.show();
     }
 
-    // TODO: Allow events to be longer/shorter than 1 hour
     public static boolean isValidHour(String startTime, String endTime) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if(startTime == endTime || LocalTime.parse(endTime).isBefore(LocalTime.parse(startTime))){
@@ -306,7 +305,6 @@ public class ItineraryFragment extends Fragment {
                 if (existingStartTime.equals(event.getStartTime()) && existingEndTime.equals(event.getEndTime()) && existingTripDate.equals(tripDateView.getText().toString().split(" ")[1]) && group==MainActivity.getGroupID()) {
                     // If the new event has same start time, end time, and trip date, update event
                     updateEvent(event);
-                    Toast.makeText(getContext(), "Event updated", Toast.LENGTH_SHORT).show();
                     eventExists = true;
                     break;
                 }
