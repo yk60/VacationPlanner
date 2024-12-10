@@ -13,7 +13,7 @@
         android:padding="16dp"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:text="hour"
+        android:text="@string/hour"
         android:backgroundTint="@color/grey_light"/>
 
 

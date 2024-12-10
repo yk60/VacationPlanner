@@ -101,7 +101,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pick Color"
+            android:text="@string/pick_color"
             android:layout_gravity="center"/>
 
     </LinearLayout>
@@ -113,7 +113,7 @@
         android:layout_marginTop="@dimen/_10dp"
         android:layout_marginStart="@dimen/_20dp"
         android:layout_marginEnd="@dimen/_20dp"
-        android:hint="Note Title"
+        android:hint="@string/note_title"
         android:textStyle="bold"
         android:textSize="25sp"
         android:background="@null"
@@ -126,7 +126,7 @@
         android:layout_marginTop="@dimen/_30dp"
         android:layout_marginStart="@dimen/_20dp"
         android:layout_marginEnd="@dimen/_20dp"
-        android:hint="Type your note here..."
+        android:hint="@string/type_your_note_here"
         android:textSize="18sp"
         android:background="@null"
         android:inputType="textMultiLine"
@@ -139,7 +139,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10dp"
-        android:text="delete note"
+        android:text="@string/delete_note"
         android:backgroundTint="@color/red_light"
         android:layout_gravity="center"/>
 

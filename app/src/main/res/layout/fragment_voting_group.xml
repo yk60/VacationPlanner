@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="32dp"
-        android:text="Voting has not yet started"
+        android:text="@string/voting_has_not_yet_started"
         android:textAlignment="center"
         android:textColor="@color/quantum_grey600"
         android:textSize="18sp"

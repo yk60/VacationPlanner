@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="Initialize your trip information!\nClick the button at the corner to edit"
+            android:text="@string/initialize_your_trip_information_nclick_the_button_at_the_corner_to_edit"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:visibility="gone"/>
@@ -38,7 +38,7 @@
                 android:gravity="start"
                 android:layout_marginTop="@dimen/_20dp"
                 android:layout_marginStart="@dimen/_40dp"
-                android:text="Upcoming Trip"
+                android:text="@string/upcoming_trip"
                 android:textColor="@color/white" />
 
             <TextView
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
                 android:layout_marginStart="@dimen/_40dp"
-                android:text="Name of Trip"
+                android:text=""
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:textSize="30sp"/>
@@ -59,7 +59,7 @@
                 android:layout_gravity="bottom"
                 android:layout_marginStart="@dimen/_40dp"
                 android:layout_marginBottom="60dp"
-                android:text="Destination"
+                android:text=""
                 android:textStyle="bold"
                 android:textSize="17sp"
                 android:textColor="@color/white" />
@@ -78,7 +78,7 @@
             android:id="@+id/editTripButton"
             android:layout_width="@dimen/_40dp"
             android:layout_height="@dimen/_40dp"
-            android:contentDescription="edit trip details"
+            android:contentDescription="@string/edit_trip_details"
             android:src="@drawable/edit_icon"
             android:background="@drawable/background_add_button"
             android:layout_gravity="bottom"

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="325dp"
     android:layout_height="325dp"
     android:layout_gravity="center"
@@ -15,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Edit Budget Goal"
+        android:text="@string/edit_budget_goal"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,7 +28,7 @@
         android:layout_gravity="center"
         android:layout_marginStart="4dp"
         android:layout_marginTop="50dp"
-        android:text="Total Budget:"
+        android:text="@string/total_budget"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
@@ -45,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="$"
+            android:text="@string/dollar_sign"
             android:layout_gravity="start"
             android:layout_marginTop="8dp"/>
 
@@ -66,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"
-        android:text="Done"
+        android:text="@string/done"
         android:layout_marginTop="@dimen/_40dp"
         android:layout_gravity="center"
         android:textColor="@color/black"

@@ -11,7 +11,7 @@
         android:id="@+id/initial_voting_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Voting has not yet started"
+        android:text="@string/voting_has_not_yet_started"
         android:textAlignment="center"
         android:textSize="18sp"
         android:visibility="visible"
@@ -38,7 +38,7 @@
         android:id="@+id/view_results"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="View results"
+        android:text="@string/view_results"
         android:backgroundTint="@color/wheat"
         android:layout_gravity="center_horizontal" />
 

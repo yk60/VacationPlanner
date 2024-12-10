@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
-                android:text="Budget Planner"
+                android:text="@string/budget_planner"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/teal_light"
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_30dp"
                 android:layout_marginTop="20dp"
-                android:text="Budget Goal:" />
+                android:text="@string/budget_goal" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_30dp"
                     android:layout_marginTop="@dimen/_10dp"
-                    android:text="$750.00"
+                    android:text=""
                     android:textSize="30sp" />
 
                 <ImageButton
@@ -63,7 +63,7 @@
                     android:layout_marginTop="@dimen/_10dp"
                     android:layout_marginEnd="@dimen/_40dp"
                     android:background="@drawable/background_add_button"
-                    android:contentDescription="edit budget goal"
+                    android:contentDescription="@string/edit_budget_goal"
                     android:src="@drawable/edit_icon" />
 
 
@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_30dp"
                     android:layout_weight="1"
-                    android:text="$450.00 / $750.00" />
+                    android:text="" />
 
             </LinearLayout>
 
@@ -113,7 +113,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="@dimen/_40dp"
-        android:text="No chart data available yet. Add costs to your saved locations to see your totals!"
+        android:text="@string/no_chart_data_available_yet_add_costs_to_your_saved_locations_to_see_your_totals"
         app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

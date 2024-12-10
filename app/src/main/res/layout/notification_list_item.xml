@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/notification_layout"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -18,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="95dp"
             android:layout_marginBottom="5dp"
-            android:text="Title of Notification"
+            android:text="@string/title_of_notification"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="16sp"/>
@@ -27,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="100dp"
-            android:text="Notification Description"
+            android:text="@string/notification_description"
             android:maxLines="2"/>
     </LinearLayout>
 
@@ -42,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:backgroundTint="@color/melon"
-            android:text="Dismiss"
+            android:text="@string/dismiss"
             android:textColor="@color/white" />
 
     </FrameLayout>

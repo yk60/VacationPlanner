@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="start"
-        android:text="Edit Trip Details"
+        android:text="@string/edit_trip_details"
         android:textStyle="bold"
         android:textSize="18sp"
         android:textColor="@color/black" />
@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_30dp"
-        android:hint="Name of Trip"
+        android:hint="@string/name_of_trip"
         android:textColor="@color/black"
         android:textColorHint="@color/white"
         android:maxLines="1"/>
@@ -47,9 +47,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_20dp"
-        android:hint="Destination"
+        android:hint="@string/destination"
         android:textColor="@color/black"
         android:textColorHint="@color/white"
+        android:inputType="text"
         android:maxLines="1"/>
 
 
@@ -65,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="Start Day"
+            android:text="@string/start_day"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
@@ -77,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:textSize="15sp"
-            android:hint="MM/DD/YYYY"
+            android:hint="@string/mm_dd_yyyy"
             android:textColor="@color/black"
             android:textColorHint="@color/white"
             android:inputType="date"/>
@@ -96,7 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="End Day"
+            android:text="@string/end_day"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
@@ -108,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:textSize="15sp"
-            android:hint="MM/DD/YYYY"
+            android:hint="@string/mm_dd_yyyy"
             android:textColor="@color/black"
             android:textColorHint="@color/white"
             android:inputType="date"/>
@@ -123,7 +124,7 @@
         android:layout_marginTop="@dimen/_40dp"
         android:layout_gravity="center"
         android:backgroundTint="@color/white"
-        android:text="Done"
+        android:text="@string/done"
         android:textColor="@color/black"/>
 
 </LinearLayout>

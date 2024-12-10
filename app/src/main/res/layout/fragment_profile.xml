@@ -25,7 +25,7 @@
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="username"
+        android:text="@string/username"
         android:textAllCaps="false"
         android:textStyle="bold"
         android:textSize="22sp"
@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_20dp"
-        android:text="Logout"
+        android:text="@string/logout"
         android:layout_gravity="center"
         android:backgroundTint="@color/wheat"/>
 

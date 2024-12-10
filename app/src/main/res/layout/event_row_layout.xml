@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:textSize="16sp"
-        android:text="no event"
+        android:text=""
         android:padding="8dp"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="12sp"

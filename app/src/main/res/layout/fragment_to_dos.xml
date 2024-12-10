@@ -37,7 +37,7 @@
         android:id="@+id/emptyList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No to dos yet!\nClick the + button to add your notes"
+        android:text="@string/no_to_dos_yet_nclick_the_button_to_add_your_notes"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10dp"
-        android:text="Notifications"
+        android:text="@string/notifications"
         android:layout_gravity="center"
         android:textSize="18sp"
         android:textStyle="bold"/>
@@ -20,7 +20,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/_30dp"
         android:layout_marginBottom="@dimen/_40dp"
-        android:text="No new notifications! Check back later."/>
+        android:text="@string/no_new_notifications_check_back_later"/>
 
     <ListView
         android:layout_marginTop="@dimen/_40dp"
