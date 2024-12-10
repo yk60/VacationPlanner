@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.Editable;
@@ -24,6 +22,7 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import edu.sjsu.android.vacationplanner.group.ItineraryFragment;
 
 
 public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
@@ -34,22 +33,24 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
     private final boolean isSavesOpen;
     private final SharedViewModel sharedViewModel;
     private final UpdateSavesListener updateSavesListener;
+    private final ItineraryFragment itineraryFragment;
     private final Uri CONTENT_URI2 = Uri.parse("content://edu.sjsu.android.vacationplanner.DataProvider");
 
 
-    public MapAdapter(Context context, ArrayList<MyPlace> placeList, boolean isSavesOpen, UpdateSavesListener updateSavesListener, SharedViewModel sharedViewModel) {
+    public MapAdapter(Context context, ArrayList<MyPlace> placeList, boolean isSavesOpen, UpdateSavesListener updateSavesListener, SharedViewModel sharedViewModel, ItineraryFragment itineraryFragment) {
         this.context = context;
         this.placeList = placeList;
         this.isSavesOpen = isSavesOpen;
         this.sharedViewModel = new ViewModelProvider((FragmentActivity) context).get(SharedViewModel.class);
         this.updateSavesListener = updateSavesListener;
+        this.itineraryFragment = itineraryFragment;
     }
 
     @NonNull
     @Override
     public PlaceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.map_row_layout, parent, false);
-        return new PlaceViewHolder(view, sharedViewModel);
+        return new PlaceViewHolder(view, sharedViewModel, itineraryFragment);
       
     }
     @Override
@@ -113,7 +114,7 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
             public void afterTextChanged(Editable s) {}
         });
 
-        holder.datetimeView.addTextChangedListener(new TextWatcher() {
+        holder.dateTimeView.addTextChangedListener(new TextWatcher() {
             private String previousText = myPlace.getDatetime();
 
             @Override
@@ -193,7 +194,7 @@ public class MapAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
 
 
         holder.costView.setText(myPlace.getCost());
-        holder.datetimeView.setText(myPlace.getDatetime());
+        holder.dateTimeView.setText(myPlace.getDatetime());
         holder.startTimeView.setText(myPlace.getStartTime());
         holder.endTimeView.setText(myPlace.getEndTime());
     }

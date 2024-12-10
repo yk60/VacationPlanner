@@ -39,7 +39,7 @@ public class HomeFragment extends Fragment {
 
     private static String tripNameString = "";
     private static String destinationString = "Destination";
-    private static String tripStartDate = "MM/DD/YYYY";
+    public static String tripStartDate = "MM/DD/YYYY";
     private static String tripEndDate = "MM/DD/YYYY";
     private static String tripDateString = tripStartDate + " - " + tripEndDate; // default
 

@@ -31,6 +31,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import edu.sjsu.android.vacationplanner.group.ItineraryFragment;
+
 
 public class SavesFragment extends Fragment implements UpdateSavesListener{
 
@@ -46,6 +48,8 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
     private Planner planner;
     private ImageButton deleteAllButton;
     private Button doneButton;
+    private ItineraryFragment itineraryFragment;
+
 
     public SavesFragment() {
     }
@@ -67,10 +71,19 @@ public class SavesFragment extends Fragment implements UpdateSavesListener{
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_saves, container, false);
+        // Initialize ItineraryFragment
+        itineraryFragment = (ItineraryFragment) getParentFragmentManager().findFragmentByTag("ITINERARY_FRAGMENT");
+        if (itineraryFragment == null) {
+            itineraryFragment = new ItineraryFragment();
+            getParentFragmentManager().beginTransaction()
+                .add(itineraryFragment, "ITINERARY_FRAGMENT")
+                .commit();
+        }
+
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         totalCostView = view.findViewById(R.id.expected_cost);
-        adapter = new MapAdapter(getContext(), Planner.getInstance().getSavedPlaces(), true, this, sharedViewModel);
+        adapter = new MapAdapter(getContext(), Planner.getInstance().getSavedPlaces(), true, this, sharedViewModel, itineraryFragment);
         recyclerView.setAdapter(adapter);
         saveButton = view.findViewById(R.id.SaveButton);
         deleteAllButton = view.findViewById(R.id.delete_all_button);

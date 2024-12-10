@@ -63,6 +63,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import edu.sjsu.android.vacationplanner.databinding.ActivityMapsBinding;
+import edu.sjsu.android.vacationplanner.group.ItineraryFragment;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<Cursor>, GPSTracker.LocationListener {
     @Nullable
@@ -83,6 +84,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final LatLng LOCATION_UNIV = new LatLng(37.335371, -121.881050);
     private final int FINE_PERMISSION_CODE = 1;
     private SharedViewModel sharedViewModel;
+    private ItineraryFragment itineraryFragment;
+
     Location currentLocation;
 
 
@@ -93,6 +96,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        itineraryFragment = new ItineraryFragment();
         binding.FloatingHomeButton.setOnClickListener(this::getLocation);
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -159,7 +163,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void updateTotalCost() {
             }
-        }, sharedViewModel);
+        }, sharedViewModel, itineraryFragment);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mapAdapter);

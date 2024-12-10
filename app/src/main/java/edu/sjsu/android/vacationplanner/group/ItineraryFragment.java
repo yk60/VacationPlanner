@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -45,6 +46,8 @@ import edu.sjsu.android.vacationplanner.MainActivity;
 import edu.sjsu.android.vacationplanner.MyEvent;
 import edu.sjsu.android.vacationplanner.R;
 import edu.sjsu.android.vacationplanner.SharedViewModel;
+import edu.sjsu.android.vacationplanner.HomeFragment;
+
 
 public class ItineraryFragment extends Fragment {
     private SharedViewModel sharedViewModel;
@@ -92,8 +95,8 @@ public class ItineraryFragment extends Fragment {
         eventAdapter = new EventAdapter(sharedViewModel.getEventsForDay(currentDay));
         eventRecyclerView.setAdapter(eventAdapter);
 
-        tripDateView = view.findViewById(R.id.trip_date);
-        currentDateView = view.findViewById(R.id.current_date);
+        tripDateView = view.findViewById(R.id.trip_date); // Day 1, 2, ...
+        currentDateView = view.findViewById(R.id.current_date); // MM/dd/yyyy
         currentCalendar = Calendar.getInstance();
 
         // set current date
@@ -185,6 +188,16 @@ public class ItineraryFragment extends Fragment {
         return hoursList;
     }
 
+
+    public String getCurrentDate() {
+        return currentDateView.getText().toString();
+    }
+
+    public static String getTripStartDate(){
+        return HomeFragment.tripStartDate;
+    }
+
+
     private void showCreateEvent(View view) {
         createEventDialog.setContentView(R.layout.event_editor_popup);
 
@@ -262,8 +275,22 @@ public class ItineraryFragment extends Fragment {
     }
 
     public void saveEvent(MyEvent event) {
+        Context context = requireContext();
         String selection = "startTime = ? AND endTime = ? AND tripDate = ? AND groupID = ?";
-        String[] selectionArgs = {event.getStartTime(), event.getEndTime(), tripDateView.getText().toString().split(" ")[1], String.valueOf(MainActivity.getGroupID())};
+        String[] selectionArgs = null;
+
+        // if user saved events directly from itinerary
+        if(tripDateView != null && tripDateView.getText().toString().contains("Day")){
+            selectionArgs = new String[]{event.getStartTime(), event.getEndTime(), tripDateView.getText().toString().split(" ")[1], String.valueOf(MainActivity.getGroupID())};
+
+        }
+        // if user saved events from saves page
+        else{
+            selectionArgs = new String[]{event.getStartTime(), event.getEndTime(), event.getTripDate(), String.valueOf(MainActivity.getGroupID())};
+            Log.d("final trip date", event.getTripDate());
+            tripDateView.setText("DAY " + event.getTripDate());
+
+        }
 
         Cursor cursor = getContext().getContentResolver().query(CONTENT_URI2, null, selection, selectionArgs, null);
         boolean eventExists = false;

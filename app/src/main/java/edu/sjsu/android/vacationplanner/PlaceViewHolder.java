@@ -23,6 +23,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,7 +42,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
     ImageButton saveView;
     ImageView imageView;
     EditText costView;
-    EditText datetimeView;
+    EditText dateTimeView;
     EditText startTimeView;
     EditText endTimeView;
     TextView tripDateView;
@@ -51,7 +52,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
     CheckBox checkBox;
 
 
-    public PlaceViewHolder(@NonNull View itemView, SharedViewModel sharedViewModel) {
+    public PlaceViewHolder(@NonNull View itemView, SharedViewModel sharedViewModel, ItineraryFragment itineraryFragment) {
         super(itemView);
         nameView = itemView.findViewById(R.id.place_name);
         addressView = itemView.findViewById(R.id.place_address);
@@ -60,7 +61,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         saveView = itemView.findViewById(R.id.save_button);
         imageView = itemView.findViewById(R.id.place_image);
         costView = itemView.findViewById(R.id.place_cost);
-        datetimeView = itemView.findViewById(R.id.place_datetime);
+        dateTimeView = itemView.findViewById(R.id.place_datetime);
         startTimeView = itemView.findViewById(R.id.startTime);
         endTimeView = itemView.findViewById(R.id.endTime);
         tripDateView = itemView.findViewById(R.id.trip_date);
@@ -68,6 +69,36 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         placeTypeSpinner = itemView.findViewById(R.id.place_type_spinner);
         saveToCalendarButton = itemView.findViewById(R.id.saveToCalendarButton);
         checkBox = itemView.findViewById(R.id.checkBox);
+
+
+        // new 
+        itemView.findViewById(R.id.saveToCalendarButton).setOnClickListener(view -> {
+            String title = nameView.getText().toString();
+            String startTime = startTimeView.getText().toString();
+            String endTime = endTimeView.getText().toString();
+            String date = dateTimeView.getText().toString();
+            String tripStartDate = ItineraryFragment.getTripStartDate();
+
+           String tripDate = convertDateToDay(date, tripStartDate);
+           Log.d("tripdate", date + "  " + tripDate);
+
+
+            MyEvent newEvent = new MyEvent(title, startTime, endTime, tripDate);
+            Context context = itemView.getContext();
+            if (!ItineraryFragment.isValidHour(startTime, endTime)) {
+                Toast.makeText(context, "Invalid start or end time.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(itineraryFragment != null){
+                itineraryFragment.saveEvent(newEvent);
+                Toast.makeText(context, "Added event to itinerary", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(context, "Failed to add event to itinerary", Toast.LENGTH_SHORT).show();
+
+            }
+
+        });
 
 
 
@@ -94,7 +125,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
                         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
                         sdf.setTimeZone(TimeZone.getTimeZone("PST"));
                         String date = sdf.format(new Date(selection));
-                        datetimeView.setText(date); 
+                        dateTimeView.setText(date);
                     }
                 });
                 materialDatePicker.show(((FragmentActivity) itemView.getContext()).getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
@@ -132,34 +163,33 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        saveToCalendarButton.setOnClickListener(new View.OnClickListener(){
 
-            @Override
-            public void onClick(View view) {
-                String title = nameView.getText().toString();
-                String startTime = startTimeView.getText().toString();
-                String endTime = endTimeView.getText().toString();
-                String tripDate = tripDateView.getText().toString().split(" ")[1];
-                MyEvent newEvent = new MyEvent(title, startTime, endTime, tripDate);
-                Context context = itemView.getContext();
-                if (!ItineraryFragment.isValidHour(startTime, endTime)) {
-                    Toast.makeText(context, "Invalid start or end time.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                FragmentActivity activity = (FragmentActivity) context;
-                ItineraryFragment itineraryFragment = (ItineraryFragment) activity.getSupportFragmentManager().findFragmentByTag("ITINERARY_FRAGMENT_TAG");
-                if (itineraryFragment != null) {
-                    itineraryFragment.setEventPosition(newEvent);
-                    Toast.makeText(context, "Added event to itinerary", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, "ItineraryFragment not found", Toast.LENGTH_SHORT).show();
-                }
 
+
+
+    }
+    // converts date in MM/DD/YYYY format to trip date number(String)
+    private String convertDateToDay(String date, String tripStartDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+        // if user did not set the trip start date
+        if(tripStartDate == null){
+            return "1";
+        }
+        try {
+            Date parsedDate = sdf.parse(date);
+            Date tripStart = sdf.parse(tripStartDate);
+            if (parsedDate.before(tripStart)) {
+                Toast.makeText(itemView.getContext(), "Invalid date. Date cannot be before trip start date.", Toast.LENGTH_SHORT).show();
+                return "";
             }
-        });
-
-
-
+            long diff = parsedDate.getTime() - tripStart.getTime();
+            int day = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
+            return String.valueOf(day);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.e("error", "error converting");
+            return "1";
+        }
     }
     
     public void bind(MyPlace myPlace,  boolean isSavesOpen, SharedViewModel sharedViewModel) {
@@ -175,7 +205,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         
         if (isSavesOpen) {
             costView.setVisibility(View.VISIBLE);
-            datetimeView.setVisibility(View.VISIBLE);
+            dateTimeView.setVisibility(View.VISIBLE);
             datePickerButton.setVisibility(View.VISIBLE);
             startTimeView.setVisibility(View.VISIBLE);
             endTimeView.setVisibility(View.VISIBLE);
@@ -187,7 +217,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
 
         } else {
             costView.setVisibility(View.GONE);
-            datetimeView.setVisibility(View.GONE);
+            dateTimeView.setVisibility(View.GONE);
             datePickerButton.setVisibility(View.GONE);
             startTimeView.setVisibility(View.GONE);
             endTimeView.setVisibility(View.GONE);
@@ -198,7 +228,7 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         }
 
         costView.setText(myPlace.getCost());
-        datetimeView.setText(myPlace.getDatetime());
+        dateTimeView.setText(myPlace.getDatetime());
         startTimeView.setText(myPlace.getStartTime());
         endTimeView.setText(myPlace.getEndTime());
 
