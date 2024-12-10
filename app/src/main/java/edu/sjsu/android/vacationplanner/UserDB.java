@@ -45,9 +45,8 @@ public class UserDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_TABLE);
-
         // initialize with test users
-        populateWithDefaultTestUsers(sqLiteDatabase);
+        this.populateWithDefaultTestUsers(sqLiteDatabase);
     }
 
     @Override
@@ -87,7 +86,7 @@ public class UserDB extends SQLiteOpenHelper {
 
 
 
-    public ContentValues addTestUser(String name, String password) {
+    private ContentValues addTestUser(String name, String password) {
         ContentValues values = new ContentValues();
         values.put("name", name);
         values.put("password", password);

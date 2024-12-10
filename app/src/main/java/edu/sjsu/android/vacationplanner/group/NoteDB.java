@@ -1,20 +1,10 @@
 package edu.sjsu.android.vacationplanner.group;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import androidx.annotation.Nullable;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.text.ParseException;
-
-import edu.sjsu.android.vacationplanner.MainActivity;
 
 public class NoteDB extends SQLiteOpenHelper {
 

@@ -7,15 +7,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import edu.sjsu.android.vacationplanner.MainActivity;
-import edu.sjsu.android.vacationplanner.R;
-import edu.sjsu.android.vacationplanner.UserDB;
 import edu.sjsu.android.vacationplanner.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
