@@ -110,15 +110,10 @@ public class UserDB extends SQLiteOpenHelper {
         database.insert(TABLE_NAME, null, addTestUser("toothpaste07", "123"));
         database.insert(TABLE_NAME, null, addTestUser("grizzlyBear", "123"));
         database.insert(TABLE_NAME, null, addTestUser("gorilla883", "123"));
-        database.insert(TABLE_NAME, null, addTestUser("applesauce", "123"));
         database.insert(TABLE_NAME, null, addTestUser("notebookUser", "123"));
         database.insert(TABLE_NAME, null, addTestUser("aroundTheWorld", "123"));
-        database.insert(TABLE_NAME, null, addTestUser("monkeyFriend", "123"));
-        database.insert(TABLE_NAME, null, addTestUser("crystalClear5", "123"));
         database.insert(TABLE_NAME, null, addTestUser("meowCat333", "123"));
         database.insert(TABLE_NAME, null, addTestUser("luckyStar", "123"));
-        database.insert(TABLE_NAME, null, addTestUser("suitcaseCollector", "123"));
-        database.insert(TABLE_NAME, null, addTestUser("photographyLover25", "123"));
     }
 
 }
