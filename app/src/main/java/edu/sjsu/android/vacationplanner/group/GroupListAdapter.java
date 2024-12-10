@@ -1,6 +1,5 @@
 package edu.sjsu.android.vacationplanner.group;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import edu.sjsu.android.vacationplanner.databinding.RowLayoutBinding;
 import edu.sjsu.android.vacationplanner.User;
 import edu.sjsu.android.vacationplanner.databinding.RowLayoutUsersBinding;
 
@@ -68,26 +66,5 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
         this.usersList = filteredList;
         notifyDataSetChanged();
     }
-
-    /*
-    public void showWarning(int position){
-        AlertDialog.Builder builder;
-        builder = new AlertDialog.Builder(context);
-
-        builder.setTitle("Warning");
-        builder.setMessage("Are you sure you want to remove this member from your list?");
-
-        builder.setPositiveButton("Yes", (dialog, id) -> {
-            // When user selects yes
-            this.usersList.remove(position);
-            this.notifyItemRemoved(position);
-            this.notifyItemRangeChanged(position, usersList.size());
-        });
-        builder.setNegativeButton("No", (dialog, id) -> {
-            // When user selects no, do nothing
-        });
-        builder.create().show();
-    }
-*/
 
 }

@@ -4,14 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.NavHostController;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +24,6 @@ import java.util.Date;
 
 import edu.sjsu.android.vacationplanner.MainActivity;
 import edu.sjsu.android.vacationplanner.R;
-import edu.sjsu.android.vacationplanner.User;
 
 
 public class ToDosFragment extends Fragment {
