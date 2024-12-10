@@ -24,18 +24,6 @@
         tools:layout="@layout/fragment_budget" />
 
     <fragment
-        android:id="@+id/navigation_planning"
-        android:name="edu.sjsu.android.vacationplanner.PlanningFragment"
-        android:label="fragment_planning"
-        tools:layout="@layout/fragment_planning" >
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_search"
-        android:name="edu.sjsu.android.vacationplanner.SearchFragment"
-        android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
-    <fragment
         android:id="@+id/navigation_calendar"
         android:name="edu.sjsu.android.vacationplanner.CalendarFragment"
         android:label="fragment_calendar"

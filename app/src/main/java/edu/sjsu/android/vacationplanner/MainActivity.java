@@ -79,32 +79,25 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.nav_view);
         NavigationUI.setupWithNavController(bottomNav, navController);
 
-        calendarButton = (ImageButton)findViewById(R.id.CalendarButton);
-        calendarButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isCalendarOpen) {
-                    fragmentManager.popBackStack();
-                    isCalendarOpen = false;
-                } else {
-                    navController.navigate(R.id.navigation_calendar);
-                    isCalendarOpen = true;
-                }
+        calendarButton = findViewById(R.id.CalendarButton);
+        calendarButton.setOnClickListener(view -> {
+            if (isCalendarOpen) {
+                fragmentManager.popBackStack();
+                isCalendarOpen = false;
+            } else {
+                navController.navigate(R.id.navigation_calendar);
+                isCalendarOpen = true;
             }
         });
 
-        savesButton = (ImageButton)findViewById(R.id.SavesButton);
-        savesButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                if (isSavesOpen) {
-                    fragmentManager.popBackStack();
-                    isSavesOpen = false;
-                } else {
-                    navController.navigate(R.id.navigation_saves);
-                    isSavesOpen = true;
-                }
+        savesButton = findViewById(R.id.SavesButton);
+        savesButton.setOnClickListener(view -> {
+            if (isSavesOpen) {
+                fragmentManager.popBackStack();
+                isSavesOpen = false;
+            } else {
+                navController.navigate(R.id.navigation_saves);
+                isSavesOpen = true;
             }
         });
 
@@ -125,29 +118,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
+        bottomNav.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
 
-                if (itemId == R.id.navigation_home) {
-                    navController.navigate(R.id.navigation_home);
-                    return true;
-                } else if (itemId == R.id.navigation_group) {
-                    navController.navigate(R.id.navigation_group);
-                    return true;
-                } else if (itemId == R.id.navigation_budget) {
-                    navController.navigate(R.id.navigation_budget);
-                    return true;
-                } else if (itemId == R.id.navigation_planning) {
-                    navController.navigate(R.id.navigation_voting);
-                    return true;
-                } else if (itemId == R.id.navigation_search) {
-                    navController.navigate(R.id.mapsActivity);
-                    return true;
-                } else {
-                    return false;
-                }
+            if (itemId == R.id.navigation_home) {
+                navController.navigate(R.id.navigation_home);
+                return true;
+            } else if (itemId == R.id.navigation_group) {
+                navController.navigate(R.id.navigation_group);
+                return true;
+            } else if (itemId == R.id.navigation_budget) {
+                navController.navigate(R.id.navigation_budget);
+                return true;
+            } else if (itemId == R.id.navigation_planning) {
+                navController.navigate(R.id.navigation_voting);
+                return true;
+            } else if (itemId == R.id.navigation_search) {
+                navController.navigate(R.id.mapsActivity);
+                return true;
+            } else {
+                return false;
             }
         });
     }
