@@ -1,7 +1,7 @@
 # CS 175 Final Project - Vacation Planner
 
 ## APK
-https://drive.google.com/file/d/1FfgzULM9agDWd_i5s8jdHQqUgJcxj0HN/view?usp=drive_link
+https://drive.google.com/file/d/1pXWFkxA5M2rx1yivchDQdRS_GZYFbMQ4/view?usp=sharing
 
 ## Backlog
 https://docs.google.com/spreadsheets/d/1fpYVnRL3AbZb8MF24ipY-xA_fWZiXZk_eyACyeAWv9c/edit?usp=sharing
