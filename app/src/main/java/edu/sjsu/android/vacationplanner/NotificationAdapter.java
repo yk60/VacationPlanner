@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,14 +40,12 @@ public class NotificationAdapter  extends ArrayAdapter<Notification> {
         TextView desc = convertView.findViewById(R.id.notification_desc);
         Button button = convertView.findViewById(R.id.notificationDismissButton);
 
-        FrameLayout frameLayout = convertView.findViewById(R.id.notification_layout);
-
         assert notification != null;
         title.setText(notification.getTitle());
         desc.setText(notification.getDescription());
         button.setOnClickListener(view -> {
             Context context = this.getContext();
-            ContentResolver result = (ContentResolver) context.getContentResolver();
+            ContentResolver result = context.getContentResolver();
             result.delete(CONTENT_URI_notifications,"notifID = ?", new String[] {String.valueOf(notification.getId())});
 
             Notification.notificationsList.remove(Notification.getNotificationForID(notification.getId()));
