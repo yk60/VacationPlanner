@@ -8,19 +8,13 @@ Vacation Planner is an Android app designed to help users collaboratively plan t
 
 https://drive.google.com/file/d/1pXWFkxA5M2rx1yivchDQdRS_GZYFbMQ4/view?usp=sharing
 
-## App Introduction
+## Screenshots
 
-<div style="display: flex; overflow-x: auto; gap: 16px; padding: 8px 0;">
-  <img src="images/Slide_Title.png" alt="Title Slide" height="400">
-  <img src="images/Slide_Login.png" alt="Login Slide" height="400">
-  <img src="images/Slide_Group.png" alt="Group Slide" height="400">
-  <img src="images/Slide_Home.png" alt="Home Slide" height="400">
-  <img src="images/Slide_Notification.png" alt="Notification Slide" height="400">
-  <img src="images/Slide_Search.png" alt="Search Slide" height="400">
-  <img src="images/Slide_Plan.png" alt="Plan Slide" height="400">
-  <img src="images/Slide_Budget.png" alt="Budget Slide" height="400">
-  <img src="images/Slide_Group_Dashboard.png" alt="Group Dashboard Slide" height="400">
-</div>
+<p>
+  <img src="images/Slide_Group.png" alt="Group" height="400" />
+  <img src="images/Slide_Home.png" alt="Home" height="400" />
+  <img src="images/Slide_Search.png" alt="Search" height="400" />
+</p>
 
 ## Demo Video
 
