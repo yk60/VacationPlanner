@@ -137,7 +137,8 @@ public class NoteDetailActivity extends AppCompatActivity {
         values.put("desc", note.getDescription());
         values.put("color", note.getColor());
         values.put("groupID", MainActivity.getGroupID());
-        Toast.makeText(this, String.valueOf(MainActivity.getGroupID()), Toast.LENGTH_SHORT).show();
+        // this line of code makes the group ID appear, which was just used for testing
+        //Toast.makeText(this, String.valueOf(MainActivity.getGroupID()), Toast.LENGTH_SHORT).show();
         values.put("deleted", getStringFromDate(note.getDeleted()));
 
         getContentResolver().insert(CONTENT_URI3, values);
